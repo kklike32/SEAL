@@ -7,7 +7,7 @@ Objective: To replicate the initial data generation phase of the SEAL (Self-Adap
 The primary goal of this project is to replicate and extend the findings of the SEAL paper. The first critical step, which this document covers, is adapting the synthetic data generation pipeline. The original implementation relies on a VLLM server and SLURM for execution on Linux-based GPU clusters. Our objective was to modify this pipeline to run locally on a MacBook Pro, leveraging its Apple Silicon GPU via the MLX library.
 
 ## 2. Methodology & Execution
-We successfully adapted the process by replacing the core components with MLX-equivalents and creating new scripts for local execution.
+I successfully adapted the process by replacing the core components with MLX-equivalents and creating new scripts for local execution.
 
 ### 2.1. Environment Setup
 A Conda environment (seal_mlx) was established with Python 3.12. The key libraries installed were:
@@ -16,15 +16,15 @@ A Conda environment (seal_mlx) was established with Python 3.12. The key librari
  * numpy, requests, tqdm: Standard utility libraries.
 
 ### 2.2. The Data Generation Script (make_squad_data_mlx.py)
-The original make_squad_data.py was designed to query a remote VLLM server endpoint. We created a new script, make_squad_data_mlx.py, which performs the generation locally.
+The original make_squad_data.py was designed to query a remote VLLM server endpoint. I created a new script, make_squad_data_mlx.py, which performs the generation locally.
 Core Logic:
  * Model Loading: Instead of calling an API, it uses mlx_lm.load() to load a Hugging Face model repository directly into the Mac's unified memory.
  * Local Generation: It iterates through articles from the SQuAD dataset and uses mlx_lm.generate() to generate k completions for each article.
- * Sampling Control: We implemented sampling control using mlx_lm.sample_utils.make_sampler to manage temperature and top_p parameters effectively.
+ * Sampling Control: I implemented sampling control using mlx_lm.sample_utils.make_sampler to manage temperature and top_p parameters effectively.
  * Organized Output: The script saves the results and a metadata file into a new, separate directory (mlx_experiments) to keep our findings distinct from the original repository's files.
 
 ### 2.3. The Execution Script (make_squad_data_mlx.sh)
-We created a new shell script to manage the execution locally.
+I created a new shell script to manage the execution locally.
 Core Logic:
  * No SLURM/VLLM: All SLURM directives and VLLM server startup logic were removed.
  * Configuration: Provides a clean, user-editable section for setting parameters like the MODEL_ID, file paths, and generation settings (k, temperature, etc.).
@@ -42,6 +42,7 @@ The primary result is the generated JSON file: knowledge-incorporation/mlx_exper
 
 ### 3.1. Deep Dive: The "Antarctica" Sample
 Let's analyze the provided sample record to understand the output's structure and significance.
+```json
   {
     "title": "Antarctica",
     "context": "Although coal, hydrocarbons, iron ore, platinum, copper, chromium, nickel, gold and other minerals have been found...",
@@ -55,6 +56,7 @@ Let's analyze the provided sample record to understand the output's structure an
     ],
     "prompt": "<|im_start|>system\nYou are an assistant tasked with analyzing the provided passage...<|im_end|>\n<|im_start|>assistant\n"
   }
+```
 
 | Field | Description |
 |---|---|
@@ -71,7 +73,7 @@ The completions array is the entire point of this phase. In the context of SEAL,
  * Goal of Self-Editing: The ultimate goal is to train a model that, when faced with new text, can generate its own fine-tuning data (similar to these completions) to update its internal knowledge base without needing a human to create that data manually. This completions array is our first, human-supervised step to bootstrap that process.
 
 ### 3.3. Understanding the <think> Blocks
-Inside each completion, we see a block of text enclosed in <think>...</think> tags. This is a direct result of a prompting technique called Chain-of-Thought (CoT) or a "Scratchpad".
+Inside each completion, I see a block of text enclosed in <think>...</think> tags. This is a direct result of a prompting technique called Chain-of-Thought (CoT) or a "Scratchpad".
  * Purpose: The prompt implicitly asks the model to "think step-by-step" before providing the final, formatted list of implications.
  * How it Works: The model first writes out its internal monologue: it deconstructs the request, analyzes the passage, brainstorms potential implications, and refines its ideas.
  * Benefit: This process of forcing the model to "show its work" dramatically improves the quality, accuracy, and relevance of the final output. It prevents the model from giving a rushed, superficial answer.

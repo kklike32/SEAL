@@ -52,7 +52,7 @@ Let's analyze the provided sample record to understand the output's structure an
     "completions": [
       "<think>...</think>\n\n**Implications Derived from the Passage:**\n\n1. **Environmental Protections Limit Resource Exploitation...**",
       "<think>...</think>\n\n**Implications Derived from the Passage on Antarctica:**\n\n1. **Limited Economic Exploitation of Mineral Resources...**",
-      // ... 3 more completion strings ...
+      "... 3 more completion strings ..."
     ],
     "prompt": "<|im_start|>system\nYou are an assistant tasked with analyzing the provided passage...<|im_end|>\n<|im_start|>assistant\n"
   }
@@ -73,7 +73,7 @@ The completions array is the entire point of this phase. In the context of SEAL,
  * Goal of Self-Editing: The ultimate goal is to train a model that, when faced with new text, can generate its own fine-tuning data (similar to these completions) to update its internal knowledge base without needing a human to create that data manually. This completions array is our first, human-supervised step to bootstrap that process.
 
 ### 3.3. Understanding the <think> Blocks
-Inside each completion, I see a block of text enclosed in <think>...</think> tags. This is a direct result of a prompting technique called Chain-of-Thought (CoT) or a "Scratchpad".
+Inside each completion, there is a block of text enclosed in <think>...</think> tags. This is a direct result of a prompting technique called Chain-of-Thought (CoT) or a "Scratchpad".
  * Purpose: The prompt implicitly asks the model to "think step-by-step" before providing the final, formatted list of implications.
  * How it Works: The model first writes out its internal monologue: it deconstructs the request, analyzes the passage, brainstorms potential implications, and refines its ideas.
  * Benefit: This process of forcing the model to "show its work" dramatically improves the quality, accuracy, and relevance of the final output. It prevents the model from giving a rushed, superficial answer.

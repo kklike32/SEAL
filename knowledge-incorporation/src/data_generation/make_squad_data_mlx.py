@@ -1,3 +1,4 @@
+# knowledge-incorporation/src/data_generation/make_squad_data_mlx.py
 """
 Generate synthetic SQuAD-style items by prompting an MLX model for `k` "implication" completions per passage.
 """

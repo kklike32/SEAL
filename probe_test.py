@@ -1,42 +1,39 @@
-# probe_test
+# probe_test.py using mlx_lm
+from mlx_lm import load, generate
 import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM
-import time
 
-# --- Configuration ---
-MODEL_NAME = "Qwen/Qwen2.5-7B" # The model used in the scripts
+MODEL_NAME = "Qwen/Qwen3-8B-MLX-4bit"
 
-# --- Device Check ---
-if not torch.backends.mps.is_available():
-    print("MPS not available. Exiting.")
-    exit()
+print("✅ MPS device is available." if torch.backends.mps.is_available() else "MPS not available")
 
-device = torch.device("mps")
-print(f"✅ MPS device is available. Attempting to load model to: {device}")
+# Load model using MLX
+print(f"Loading MLX model: {MODEL_NAME}")
+model, tokenizer = load(MODEL_NAME)
 
-# --- Model Loading Test ---
-try:
-    print(f"\n1. Loading Tokenizer for '{MODEL_NAME}'...")
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, trust_remote_code=True)
-    print("   Tokenizer loaded successfully.")
+# Simple test prompt
+prompt = "Hello, how can I help you today?"
 
-    print(f"\n2. Loading Model '{MODEL_NAME}' to MPS device...")
-    print("   This may take a few minutes and download several gigabytes...")
-
-    start_time = time.time()
-    # We load the model directly to the MPS device.
-    # torch_dtype=torch.bfloat16 is not well supported on MPS, so we use float16
-    model = AutoModelForCausalLM.from_pretrained(
-        MODEL_NAME,
-        torch_dtype=torch.float16, 
-        device_map=device,
-        trust_remote_code=True,
+# Format as chat if needed
+if tokenizer.chat_template is not None:
+    prompt = tokenizer.apply_chat_template(
+        [{"role": "user", "content": prompt}],
+        add_generation_prompt=True,
+        tokenize=False
     )
-    end_time = time.time()
 
-    print(f"\nSUCCESS! Model loaded to MPS in {end_time - start_time:.2f} seconds.")
-    print(f"   Model is on device: {model.device}")
+# Generate output
+response = generate(model, tokenizer, prompt=prompt, verbose=True)
+print("\n=== Response ===")
+print(response)
 
-except Exception as e:
-    print(f"\nFAILED to load model.")
-    print(f"   Error: {e}")
+
+
+#!/usr/bin/env python3
+
+# =================================================================================== #
+#   Launches the unified MLX-based Test-Time Training (TTT) Server for SEAL.
+#   This script starts a single process that listens for ZMQ requests and performs
+#   both LoRA fine-tuning and evaluation on the Mac's GPU using MLX.
+#   VERSION: Aligned with the modern mlx_lm.tuner API.
+# =================================================================================== #
+

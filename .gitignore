@@ -2,3 +2,5 @@
 __pycache__/
 logs/
 models/
+.DS_Store
+test.py

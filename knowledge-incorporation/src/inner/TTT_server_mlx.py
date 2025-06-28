@@ -11,6 +11,7 @@ import gc
 import json
 import logging
 import os
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
 import time
 from typing import Dict
 
@@ -21,9 +22,10 @@ import mlx.utils as mx_utils
 import zmq
 from datasets import Dataset
 from mlx_lm.utils import load
+from mlx_lm import utils as lm_utils
 
 # Import the primary evaluation function from our MLX utils file.
-from ..utils_mlx import accuracy_and_texts_mlx
+from ..utils_mlx import accuracy_and_texts_mlx, run_lora_training
 
 # --- Use the modern 'tuner' API ---
 from mlx_lm.tuner import train, linear_to_lora_layers
@@ -45,18 +47,16 @@ class ServerState:
     def __init__(self, model_id: str):
         LOG.info("Loading base model '%s'...", model_id)
         self._model_id = model_id
-        self.model, self.tokenizer = load(self._model_id)
+        _, self.tokenizer = load(self._model_id)
         
-        # Use mx.array(p) to perform a deep copy a tensor.
-        self._pristine_weights = mx_utils.tree_map(lambda p: mx.array(p), self.model.parameters())
-        
-        LOG.info("Base model loaded and pristine weights copied.")
+        self.model = None
+        self.restore_base_model() # Perform initial load
+        LOG.info("Initial model and tokenizer loaded.")
 
     def restore_base_model(self):
         """Restores the model to its original, pre-fine-tuning state."""
-        LOG.debug("Restoring model to pristine state.")
-        flat_pristine_weights = mx_utils.tree_flatten(self._pristine_weights)
-        self.model.load_weights(flat_pristine_weights)
+        LOG.debug("Loading fresh model instance to ensure pristine state.")
+        self.model, _ = load(self._model_id)
         gc.collect()
 
 # ---------------------------  MAIN SERVER LOGIC  -------------------------- #
@@ -100,106 +100,80 @@ def main():
             # --- Extract parameters from the request ---
             train_sequences = msg.get("train_sequences", [])
             questions = msg.get("eval_questions", [])
-            lora_rank = msg.get("lora_rank", 32)
-            lora_layers = msg.get("lora_layers", 16)
-            lora_alpha = msg.get("lora_alpha", 64)
-            lora_dropout = msg.get("lora_dropout", 0.0)
-            finetune_epochs = msg.get("finetune_epochs", 10)
-            finetune_lr = msg.get("finetune_lr", 1e-3)
-            batch_size = msg.get("batch_size", 1)
-            end_mask_substring = msg.get("end_mask_substring", "")
             skip_training = bool(msg.get("skip_training", False))
 
-            sampling_cfg = {"max_tokens": args.eval_max_tokens, 
-                            "temperature": args.eval_temperature, 
-                            "top_p": args.eval_top_p}
+            # This dictionary will be passed to our training utility
+            finetune_args = {
+                "lora_layers": msg.get("lora_layers", 16),
+                "finetune_epochs": msg.get("finetune_epochs", 10),
+                "finetune_lr": msg.get("finetune_lr", 1e-3),
+                "batch_size": msg.get("batch_size", 1),
+                "end_mask_substring": msg.get("end_mask_substring", "")
+            }
+
+            # This dictionary is for the LoRA configuration specifically
+            lora_config = {
+                "rank": msg.get("lora_rank", 32),
+                "alpha": msg.get("lora_alpha", 64),
+                "dropout": msg.get("lora_dropout", 0.0),
+                "scale": 10.0,
+            }
+
+            sampling_cfg = {
+                "max_tokens": args.eval_max_tokens,
+                "temperature": args.eval_temperature,
+                "top_p": args.eval_top_p
+            }
 
             # --- 1. Baseline Evaluation ---
             LOG.info("Step %d: Performing baseline evaluation...", step)
             base_acc, base_texts, base_ok = accuracy_and_texts_mlx(
-                state.model, 
-                state.tokenizer, 
-                questions, 
-                sampling_cfg, 
+                state.model,
+                state.tokenizer,
+                questions,
+                sampling_cfg,
                 args.instruct_model
             )
             LOG.info("Step %d: Baseline accuracy: %.3f", step, base_acc)
 
             if skip_training or not train_sequences:
-                reply = { 
-                    "baseline_accuracy": base_acc, 
-                    "adapter_accuracy": base_acc, 
-                    "adapter_gain": 0.0, 
-                    "baseline_texts": base_texts, 
-                    "adapter_texts": base_texts, 
-                    "baseline_correct": base_ok, 
-                    "adapter_correct": base_ok, 
+                reply = {
+                    "baseline_accuracy": base_acc,
+                    "adapter_accuracy": base_acc,
+                    "adapter_gain": 0.0,
+                    "baseline_texts": base_texts,
+                    "adapter_texts": base_texts,
+                    "baseline_correct": base_ok,
+                    "adapter_correct": base_ok,
                     "gains": [0] * len(base_ok)
                 }
                 sock.send_json(reply)
                 LOG.info("Step %d: Finished (training skipped). Took %.2fs", step, time.time() - recv_start)
                 step += 1
                 continue
-
-            # --- 2. LoRA Fine-Tuning (using the 'tuner' API) ---
-            LOG.info("Step %d: Starting LoRA fine-tuning with the 'tuner' API...", step)
             
-            state.model.freeze()
-            lora_config = {
-                "rank": lora_rank, 
-                "alpha": lora_alpha, 
-                "dropout": lora_dropout, 
-                "scale": 10.0}
-            linear_to_lora_layers(state.model, lora_layers, lora_config)
-
-            if not end_mask_substring:
-                raise ValueError("'end_mask_substring' is required for training.")
-            sub_ids = state.tokenizer.encode(end_mask_substring)
+            # --- 2. LoRA Fine-Tuning (by calling our utility function) ---
+            LOG.info("Step %d: Starting LoRA fine-tuning...", step)
+            # Corrected logging statement
+            LOG.info("LoRA config: %s", json.dumps(lora_config))
+            LOG.info("Finetune args: %s", json.dumps(finetune_args))
             
-            processed_data = []
-            for seq in train_sequences:
-                tokens = state.tokenizer.encode(seq)
-                labels = list(tokens)
-                
-                # Find the mask position
-                M = len(sub_ids)
-                mask_pos = -1
-                for i in range(len(labels) - M + 1):
-                    if labels[i : i + M] == sub_ids:
-                        mask_pos = i + M
-                        break
-                
-                # Apply mask
-                if mask_pos != -1:
-                    labels[:mask_pos] = [-100] * mask_pos
-                
-                processed_data.append({"input_ids": tokens, "labels": labels})
-
-            train_dataset = Dataset.from_list(processed_data)
-
-            total_iters = (len(train_dataset) // batch_size) * finetune_epochs
-            
-            training_args = TrainingArgs(
-                iters=total_iters,
-                batch_size=batch_size,
-                steps_per_report=min(10, total_iters if total_iters > 0 else 1),
-                adapter_file=None, # Do not save adapters to disk
+            # Call the refactored training function with the correctly assembled dicts
+            run_lora_training(
+                state.model,
+                state.tokenizer,
+                train_sequences,
+                finetune_args,
+                lora_config,
+                args.max_seq_length
             )
-            
-            # The model is trained in-place
-            train(
-                model=state.model,
-                tokenizer=state.tokenizer,
-                args=training_args,
-                optimizer=optim.Adam(learning_rate=finetune_lr),
-                train_dataset=train_dataset,
-                val_dataset=None,
-            )
+            LOG.info("Step %d: LoRA fine-tuning complete.", step)        
 
             # --- 3. Adapter Evaluation ---
             LOG.info("Step %d: Performing evaluation with adapter...", step)
             adapter_acc, adapter_texts, adapter_ok = accuracy_and_texts_mlx(
-                state.model, state.tokenizer, questions, sampling_cfg, args.instruct_model
+                state.model, state.tokenizer, 
+                questions, sampling_cfg, args.instruct_model
             )
             LOG.info("Step %d: Adapter accuracy: %.3f", step, adapter_acc)
             

@@ -1,5 +1,8 @@
-# src/query/query_server.py
+# src/query/query_server_mlx.py
 """
+Modified the batch size to include both batch size and gradient accumlation steps 
+as our MLX algorithm will achieve the same training behavior.
+
 Query TTT server on SQuAD synthetic data. This drives the inner-loop TTT server:
 sample k synthetic completions per article, run `eval_times` fine-tune+eval 
 cycles, and write an aggregated JSON report. This is used in both ReST-EM 
@@ -36,24 +39,24 @@ from ..utils import (
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser()
     p.add_argument("--exp_name", default="rank_iter0")
-    p.add_argument("--dataset", default="data/synthetic_data/train/iter0_train.json")
-    p.add_argument("--output_dir", default="results/query_server")
-    p.add_argument("--server_host", default="127.0.0.1")
+    p.add_argument("--dataset", default="mlx_experiments/data/synthetic_data/train/iter0_train.json")
+    p.add_argument("--output_dir", default="mlx_experiments/results/query_server")
+    p.add_argument("--server_host", default="localhost")
     p.add_argument("--zmq_port", type=int, default=5555)
 
     p.add_argument("--n_articles", type=int, default=3)
     p.add_argument("--k_completions", type=int, default=5)
-    p.add_argument("--eval_times", type=int, default=3)
+    p.add_argument("--eval_times", type=int, default=1)
 
     # LoRA / optimisation hyper-params
     p.add_argument("--lora_rank", type=int, default=32)
     p.add_argument("--lora_alpha", type=int, default=64)
     p.add_argument("--lora_dropout", type=float, default=0)
+    p.add_argument("--lora_layers", type=int, default=16)
     p.add_argument("--finetune_epochs", type=int, default=10)
     p.add_argument("--finetune_lr", type=float, default=1e-3)
     p.add_argument("--batch_size", type=int, default=1)
     p.add_argument("--gradient_accumulation_steps", type=int, default=1)
-    p.add_argument("--end_mask_substring", default="")
     p.add_argument("--split_newlines", action="store_true")
     return p.parse_args()
 
@@ -64,6 +67,7 @@ def send_round_trip(
     train_sequences: List[str],
     questions: List[Dict[str, str]],
     args: argparse.Namespace,
+    end_mask_substring: str,
     max_retries: int = 2,
     timeout_ms: int = 600_000,           # 10 minutes
 ) -> Dict[str, Any]:
@@ -84,17 +88,18 @@ def send_round_trip(
         poller.register(sock, zmq.POLLIN)
 
         # build & send the request -------------------------
+        effective_batch_size = args.batch_size * args.gradient_accumulation_steps
         payload = {
             "train_sequences": train_sequences,
             "eval_questions": questions,
             "lora_rank": args.lora_rank,
             "lora_alpha": args.lora_alpha,
             "lora_dropout": args.lora_dropout,
+            "lora_layers": args.lora_layers,
             "finetune_epochs": args.finetune_epochs,
             "finetune_lr": args.finetune_lr,
-            "batch_size": args.batch_size,
-            "gradient_accumulation_steps": args.gradient_accumulation_steps,
-            "end_mask_substring": args.end_mask_substring,
+            "batch_size": effective_batch_size,
+            "end_mask_substring": end_mask_substring,
         }
 
         sock.send_json(payload)
@@ -133,11 +138,13 @@ def evaluate_completion(ctx, endpoint, item: Dict[str, Any], comp_raw: str, args
     ]
     train_sequences = build_train_sequences(comp_raw, context, title, split_newlines=args.split_newlines)
 
+    mask_substring_for_request = f"{title}\n"
+
     base_accs, adpt_accs, gains = [], [], []
     q_details: List[Dict[str, Any]] = []
 
     for i in range(args.eval_times):
-        rep = send_round_trip(ctx, endpoint, train_sequences, questions, args)
+        rep = send_round_trip(ctx, endpoint, train_sequences, questions, args, mask_substring_for_request)
 
         base_accs.append(rep["baseline_accuracy"])
         adpt_accs.append(rep["adapter_accuracy"])
@@ -308,3 +315,6 @@ def main() -> None:
     # send_shutdown(ctx, endpoint)
     ctx.term()
 
+
+if __name__ == "__main__":
+    main()

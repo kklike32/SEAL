@@ -16,7 +16,8 @@ echo "Launching MLX TTT server on $(hostname)..."
 
 # -------- User-editable Configurations ---------------------------------------------- #
 # The Hugging Face repo ID of the MLX model to use for training and evaluation.
-MODEL_ID="Qwen/Qwen3-8B-MLX-4bit"
+# MODEL_ID="Qwen/Qwen3-8B-MLX-4bit"
+MODEL_ID="mlx-community/Meta-Llama-3-8B-Instruct"
 
 # The ZMQ port the server will listen on for requests from the outer-loop driver.
 ZMQ_PORT=5555

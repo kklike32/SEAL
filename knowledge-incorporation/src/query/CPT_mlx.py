@@ -45,7 +45,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--gradient_accumulation_steps", type=int, default=1)
 
     # Misc
-    p.add_argument("--end_mask_substring", default="")
+    p.add_argument("--end_mask_substring", default="---")
     p.add_argument("--split_newlines", action="store_true", help="Split training completions by new-lines inside each '---' segment (matches query_server flag).")
     p.add_argument("--skip_training", action="store_true", help="Run baseline inference only (sanity check).")
     p.add_argument("--eval_question_limit", type=int, default=None, help="Limit number of eval questions to use (for debugging).")
@@ -62,7 +62,6 @@ def send_round_trip(
     args: argparse.Namespace,
 ) -> Dict[str, Any]:
     """Send a single request to the inner-loop server and return the JSON reply."""
-    effective_batch_size = args.batch_size * args.gradient_accumulation_steps
     sock.send_json(
         {
             "train_sequences": train_sequences,
@@ -72,7 +71,8 @@ def send_round_trip(
             "lora_dropout": args.lora_dropout,
             "finetune_epochs": args.finetune_epochs,
             "finetune_lr": args.finetune_lr,
-            "batch_size": effective_batch_size,
+            "batch_size": args.batch_size,
+            "gradient_accumulation_steps": args.gradient_accumulation_steps,
             "end_mask_substring": args.end_mask_substring,
             "skip_training": bool(args.skip_training),
         }

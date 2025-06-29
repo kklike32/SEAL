@@ -57,6 +57,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--finetune_lr", type=float, default=1e-3)
     p.add_argument("--batch_size", type=int, default=1)
     p.add_argument("--gradient_accumulation_steps", type=int, default=1)
+    p.add_argument("--end_mask_substring", default="---")
     p.add_argument("--split_newlines", action="store_true")
     return p.parse_args()
 

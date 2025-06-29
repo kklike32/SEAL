@@ -28,8 +28,7 @@ from mlx_lm import utils as lm_utils
 from ..utils_mlx import accuracy_and_texts_mlx, run_lora_training
 
 # --- Use the modern 'tuner' API ---
-from mlx_lm.tuner import train, linear_to_lora_layers
-from mlx_lm.tuner.trainer import TrainingArgs
+from mlx_lm.tuner import linear_to_lora_layers
 
 # ---------------------------  CONFIG & LOGGING  --------------------------- #
 logging.basicConfig(

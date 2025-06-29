@@ -150,7 +150,6 @@ tzdata==2025.2
 urllib3==2.5.0
 uvicorn==0.34.3
 uvloop==0.21.0
--e git+https://github.com/vllm-project/vllm.git@1bcd15edc71422e4eb4525f5e07903d73187da17#egg=vllm
 watchfiles==1.1.0
 wcwidth==0.2.13
 websockets==15.0.1

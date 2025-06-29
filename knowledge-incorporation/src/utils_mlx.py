@@ -219,7 +219,9 @@ def run_lora_training(
     labels = mx.array(labels)
     
     # 3. Set up the training components
-    optimizer = optim.Adam(learning_rate=finetune_args['finetune_lr'])
+    # Use a lower learning rate and a warmup schedule for AdamW
+    learning_rate = optim.linear_schedule(1e-6, 1e-5, 100)
+    optimizer = optim.AdamW(learning_rate=learning_rate)
     
     # Create the gradient function using new custom masked loss function.
     loss_and_grad_fn = nn.value_and_grad(model, masked_ce_loss)

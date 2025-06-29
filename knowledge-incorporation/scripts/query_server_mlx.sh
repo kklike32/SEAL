@@ -14,7 +14,7 @@ echo "Launching MLX Query Server Client..."
 # --- Paths and Names ---
 EXP_NAME="mlx_run_iter1"
 DATASET="knowledge-incorporation/mlx_experiments/data/synthetic_data/train/squad_train_mlx_generated.json"
-OUTPUT_DIR="knowledge-incorporation/mlx_experiments/results/query_server_4"
+OUTPUT_DIR="knowledge-incorporation/mlx_experiments/results/query_server_5"
 SERVER_HOST="localhost"
 ZMQ_PORT=5555
 

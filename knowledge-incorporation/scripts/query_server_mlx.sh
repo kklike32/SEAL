@@ -12,28 +12,28 @@ echo "Launching MLX Query Server Client..."
 # These values will be sent to the TTT server.
 
 # --- Paths and Names ---
-EXP_NAME="mlx_run_iter0"
+EXP_NAME="mlx_run_iter1"
 DATASET="knowledge-incorporation/mlx_experiments/data/synthetic_data/train/squad_train_mlx_generated.json"
-OUTPUT_DIR="knowledge-incorporation/mlx_experiments/results/query_server_3"
+OUTPUT_DIR="knowledge-incorporation/mlx_experiments/results/query_server_4"
 SERVER_HOST="localhost"
 ZMQ_PORT=5555
 
 # --- Data Handling ---
 # Limit the number of articles to process from the dataset for a quicker test run.
 # Set to -1 to use all articles.
-N_ARTICLES=1
+N_ARTICLES=3
 # Use the top K completions from each article for training.
 K_COMPLETIONS=5
 # Run fine-tuning N times for each completion to check stability.
 EVAL_TIMES=1
 
 # --- LoRA / Optimisation Hyper-params (matching original script's defaults) ---
-LORA_RANK=8
-LORA_ALPHA=16
-LORA_DROPOUT=0.05
+LORA_RANK=32
+LORA_ALPHA=64
+LORA_DROPOUT=0.0
 LORA_LAYERS=4
 FINETUNE_EPOCHS=5
-FINETUNE_LR=5e-5
+FINETUNE_LR=1e-3
 BATCH_SIZE=1
 GRAD_ACC=1 # Our python script will multiply this with BATCH_SIZE
 

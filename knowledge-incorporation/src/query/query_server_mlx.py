@@ -138,7 +138,7 @@ def evaluate_completion(ctx, endpoint, item: Dict[str, Any], comp_raw: str, args
     ]
     train_sequences = build_train_sequences(comp_raw, context, title, split_newlines=args.split_newlines)
 
-    mask_substring_for_request = f"{title}\n"
+    mask_substring_for_request = "---"
 
     base_accs, adpt_accs, gains = [], [], []
     q_details: List[Dict[str, Any]] = []

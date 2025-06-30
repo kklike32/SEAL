@@ -3,6 +3,7 @@
 import argparse
 import os
 from pathlib import Path
+import json
 
 import mlx.optimizers as optim
 from datasets import load_dataset
@@ -117,10 +118,26 @@ def main():
         val_dataset=encoded_train[:1],
     )
 
-    # 6. Save the configuration and tokenizer alongside the adapter
-    # This makes the adapter portable and easy to use later.
-    save_config(vars(args), output_dir / "adapter_config.json")
+    # 6. Save adapter config + tokenizer
+    adapter_meta = {
+        "fine_tune_type": "lora",
+        "num_layers":     args.lora_layers,
+        "lora_parameters": {
+            "rank":    args.lora_rank,
+            "alpha":   args.lora_alpha,
+            "dropout": args.lora_dropout,
+            "scale":   10.0,
+        },
+    }
+    with open(output_dir / "adapter_config.json", "w") as f:
+        json.dump(adapter_meta, f, indent=2)
+    
+    # Save the original flat training args for our own reference
+    save_config(vars(args), output_dir / "train_args.json")
+    
+    # Save the tokenizer
     tokenizer.save_pretrained(output_dir)
+
 
     print("\n" + "=" * 50)
     print("SFT complete.")

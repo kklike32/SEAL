@@ -1,0 +1,956 @@
+01:22:29 [INFO] TTT_server_mlx - Loading base model 'knowledge-incorporation/mlx_experiments/models/SEAL-Llama3-8B-final-fused'...
+01:22:37 [INFO] TTT_server_mlx - Initial model and tokenizer loaded.
+01:22:37 [INFO] TTT_server_mlx - ZMQ listening for requests at tcp://*:40677
+01:22:37 [INFO] TTT_server_mlx - Waiting for new request...
+01:22:37 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+01:22:37 [INFO] TTT_server_mlx - Step 0: Performing baseline evaluation...
+01:22:37 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:23:01 [INFO] TTT_server_mlx - Generation complete.
+01:23:01 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:23:02 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:23:02 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:23:03 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:23:03 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:23:04 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:23:04 [INFO] TTT_server_mlx - Grading complete.
+01:23:04 [INFO] TTT_server_mlx - Step 0: Baseline accuracy: 0.600
+01:23:04 [INFO] TTT_server_mlx - Step 0: Starting LoRA fine-tuning...
+01:23:04 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+01:23:04 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+01:23:04 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+01:23:17 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 17.2670
+01:23:30 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 17.2633
+01:23:43 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 17.2476
+01:23:43 [INFO] TTT_server_mlx - Step 0: LoRA fine-tuning complete.
+01:23:43 [INFO] TTT_server_mlx - Step 0: Performing evaluation with adapter...
+01:23:43 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:24:05 [INFO] TTT_server_mlx - Generation complete.
+01:24:05 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:24:05 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:24:06 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:24:06 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:24:07 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:24:07 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:24:07 [INFO] TTT_server_mlx - Grading complete.
+01:24:07 [INFO] TTT_server_mlx - Step 0: Adapter accuracy: 0.600
+01:24:12 [INFO] TTT_server_mlx - Step 0 complete. Model restored to base state.
+01:24:12 [INFO] TTT_server_mlx - Waiting for new request...
+01:24:12 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+01:24:12 [INFO] TTT_server_mlx - Step 1: Performing baseline evaluation...
+01:24:12 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:24:36 [INFO] TTT_server_mlx - Generation complete.
+01:24:36 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:24:36 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:24:37 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:24:37 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:24:38 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:24:38 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:24:38 [INFO] TTT_server_mlx - Grading complete.
+01:24:38 [INFO] TTT_server_mlx - Step 1: Baseline accuracy: 0.400
+01:24:38 [INFO] TTT_server_mlx - Step 1: Starting LoRA fine-tuning...
+01:24:38 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+01:24:38 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+01:24:38 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+01:24:51 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 17.4909
+01:25:04 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 17.4862
+01:25:17 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 17.4687
+01:25:17 [INFO] TTT_server_mlx - Step 1: LoRA fine-tuning complete.
+01:25:17 [INFO] TTT_server_mlx - Step 1: Performing evaluation with adapter...
+01:25:17 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:25:39 [INFO] TTT_server_mlx - Generation complete.
+01:25:39 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:25:40 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:25:41 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:25:41 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:25:42 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:25:42 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:25:42 [INFO] TTT_server_mlx - Grading complete.
+01:25:42 [INFO] TTT_server_mlx - Step 1: Adapter accuracy: 0.600
+01:25:46 [INFO] TTT_server_mlx - Step 1 complete. Model restored to base state.
+01:25:46 [INFO] TTT_server_mlx - Waiting for new request...
+01:25:46 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+01:25:46 [INFO] TTT_server_mlx - Step 2: Performing baseline evaluation...
+01:25:46 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:26:10 [INFO] TTT_server_mlx - Generation complete.
+01:26:10 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:26:12 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:26:12 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:26:12 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:26:13 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:26:13 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:26:13 [INFO] TTT_server_mlx - Grading complete.
+01:26:13 [INFO] TTT_server_mlx - Step 2: Baseline accuracy: 0.600
+01:26:13 [INFO] TTT_server_mlx - Step 2: Starting LoRA fine-tuning...
+01:26:13 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+01:26:13 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+01:26:13 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+01:26:26 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 17.2666
+01:26:39 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 17.2613
+01:26:53 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 17.2458
+01:26:53 [INFO] TTT_server_mlx - Step 2: LoRA fine-tuning complete.
+01:26:53 [INFO] TTT_server_mlx - Step 2: Performing evaluation with adapter...
+01:26:53 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:27:14 [INFO] TTT_server_mlx - Generation complete.
+01:27:14 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:27:15 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:27:15 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:27:16 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:27:16 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:27:17 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:27:17 [INFO] TTT_server_mlx - Grading complete.
+01:27:17 [INFO] TTT_server_mlx - Step 2: Adapter accuracy: 0.600
+01:27:21 [INFO] TTT_server_mlx - Step 2 complete. Model restored to base state.
+01:27:21 [INFO] TTT_server_mlx - Waiting for new request...
+01:27:21 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+01:27:21 [INFO] TTT_server_mlx - Step 3: Performing baseline evaluation...
+01:27:21 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:27:45 [INFO] TTT_server_mlx - Generation complete.
+01:27:45 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:27:46 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:27:46 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:27:46 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:27:47 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:27:47 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:27:47 [INFO] TTT_server_mlx - Grading complete.
+01:27:47 [INFO] TTT_server_mlx - Step 3: Baseline accuracy: 0.000
+01:27:47 [INFO] TTT_server_mlx - Step 3: Starting LoRA fine-tuning...
+01:27:47 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+01:27:47 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+01:27:47 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+01:28:00 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 16.1218
+01:28:13 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 16.1171
+01:28:26 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 16.1046
+01:28:26 [INFO] TTT_server_mlx - Step 3: LoRA fine-tuning complete.
+01:28:26 [INFO] TTT_server_mlx - Step 3: Performing evaluation with adapter...
+01:28:26 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:28:48 [INFO] TTT_server_mlx - Generation complete.
+01:28:48 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:28:49 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:28:49 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:28:50 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:28:50 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:28:50 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:28:50 [INFO] TTT_server_mlx - Grading complete.
+01:28:50 [INFO] TTT_server_mlx - Step 3: Adapter accuracy: 0.000
+01:28:55 [INFO] TTT_server_mlx - Step 3 complete. Model restored to base state.
+01:28:55 [INFO] TTT_server_mlx - Waiting for new request...
+01:28:55 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+01:28:55 [INFO] TTT_server_mlx - Step 4: Performing baseline evaluation...
+01:28:55 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:29:19 [INFO] TTT_server_mlx - Generation complete.
+01:29:19 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:29:19 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:29:20 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:29:20 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:29:21 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:29:21 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:29:21 [INFO] TTT_server_mlx - Grading complete.
+01:29:21 [INFO] TTT_server_mlx - Step 4: Baseline accuracy: 0.000
+01:29:21 [INFO] TTT_server_mlx - Step 4: Starting LoRA fine-tuning...
+01:29:21 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+01:29:21 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+01:29:21 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+01:29:34 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 15.9708
+01:29:47 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 15.9691
+01:30:00 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 15.9574
+01:30:00 [INFO] TTT_server_mlx - Step 4: LoRA fine-tuning complete.
+01:30:00 [INFO] TTT_server_mlx - Step 4: Performing evaluation with adapter...
+01:30:00 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:30:22 [INFO] TTT_server_mlx - Generation complete.
+01:30:22 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:30:23 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:30:23 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:30:23 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:30:24 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:30:24 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:30:24 [INFO] TTT_server_mlx - Grading complete.
+01:30:24 [INFO] TTT_server_mlx - Step 4: Adapter accuracy: 0.000
+01:30:29 [INFO] TTT_server_mlx - Step 4 complete. Model restored to base state.
+01:30:29 [INFO] TTT_server_mlx - Waiting for new request...
+01:30:29 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+01:30:29 [INFO] TTT_server_mlx - Step 5: Performing baseline evaluation...
+01:30:29 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:30:53 [INFO] TTT_server_mlx - Generation complete.
+01:30:53 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:30:53 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:30:54 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:30:54 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:30:54 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:30:57 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:30:57 [INFO] TTT_server_mlx - Grading complete.
+01:30:57 [INFO] TTT_server_mlx - Step 5: Baseline accuracy: 0.000
+01:30:57 [INFO] TTT_server_mlx - Step 5: Starting LoRA fine-tuning...
+01:30:57 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+01:30:57 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+01:30:57 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+01:31:10 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 16.0853
+01:31:23 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 16.0822
+01:31:37 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 16.0666
+01:31:37 [INFO] TTT_server_mlx - Step 5: LoRA fine-tuning complete.
+01:31:37 [INFO] TTT_server_mlx - Step 5: Performing evaluation with adapter...
+01:31:37 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:31:58 [INFO] TTT_server_mlx - Generation complete.
+01:31:58 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:31:59 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:31:59 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:32:00 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:32:00 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:32:01 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:32:01 [INFO] TTT_server_mlx - Grading complete.
+01:32:01 [INFO] TTT_server_mlx - Step 5: Adapter accuracy: 0.000
+01:32:05 [INFO] TTT_server_mlx - Step 5 complete. Model restored to base state.
+01:32:05 [INFO] TTT_server_mlx - Waiting for new request...
+01:32:05 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+01:32:05 [INFO] TTT_server_mlx - Step 6: Performing baseline evaluation...
+01:32:05 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:32:29 [INFO] TTT_server_mlx - Generation complete.
+01:32:29 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:32:30 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:32:30 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:32:30 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:32:31 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:32:31 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:32:31 [INFO] TTT_server_mlx - Grading complete.
+01:32:31 [INFO] TTT_server_mlx - Step 6: Baseline accuracy: 0.600
+01:32:31 [INFO] TTT_server_mlx - Step 6: Starting LoRA fine-tuning...
+01:32:31 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+01:32:31 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+01:32:31 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+01:32:45 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 16.2507
+01:32:58 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 16.2490
+01:33:11 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 16.2328
+01:33:11 [INFO] TTT_server_mlx - Step 6: LoRA fine-tuning complete.
+01:33:11 [INFO] TTT_server_mlx - Step 6: Performing evaluation with adapter...
+01:33:11 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:33:32 [INFO] TTT_server_mlx - Generation complete.
+01:33:32 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:33:33 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:33:33 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:33:34 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:33:34 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:33:35 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:33:35 [INFO] TTT_server_mlx - Grading complete.
+01:33:35 [INFO] TTT_server_mlx - Step 6: Adapter accuracy: 0.600
+01:33:39 [INFO] TTT_server_mlx - Step 6 complete. Model restored to base state.
+01:33:39 [INFO] TTT_server_mlx - Waiting for new request...
+01:33:39 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+01:33:39 [INFO] TTT_server_mlx - Step 7: Performing baseline evaluation...
+01:33:39 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:34:03 [INFO] TTT_server_mlx - Generation complete.
+01:34:03 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:34:04 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:34:04 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:34:05 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:34:05 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:34:06 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:34:06 [INFO] TTT_server_mlx - Grading complete.
+01:34:06 [INFO] TTT_server_mlx - Step 7: Baseline accuracy: 0.600
+01:34:06 [INFO] TTT_server_mlx - Step 7: Starting LoRA fine-tuning...
+01:34:06 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+01:34:06 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+01:34:06 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+01:34:19 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 16.0502
+01:34:32 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 16.0448
+01:34:46 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 16.0271
+01:34:46 [INFO] TTT_server_mlx - Step 7: LoRA fine-tuning complete.
+01:34:46 [INFO] TTT_server_mlx - Step 7: Performing evaluation with adapter...
+01:34:46 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:35:07 [INFO] TTT_server_mlx - Generation complete.
+01:35:07 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:35:08 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:35:08 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:35:09 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:35:09 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:35:10 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:35:10 [INFO] TTT_server_mlx - Grading complete.
+01:35:10 [INFO] TTT_server_mlx - Step 7: Adapter accuracy: 0.600
+01:35:14 [INFO] TTT_server_mlx - Step 7 complete. Model restored to base state.
+01:35:14 [INFO] TTT_server_mlx - Waiting for new request...
+01:35:14 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+01:35:14 [INFO] TTT_server_mlx - Step 8: Performing baseline evaluation...
+01:35:14 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:35:38 [INFO] TTT_server_mlx - Generation complete.
+01:35:38 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:35:39 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:35:39 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:35:40 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:35:40 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:35:40 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:35:40 [INFO] TTT_server_mlx - Grading complete.
+01:35:40 [INFO] TTT_server_mlx - Step 8: Baseline accuracy: 0.600
+01:35:40 [INFO] TTT_server_mlx - Step 8: Starting LoRA fine-tuning...
+01:35:40 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+01:35:40 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+01:35:40 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+01:35:53 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 16.3554
+01:36:07 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 16.3481
+01:36:20 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 16.3328
+01:36:20 [INFO] TTT_server_mlx - Step 8: LoRA fine-tuning complete.
+01:36:20 [INFO] TTT_server_mlx - Step 8: Performing evaluation with adapter...
+01:36:20 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:36:41 [INFO] TTT_server_mlx - Generation complete.
+01:36:41 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:36:42 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:36:42 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:36:43 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:36:43 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:36:43 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:36:43 [INFO] TTT_server_mlx - Grading complete.
+01:36:43 [INFO] TTT_server_mlx - Step 8: Adapter accuracy: 0.600
+01:36:48 [INFO] TTT_server_mlx - Step 8 complete. Model restored to base state.
+01:36:48 [INFO] TTT_server_mlx - Waiting for new request...
+01:36:48 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+01:36:48 [INFO] TTT_server_mlx - Step 9: Performing baseline evaluation...
+01:36:48 [INFO] TTT_server_mlx - Generating 4 completions with MLX...
+01:37:07 [INFO] TTT_server_mlx - Generation complete.
+01:37:07 [INFO] TTT_server_mlx - Grading 4 non-empty predictions with GPT-4...
+01:37:08 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:37:09 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:37:09 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:37:09 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:37:09 [INFO] TTT_server_mlx - Grading complete.
+01:37:09 [INFO] TTT_server_mlx - Step 9: Baseline accuracy: 0.000
+01:37:09 [INFO] TTT_server_mlx - Step 9: Starting LoRA fine-tuning...
+01:37:09 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+01:37:09 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+01:37:09 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+01:37:23 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 17.3490
+01:37:36 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 17.3462
+01:37:49 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 17.3326
+01:37:49 [INFO] TTT_server_mlx - Step 9: LoRA fine-tuning complete.
+01:37:49 [INFO] TTT_server_mlx - Step 9: Performing evaluation with adapter...
+01:37:49 [INFO] TTT_server_mlx - Generating 4 completions with MLX...
+01:38:06 [INFO] TTT_server_mlx - Generation complete.
+01:38:06 [INFO] TTT_server_mlx - Grading 4 non-empty predictions with GPT-4...
+01:38:06 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:38:07 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:38:07 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:38:08 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:38:08 [INFO] TTT_server_mlx - Grading complete.
+01:38:08 [INFO] TTT_server_mlx - Step 9: Adapter accuracy: 0.000
+01:38:12 [INFO] TTT_server_mlx - Step 9 complete. Model restored to base state.
+01:38:12 [INFO] TTT_server_mlx - Waiting for new request...
+01:38:12 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+01:38:12 [INFO] TTT_server_mlx - Step 10: Performing baseline evaluation...
+01:38:12 [INFO] TTT_server_mlx - Generating 4 completions with MLX...
+01:38:32 [INFO] TTT_server_mlx - Generation complete.
+01:38:32 [INFO] TTT_server_mlx - Grading 4 non-empty predictions with GPT-4...
+01:38:33 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:38:33 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:38:34 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:38:34 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:38:34 [INFO] TTT_server_mlx - Grading complete.
+01:38:34 [INFO] TTT_server_mlx - Step 10: Baseline accuracy: 0.000
+01:38:34 [INFO] TTT_server_mlx - Step 10: Starting LoRA fine-tuning...
+01:38:34 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+01:38:34 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+01:38:34 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+01:38:47 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 17.2298
+01:39:00 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 17.2266
+01:39:13 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 17.2087
+01:39:13 [INFO] TTT_server_mlx - Step 10: LoRA fine-tuning complete.
+01:39:13 [INFO] TTT_server_mlx - Step 10: Performing evaluation with adapter...
+01:39:13 [INFO] TTT_server_mlx - Generating 4 completions with MLX...
+01:39:31 [INFO] TTT_server_mlx - Generation complete.
+01:39:31 [INFO] TTT_server_mlx - Grading 4 non-empty predictions with GPT-4...
+01:39:31 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:39:32 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:39:32 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:39:33 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:39:33 [INFO] TTT_server_mlx - Grading complete.
+01:39:33 [INFO] TTT_server_mlx - Step 10: Adapter accuracy: 0.000
+01:39:37 [INFO] TTT_server_mlx - Step 10 complete. Model restored to base state.
+01:39:37 [INFO] TTT_server_mlx - Waiting for new request...
+01:39:37 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+01:39:37 [INFO] TTT_server_mlx - Step 11: Performing baseline evaluation...
+01:39:37 [INFO] TTT_server_mlx - Generating 4 completions with MLX...
+01:39:56 [INFO] TTT_server_mlx - Generation complete.
+01:39:56 [INFO] TTT_server_mlx - Grading 4 non-empty predictions with GPT-4...
+01:39:57 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:39:57 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:39:58 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:39:58 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:39:58 [INFO] TTT_server_mlx - Grading complete.
+01:39:58 [INFO] TTT_server_mlx - Step 11: Baseline accuracy: 0.000
+01:39:58 [INFO] TTT_server_mlx - Step 11: Starting LoRA fine-tuning...
+01:39:58 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+01:39:58 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+01:39:58 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+01:40:11 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 17.2817
+01:40:25 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 17.2761
+01:40:38 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 17.2597
+01:40:38 [INFO] TTT_server_mlx - Step 11: LoRA fine-tuning complete.
+01:40:38 [INFO] TTT_server_mlx - Step 11: Performing evaluation with adapter...
+01:40:38 [INFO] TTT_server_mlx - Generating 4 completions with MLX...
+01:40:55 [INFO] TTT_server_mlx - Generation complete.
+01:40:55 [INFO] TTT_server_mlx - Grading 4 non-empty predictions with GPT-4...
+01:40:55 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:40:56 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:40:56 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:40:57 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:40:57 [INFO] TTT_server_mlx - Grading complete.
+01:40:57 [INFO] TTT_server_mlx - Step 11: Adapter accuracy: 0.000
+01:41:01 [INFO] TTT_server_mlx - Step 11 complete. Model restored to base state.
+01:41:01 [INFO] TTT_server_mlx - Waiting for new request...
+01:41:01 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+01:41:01 [INFO] TTT_server_mlx - Step 12: Performing baseline evaluation...
+01:41:01 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:41:25 [INFO] TTT_server_mlx - Generation complete.
+01:41:25 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:41:25 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:41:26 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:41:26 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:41:27 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:41:28 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:41:28 [INFO] TTT_server_mlx - Grading complete.
+01:41:28 [INFO] TTT_server_mlx - Step 12: Baseline accuracy: 0.200
+01:41:28 [INFO] TTT_server_mlx - Step 12: Starting LoRA fine-tuning...
+01:41:28 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+01:41:28 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+01:41:28 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+01:41:41 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 15.9988
+01:41:55 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 15.9950
+01:42:08 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 15.9795
+01:42:08 [INFO] TTT_server_mlx - Step 12: LoRA fine-tuning complete.
+01:42:08 [INFO] TTT_server_mlx - Step 12: Performing evaluation with adapter...
+01:42:08 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:42:29 [INFO] TTT_server_mlx - Generation complete.
+01:42:29 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:42:30 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:42:30 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:42:31 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:42:31 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:42:32 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:42:32 [INFO] TTT_server_mlx - Grading complete.
+01:42:32 [INFO] TTT_server_mlx - Step 12: Adapter accuracy: 0.200
+01:42:36 [INFO] TTT_server_mlx - Step 12 complete. Model restored to base state.
+01:42:36 [INFO] TTT_server_mlx - Waiting for new request...
+01:42:36 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+01:42:36 [INFO] TTT_server_mlx - Step 13: Performing baseline evaluation...
+01:42:36 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:43:00 [INFO] TTT_server_mlx - Generation complete.
+01:43:00 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:43:00 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:43:00 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:43:01 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:43:01 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:43:02 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:43:02 [INFO] TTT_server_mlx - Grading complete.
+01:43:02 [INFO] TTT_server_mlx - Step 13: Baseline accuracy: 0.200
+01:43:02 [INFO] TTT_server_mlx - Step 13: Starting LoRA fine-tuning...
+01:43:02 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+01:43:02 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+01:43:02 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+01:43:15 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 16.2082
+01:43:28 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 16.2031
+01:43:41 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 16.1931
+01:43:41 [INFO] TTT_server_mlx - Step 13: LoRA fine-tuning complete.
+01:43:41 [INFO] TTT_server_mlx - Step 13: Performing evaluation with adapter...
+01:43:41 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:44:02 [INFO] TTT_server_mlx - Generation complete.
+01:44:02 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:44:03 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:44:04 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:44:06 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:44:06 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:44:07 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:44:07 [INFO] TTT_server_mlx - Grading complete.
+01:44:07 [INFO] TTT_server_mlx - Step 13: Adapter accuracy: 0.200
+01:44:11 [INFO] TTT_server_mlx - Step 13 complete. Model restored to base state.
+01:44:11 [INFO] TTT_server_mlx - Waiting for new request...
+01:44:11 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+01:44:11 [INFO] TTT_server_mlx - Step 14: Performing baseline evaluation...
+01:44:11 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:44:35 [INFO] TTT_server_mlx - Generation complete.
+01:44:35 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:44:36 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:44:37 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:44:37 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:44:37 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:44:38 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:44:38 [INFO] TTT_server_mlx - Grading complete.
+01:44:38 [INFO] TTT_server_mlx - Step 14: Baseline accuracy: 0.200
+01:44:38 [INFO] TTT_server_mlx - Step 14: Starting LoRA fine-tuning...
+01:44:38 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+01:44:38 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+01:44:38 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+01:44:51 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 16.3334
+01:45:04 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 16.3270
+01:45:17 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 16.3127
+01:45:17 [INFO] TTT_server_mlx - Step 14: LoRA fine-tuning complete.
+01:45:17 [INFO] TTT_server_mlx - Step 14: Performing evaluation with adapter...
+01:45:17 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:45:39 [INFO] TTT_server_mlx - Generation complete.
+01:45:39 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:45:42 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:45:42 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:45:42 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:45:43 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:45:45 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:45:45 [INFO] TTT_server_mlx - Grading complete.
+01:45:45 [INFO] TTT_server_mlx - Step 14: Adapter accuracy: 0.200
+01:45:49 [INFO] TTT_server_mlx - Step 14 complete. Model restored to base state.
+01:45:49 [INFO] TTT_server_mlx - Waiting for new request...
+01:45:49 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+01:45:49 [INFO] TTT_server_mlx - Step 15: Performing baseline evaluation...
+01:45:49 [INFO] TTT_server_mlx - Generating 3 completions with MLX...
+01:46:05 [INFO] TTT_server_mlx - Generation complete.
+01:46:05 [INFO] TTT_server_mlx - Grading 3 non-empty predictions with GPT-4...
+01:46:05 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:46:06 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:46:06 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:46:06 [INFO] TTT_server_mlx - Grading complete.
+01:46:06 [INFO] TTT_server_mlx - Step 15: Baseline accuracy: 0.333
+01:46:06 [INFO] TTT_server_mlx - Step 15: Starting LoRA fine-tuning...
+01:46:06 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+01:46:06 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+01:46:06 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+01:46:19 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 16.3182
+01:46:32 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 16.3118
+01:46:45 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 16.2968
+01:46:45 [INFO] TTT_server_mlx - Step 15: LoRA fine-tuning complete.
+01:46:45 [INFO] TTT_server_mlx - Step 15: Performing evaluation with adapter...
+01:46:45 [INFO] TTT_server_mlx - Generating 3 completions with MLX...
+01:46:58 [INFO] TTT_server_mlx - Generation complete.
+01:46:58 [INFO] TTT_server_mlx - Grading 3 non-empty predictions with GPT-4...
+01:46:59 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:46:59 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:47:00 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:47:00 [INFO] TTT_server_mlx - Grading complete.
+01:47:00 [INFO] TTT_server_mlx - Step 15: Adapter accuracy: 0.333
+01:47:04 [INFO] TTT_server_mlx - Step 15 complete. Model restored to base state.
+01:47:04 [INFO] TTT_server_mlx - Waiting for new request...
+01:47:04 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+01:47:04 [INFO] TTT_server_mlx - Step 16: Performing baseline evaluation...
+01:47:04 [INFO] TTT_server_mlx - Generating 3 completions with MLX...
+01:47:20 [INFO] TTT_server_mlx - Generation complete.
+01:47:20 [INFO] TTT_server_mlx - Grading 3 non-empty predictions with GPT-4...
+01:47:20 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:47:21 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:47:21 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:47:21 [INFO] TTT_server_mlx - Grading complete.
+01:47:21 [INFO] TTT_server_mlx - Step 16: Baseline accuracy: 0.333
+01:47:21 [INFO] TTT_server_mlx - Step 16: Starting LoRA fine-tuning...
+01:47:21 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+01:47:21 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+01:47:21 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+01:47:34 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 16.3186
+01:47:47 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 16.3146
+01:48:00 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 16.2975
+01:48:00 [INFO] TTT_server_mlx - Step 16: LoRA fine-tuning complete.
+01:48:00 [INFO] TTT_server_mlx - Step 16: Performing evaluation with adapter...
+01:48:00 [INFO] TTT_server_mlx - Generating 3 completions with MLX...
+01:48:13 [INFO] TTT_server_mlx - Generation complete.
+01:48:13 [INFO] TTT_server_mlx - Grading 3 non-empty predictions with GPT-4...
+01:48:14 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:48:14 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:48:14 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:48:14 [INFO] TTT_server_mlx - Grading complete.
+01:48:14 [INFO] TTT_server_mlx - Step 16: Adapter accuracy: 0.333
+01:48:19 [INFO] TTT_server_mlx - Step 16 complete. Model restored to base state.
+01:48:19 [INFO] TTT_server_mlx - Waiting for new request...
+01:48:19 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+01:48:19 [INFO] TTT_server_mlx - Step 17: Performing baseline evaluation...
+01:48:19 [INFO] TTT_server_mlx - Generating 3 completions with MLX...
+01:48:34 [INFO] TTT_server_mlx - Generation complete.
+01:48:34 [INFO] TTT_server_mlx - Grading 3 non-empty predictions with GPT-4...
+01:48:35 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:48:35 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:48:35 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:48:35 [INFO] TTT_server_mlx - Grading complete.
+01:48:35 [INFO] TTT_server_mlx - Step 17: Baseline accuracy: 0.333
+01:48:35 [INFO] TTT_server_mlx - Step 17: Starting LoRA fine-tuning...
+01:48:35 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+01:48:35 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+01:48:35 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+01:48:49 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 16.3932
+01:49:02 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 16.3860
+01:49:15 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 16.3734
+01:49:15 [INFO] TTT_server_mlx - Step 17: LoRA fine-tuning complete.
+01:49:15 [INFO] TTT_server_mlx - Step 17: Performing evaluation with adapter...
+01:49:15 [INFO] TTT_server_mlx - Generating 3 completions with MLX...
+01:49:28 [INFO] TTT_server_mlx - Generation complete.
+01:49:28 [INFO] TTT_server_mlx - Grading 3 non-empty predictions with GPT-4...
+01:49:28 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:49:29 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:49:29 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:49:29 [INFO] TTT_server_mlx - Grading complete.
+01:49:29 [INFO] TTT_server_mlx - Step 17: Adapter accuracy: 0.333
+01:49:33 [INFO] TTT_server_mlx - Step 17 complete. Model restored to base state.
+01:49:33 [INFO] TTT_server_mlx - Waiting for new request...
+01:49:33 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+01:49:33 [INFO] TTT_server_mlx - Step 18: Performing baseline evaluation...
+01:49:33 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:49:57 [INFO] TTT_server_mlx - Generation complete.
+01:49:57 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:49:57 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:49:58 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:49:58 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:49:59 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:49:59 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:49:59 [INFO] TTT_server_mlx - Grading complete.
+01:49:59 [INFO] TTT_server_mlx - Step 18: Baseline accuracy: 0.200
+01:49:59 [INFO] TTT_server_mlx - Step 18: Starting LoRA fine-tuning...
+01:49:59 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+01:49:59 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+01:49:59 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+01:50:12 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 16.5907
+01:50:25 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 16.5866
+01:50:39 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 16.5673
+01:50:39 [INFO] TTT_server_mlx - Step 18: LoRA fine-tuning complete.
+01:50:39 [INFO] TTT_server_mlx - Step 18: Performing evaluation with adapter...
+01:50:39 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:51:00 [INFO] TTT_server_mlx - Generation complete.
+01:51:00 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:51:00 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:51:00 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:51:01 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:51:01 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:51:02 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:51:02 [INFO] TTT_server_mlx - Grading complete.
+01:51:02 [INFO] TTT_server_mlx - Step 18: Adapter accuracy: 0.200
+01:51:06 [INFO] TTT_server_mlx - Step 18 complete. Model restored to base state.
+01:51:06 [INFO] TTT_server_mlx - Waiting for new request...
+01:51:06 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+01:51:06 [INFO] TTT_server_mlx - Step 19: Performing baseline evaluation...
+01:51:06 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:51:29 [INFO] TTT_server_mlx - Generation complete.
+01:51:29 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:51:31 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:51:31 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:51:32 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:51:32 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:51:33 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:51:33 [INFO] TTT_server_mlx - Grading complete.
+01:51:33 [INFO] TTT_server_mlx - Step 19: Baseline accuracy: 0.200
+01:51:33 [INFO] TTT_server_mlx - Step 19: Starting LoRA fine-tuning...
+01:51:33 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+01:51:33 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+01:51:33 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+01:51:46 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 16.8462
+01:51:59 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 16.8416
+01:52:12 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 16.8238
+01:52:12 [INFO] TTT_server_mlx - Step 19: LoRA fine-tuning complete.
+01:52:12 [INFO] TTT_server_mlx - Step 19: Performing evaluation with adapter...
+01:52:12 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:52:33 [INFO] TTT_server_mlx - Generation complete.
+01:52:33 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:52:34 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:52:34 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:52:34 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:52:35 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:52:35 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:52:35 [INFO] TTT_server_mlx - Grading complete.
+01:52:35 [INFO] TTT_server_mlx - Step 19: Adapter accuracy: 0.200
+01:52:39 [INFO] TTT_server_mlx - Step 19 complete. Model restored to base state.
+01:52:39 [INFO] TTT_server_mlx - Waiting for new request...
+01:52:39 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+01:52:39 [INFO] TTT_server_mlx - Step 20: Performing baseline evaluation...
+01:52:39 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:53:03 [INFO] TTT_server_mlx - Generation complete.
+01:53:03 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:53:04 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:53:04 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:53:05 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:53:06 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:53:06 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:53:06 [INFO] TTT_server_mlx - Grading complete.
+01:53:06 [INFO] TTT_server_mlx - Step 20: Baseline accuracy: 0.200
+01:53:06 [INFO] TTT_server_mlx - Step 20: Starting LoRA fine-tuning...
+01:53:06 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+01:53:06 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+01:53:06 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+01:53:19 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 16.8168
+01:53:32 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 16.8098
+01:53:45 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 16.7946
+01:53:45 [INFO] TTT_server_mlx - Step 20: LoRA fine-tuning complete.
+01:53:45 [INFO] TTT_server_mlx - Step 20: Performing evaluation with adapter...
+01:53:45 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:54:06 [INFO] TTT_server_mlx - Generation complete.
+01:54:06 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:54:07 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:54:07 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:54:08 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:54:08 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:54:08 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:54:08 [INFO] TTT_server_mlx - Grading complete.
+01:54:08 [INFO] TTT_server_mlx - Step 20: Adapter accuracy: 0.200
+01:54:13 [INFO] TTT_server_mlx - Step 20 complete. Model restored to base state.
+01:54:13 [INFO] TTT_server_mlx - Waiting for new request...
+01:54:13 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+01:54:13 [INFO] TTT_server_mlx - Step 21: Performing baseline evaluation...
+01:54:13 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:54:36 [INFO] TTT_server_mlx - Generation complete.
+01:54:36 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:54:37 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:54:37 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:54:37 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:54:38 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:54:38 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:54:38 [INFO] TTT_server_mlx - Grading complete.
+01:54:38 [INFO] TTT_server_mlx - Step 21: Baseline accuracy: 0.400
+01:54:38 [INFO] TTT_server_mlx - Step 21: Starting LoRA fine-tuning...
+01:54:38 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+01:54:38 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+01:54:38 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+01:54:51 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 15.6944
+01:55:05 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 15.6910
+01:55:18 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 15.6750
+01:55:18 [INFO] TTT_server_mlx - Step 21: LoRA fine-tuning complete.
+01:55:18 [INFO] TTT_server_mlx - Step 21: Performing evaluation with adapter...
+01:55:18 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:55:39 [INFO] TTT_server_mlx - Generation complete.
+01:55:39 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:55:39 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:55:40 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:55:40 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:55:41 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:55:42 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:55:42 [INFO] TTT_server_mlx - Grading complete.
+01:55:42 [INFO] TTT_server_mlx - Step 21: Adapter accuracy: 0.400
+01:55:46 [INFO] TTT_server_mlx - Step 21 complete. Model restored to base state.
+01:55:46 [INFO] TTT_server_mlx - Waiting for new request...
+01:55:46 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+01:55:46 [INFO] TTT_server_mlx - Step 22: Performing baseline evaluation...
+01:55:46 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:56:09 [INFO] TTT_server_mlx - Generation complete.
+01:56:09 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:56:11 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:56:11 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:56:12 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:56:12 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:56:13 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:56:13 [INFO] TTT_server_mlx - Grading complete.
+01:56:13 [INFO] TTT_server_mlx - Step 22: Baseline accuracy: 0.400
+01:56:13 [INFO] TTT_server_mlx - Step 22: Starting LoRA fine-tuning...
+01:56:13 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+01:56:13 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+01:56:13 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+01:56:26 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 15.9406
+01:56:39 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 15.9351
+01:56:52 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 15.9241
+01:56:52 [INFO] TTT_server_mlx - Step 22: LoRA fine-tuning complete.
+01:56:52 [INFO] TTT_server_mlx - Step 22: Performing evaluation with adapter...
+01:56:52 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:57:13 [INFO] TTT_server_mlx - Generation complete.
+01:57:13 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:57:14 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:57:15 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:57:15 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:57:16 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:57:16 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:57:16 [INFO] TTT_server_mlx - Grading complete.
+01:57:16 [INFO] TTT_server_mlx - Step 22: Adapter accuracy: 0.400
+01:57:20 [INFO] TTT_server_mlx - Step 22 complete. Model restored to base state.
+01:57:20 [INFO] TTT_server_mlx - Waiting for new request...
+01:57:20 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+01:57:20 [INFO] TTT_server_mlx - Step 23: Performing baseline evaluation...
+01:57:20 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:57:44 [INFO] TTT_server_mlx - Generation complete.
+01:57:44 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:57:44 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:57:45 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:57:45 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:57:46 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:57:46 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:57:46 [INFO] TTT_server_mlx - Grading complete.
+01:57:46 [INFO] TTT_server_mlx - Step 23: Baseline accuracy: 0.400
+01:57:46 [INFO] TTT_server_mlx - Step 23: Starting LoRA fine-tuning...
+01:57:46 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+01:57:46 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+01:57:46 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+01:57:59 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 15.9704
+01:58:12 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 15.9653
+01:58:25 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 15.9544
+01:58:25 [INFO] TTT_server_mlx - Step 23: LoRA fine-tuning complete.
+01:58:25 [INFO] TTT_server_mlx - Step 23: Performing evaluation with adapter...
+01:58:25 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:58:46 [INFO] TTT_server_mlx - Generation complete.
+01:58:46 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:58:47 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:58:48 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:58:48 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:58:49 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:58:49 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:58:49 [INFO] TTT_server_mlx - Grading complete.
+01:58:49 [INFO] TTT_server_mlx - Step 23: Adapter accuracy: 0.400
+01:58:53 [INFO] TTT_server_mlx - Step 23 complete. Model restored to base state.
+01:58:53 [INFO] TTT_server_mlx - Waiting for new request...
+01:58:53 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+01:58:53 [INFO] TTT_server_mlx - Step 24: Performing baseline evaluation...
+01:58:53 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+01:59:17 [INFO] TTT_server_mlx - Generation complete.
+01:59:17 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+01:59:18 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:59:18 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:59:19 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:59:19 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:59:20 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+01:59:20 [INFO] TTT_server_mlx - Grading complete.
+01:59:20 [INFO] TTT_server_mlx - Step 24: Baseline accuracy: 0.600
+01:59:20 [INFO] TTT_server_mlx - Step 24: Starting LoRA fine-tuning...
+01:59:20 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+01:59:20 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+01:59:20 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+01:59:33 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 16.3623
+01:59:46 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 16.3545
+01:59:59 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 16.3388
+01:59:59 [INFO] TTT_server_mlx - Step 24: LoRA fine-tuning complete.
+01:59:59 [INFO] TTT_server_mlx - Step 24: Performing evaluation with adapter...
+01:59:59 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+02:00:21 [INFO] TTT_server_mlx - Generation complete.
+02:00:21 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+02:00:21 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:00:22 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:00:22 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:00:23 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:00:23 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:00:23 [INFO] TTT_server_mlx - Grading complete.
+02:00:23 [INFO] TTT_server_mlx - Step 24: Adapter accuracy: 0.600
+02:00:28 [INFO] TTT_server_mlx - Step 24 complete. Model restored to base state.
+02:00:28 [INFO] TTT_server_mlx - Waiting for new request...
+02:00:28 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+02:00:28 [INFO] TTT_server_mlx - Step 25: Performing baseline evaluation...
+02:00:28 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+02:00:51 [INFO] TTT_server_mlx - Generation complete.
+02:00:51 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+02:00:52 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:00:52 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:00:53 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:00:53 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:00:54 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:00:54 [INFO] TTT_server_mlx - Grading complete.
+02:00:54 [INFO] TTT_server_mlx - Step 25: Baseline accuracy: 0.600
+02:00:54 [INFO] TTT_server_mlx - Step 25: Starting LoRA fine-tuning...
+02:00:54 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+02:00:54 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+02:00:54 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+02:01:07 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 16.4959
+02:01:20 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 16.4912
+02:01:33 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 16.4734
+02:01:33 [INFO] TTT_server_mlx - Step 25: LoRA fine-tuning complete.
+02:01:33 [INFO] TTT_server_mlx - Step 25: Performing evaluation with adapter...
+02:01:33 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+02:01:55 [INFO] TTT_server_mlx - Generation complete.
+02:01:55 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+02:01:55 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:01:56 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:01:56 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:01:57 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:01:57 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:01:57 [INFO] TTT_server_mlx - Grading complete.
+02:01:57 [INFO] TTT_server_mlx - Step 25: Adapter accuracy: 0.600
+02:02:02 [INFO] TTT_server_mlx - Step 25 complete. Model restored to base state.
+02:02:02 [INFO] TTT_server_mlx - Waiting for new request...
+02:02:02 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+02:02:02 [INFO] TTT_server_mlx - Step 26: Performing baseline evaluation...
+02:02:02 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+02:02:25 [INFO] TTT_server_mlx - Generation complete.
+02:02:25 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+02:02:26 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:02:26 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:02:27 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:02:27 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:02:28 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:02:28 [INFO] TTT_server_mlx - Grading complete.
+02:02:28 [INFO] TTT_server_mlx - Step 26: Baseline accuracy: 0.600
+02:02:28 [INFO] TTT_server_mlx - Step 26: Starting LoRA fine-tuning...
+02:02:28 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+02:02:28 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+02:02:28 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+02:02:41 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 16.4479
+02:02:54 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 16.4413
+02:03:07 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 16.4278
+02:03:07 [INFO] TTT_server_mlx - Step 26: LoRA fine-tuning complete.
+02:03:07 [INFO] TTT_server_mlx - Step 26: Performing evaluation with adapter...
+02:03:07 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+02:03:28 [INFO] TTT_server_mlx - Generation complete.
+02:03:28 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+02:03:29 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:03:30 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:03:30 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:03:30 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:03:31 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:03:31 [INFO] TTT_server_mlx - Grading complete.
+02:03:31 [INFO] TTT_server_mlx - Step 26: Adapter accuracy: 0.600
+02:03:35 [INFO] TTT_server_mlx - Step 26 complete. Model restored to base state.
+02:03:35 [INFO] TTT_server_mlx - Waiting for new request...
+02:03:35 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+02:03:35 [INFO] TTT_server_mlx - Step 27: Performing baseline evaluation...
+02:03:35 [INFO] TTT_server_mlx - Generating 2 completions with MLX...
+02:03:47 [INFO] TTT_server_mlx - Generation complete.
+02:03:47 [INFO] TTT_server_mlx - Grading 2 non-empty predictions with GPT-4...
+02:03:47 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:03:48 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:03:48 [INFO] TTT_server_mlx - Grading complete.
+02:03:48 [INFO] TTT_server_mlx - Step 27: Baseline accuracy: 0.500
+02:03:48 [INFO] TTT_server_mlx - Step 27: Starting LoRA fine-tuning...
+02:03:48 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+02:03:48 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+02:03:48 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+02:04:01 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 16.8337
+02:04:14 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 16.8284
+02:04:27 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 16.8147
+02:04:27 [INFO] TTT_server_mlx - Step 27: LoRA fine-tuning complete.
+02:04:27 [INFO] TTT_server_mlx - Step 27: Performing evaluation with adapter...
+02:04:27 [INFO] TTT_server_mlx - Generating 2 completions with MLX...
+02:04:36 [INFO] TTT_server_mlx - Generation complete.
+02:04:36 [INFO] TTT_server_mlx - Grading 2 non-empty predictions with GPT-4...
+02:04:37 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:04:37 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:04:37 [INFO] TTT_server_mlx - Grading complete.
+02:04:37 [INFO] TTT_server_mlx - Step 27: Adapter accuracy: 0.500
+02:04:41 [INFO] TTT_server_mlx - Step 27 complete. Model restored to base state.
+02:04:41 [INFO] TTT_server_mlx - Waiting for new request...
+02:04:41 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+02:04:41 [INFO] TTT_server_mlx - Step 28: Performing baseline evaluation...
+02:04:41 [INFO] TTT_server_mlx - Generating 2 completions with MLX...
+02:04:53 [INFO] TTT_server_mlx - Generation complete.
+02:04:53 [INFO] TTT_server_mlx - Grading 2 non-empty predictions with GPT-4...
+02:04:53 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:04:55 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:04:55 [INFO] TTT_server_mlx - Grading complete.
+02:04:55 [INFO] TTT_server_mlx - Step 28: Baseline accuracy: 0.500
+02:04:55 [INFO] TTT_server_mlx - Step 28: Starting LoRA fine-tuning...
+02:04:55 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+02:04:55 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+02:04:55 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+02:05:08 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 17.0240
+02:05:22 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 17.0179
+02:05:35 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 17.0034
+02:05:35 [INFO] TTT_server_mlx - Step 28: LoRA fine-tuning complete.
+02:05:35 [INFO] TTT_server_mlx - Step 28: Performing evaluation with adapter...
+02:05:35 [INFO] TTT_server_mlx - Generating 2 completions with MLX...
+02:05:44 [INFO] TTT_server_mlx - Generation complete.
+02:05:44 [INFO] TTT_server_mlx - Grading 2 non-empty predictions with GPT-4...
+02:05:44 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:05:45 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:05:45 [INFO] TTT_server_mlx - Grading complete.
+02:05:45 [INFO] TTT_server_mlx - Step 28: Adapter accuracy: 0.500
+02:05:49 [INFO] TTT_server_mlx - Step 28 complete. Model restored to base state.
+02:05:49 [INFO] TTT_server_mlx - Waiting for new request...
+02:05:49 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+02:05:49 [INFO] TTT_server_mlx - Step 29: Performing baseline evaluation...
+02:05:49 [INFO] TTT_server_mlx - Generating 2 completions with MLX...
+02:06:00 [INFO] TTT_server_mlx - Generation complete.
+02:06:00 [INFO] TTT_server_mlx - Grading 2 non-empty predictions with GPT-4...
+02:06:01 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:06:01 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:06:01 [INFO] TTT_server_mlx - Grading complete.
+02:06:01 [INFO] TTT_server_mlx - Step 29: Baseline accuracy: 0.500
+02:06:01 [INFO] TTT_server_mlx - Step 29: Starting LoRA fine-tuning...
+02:06:01 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+02:06:01 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+02:06:01 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+02:06:14 [INFO] TTT_server_mlx - Epoch 1/3 | Average Loss: 16.9379
+02:06:27 [INFO] TTT_server_mlx - Epoch 2/3 | Average Loss: 16.9308
+02:06:40 [INFO] TTT_server_mlx - Epoch 3/3 | Average Loss: 16.9175
+02:06:40 [INFO] TTT_server_mlx - Step 29: LoRA fine-tuning complete.
+02:06:40 [INFO] TTT_server_mlx - Step 29: Performing evaluation with adapter...
+02:06:40 [INFO] TTT_server_mlx - Generating 2 completions with MLX...
+02:06:49 [INFO] TTT_server_mlx - Generation complete.
+02:06:49 [INFO] TTT_server_mlx - Grading 2 non-empty predictions with GPT-4...
+02:06:50 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:06:50 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+02:06:50 [INFO] TTT_server_mlx - Grading complete.
+02:06:50 [INFO] TTT_server_mlx - Step 29: Adapter accuracy: 0.500

@@ -1,0 +1,24 @@
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+TTT server error: TypeError: zeros_like(): incompatible function arguments. The following argument types are supported:
+    1. zeros_like(a: array, /, *, stream: Union[None, Stream, Device] = None) -> array
+
+Invoked with types: dict
+Sent request to TTT server (attempt 2/2, waiting ≤10 min)
+TTT server error: TypeError: zeros_like(): incompatible function arguments. The following argument types are supported:
+    1. zeros_like(a: array, /, *, stream: Union[None, Stream, Device] = None) -> array
+
+Invoked with types: dict
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/keenankalra/Documents/SEAL/knowledge-incorporation/src/query/query_server_mlx.py", line 321, in <module>
+    main()
+  File "/Users/keenankalra/Documents/SEAL/knowledge-incorporation/src/query/query_server_mlx.py", line 213, in main
+    stats, q_details = evaluate_completion(ctx, endpoint, item, comp_raw, args)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/keenankalra/Documents/SEAL/knowledge-incorporation/src/query/query_server_mlx.py", line 148, in evaluate_completion
+    rep = send_round_trip(ctx, endpoint, train_sequences, questions, args, mask_substring_for_request)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/keenankalra/Documents/SEAL/knowledge-incorporation/src/query/query_server_mlx.py", line 126, in send_round_trip
+    raise RuntimeError(f"TTT server unreachable after {max_retries} attempts")
+RuntimeError: TTT server unreachable after 2 attempts

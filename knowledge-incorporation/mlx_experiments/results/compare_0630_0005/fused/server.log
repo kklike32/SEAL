@@ -1,0 +1,60 @@
+00:06:16 [INFO] TTT_server_mlx - Loading base model 'knowledge-incorporation/mlx_experiments/models/SEAL-Llama3-8B-final-fused'...
+00:06:23 [INFO] TTT_server_mlx - Initial model and tokenizer loaded.
+00:06:23 [INFO] TTT_server_mlx - ZMQ listening for requests at tcp://*:52916
+00:06:23 [INFO] TTT_server_mlx - Waiting for new request...
+00:06:24 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+00:06:24 [INFO] TTT_server_mlx - Step 0: Performing baseline evaluation...
+00:06:24 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+00:06:48 [INFO] TTT_server_mlx - Generation complete.
+00:06:48 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+00:06:49 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+00:06:49 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+00:06:50 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+00:06:50 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+00:06:51 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+00:06:51 [INFO] TTT_server_mlx - Grading complete.
+00:06:51 [INFO] TTT_server_mlx - Step 0: Baseline accuracy: 0.600
+00:06:51 [INFO] TTT_server_mlx - Step 0: Starting LoRA fine-tuning...
+00:06:51 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+00:06:51 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+00:06:51 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+00:06:51 [ERROR] TTT_server_mlx - An error occurred while processing the request.
+Traceback (most recent call last):
+  File "/Users/keenankalra/Documents/SEAL/knowledge-incorporation/src/inner/TTT_server_mlx.py", line 165, in main
+    run_lora_training(
+  File "/Users/keenankalra/Documents/SEAL/knowledge-incorporation/src/utils_mlx.py", line 241, in run_lora_training
+    accumulated_grads = {k: mx.zeros_like(v) for k, v in model.trainable_parameters().items()}
+                            ^^^^^^^^^^^^^^^^
+TypeError: zeros_like(): incompatible function arguments. The following argument types are supported:
+    1. zeros_like(a: array, /, *, stream: Union[None, Stream, Device] = None) -> array
+
+Invoked with types: dict
+00:06:55 [INFO] TTT_server_mlx - Step 0 complete. Model restored to base state.
+00:06:55 [INFO] TTT_server_mlx - Waiting for new request...
+00:06:55 [INFO] TTT_server_mlx - Received request with keys: ['train_sequences', 'eval_questions', 'lora_rank', 'lora_alpha', 'lora_dropout', 'lora_layers', 'finetune_epochs', 'finetune_lr', 'batch_size', 'gradient_accumulation_steps', 'end_mask_substring']
+00:06:55 [INFO] TTT_server_mlx - Step 1: Performing baseline evaluation...
+00:06:55 [INFO] TTT_server_mlx - Generating 5 completions with MLX...
+00:07:19 [INFO] TTT_server_mlx - Generation complete.
+00:07:19 [INFO] TTT_server_mlx - Grading 5 non-empty predictions with GPT-4...
+00:07:19 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+00:07:20 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+00:07:20 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+00:07:21 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+00:07:21 [INFO] TTT_server_mlx - HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 200 OK"
+00:07:21 [INFO] TTT_server_mlx - Grading complete.
+00:07:21 [INFO] TTT_server_mlx - Step 1: Baseline accuracy: 0.600
+00:07:21 [INFO] TTT_server_mlx - Step 1: Starting LoRA fine-tuning...
+00:07:21 [INFO] TTT_server_mlx - LoRA config: {"rank": 32, "alpha": 64, "dropout": 0, "scale": 10.0}
+00:07:21 [INFO] TTT_server_mlx - Finetune args: {"lora_layers": 2, "finetune_epochs": 3, "finetune_lr": 0.001, "batch_size": 1, "gradient_accumulation_steps": 1, "end_mask_substring": "---"}
+00:07:21 [INFO] TTT_server_mlx - Starting manual training loop for 3 epochs...
+00:07:21 [ERROR] TTT_server_mlx - An error occurred while processing the request.
+Traceback (most recent call last):
+  File "/Users/keenankalra/Documents/SEAL/knowledge-incorporation/src/inner/TTT_server_mlx.py", line 165, in main
+    run_lora_training(
+  File "/Users/keenankalra/Documents/SEAL/knowledge-incorporation/src/utils_mlx.py", line 241, in run_lora_training
+    accumulated_grads = {k: mx.zeros_like(v) for k, v in model.trainable_parameters().items()}
+                            ^^^^^^^^^^^^^^^^
+TypeError: zeros_like(): incompatible function arguments. The following argument types are supported:
+    1. zeros_like(a: array, /, *, stream: Union[None, Stream, Device] = None) -> array
+
+Invoked with types: dict

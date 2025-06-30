@@ -7,6 +7,7 @@ import mlx.optimizers as optim
 from mlx_lm import generate
 from mlx_lm.tuner import linear_to_lora_layers 
 from mlx_lm.sample_utils import make_sampler
+from mlx.utils import tree_flatten, tree_map
 
 # Import reusable components from the original utils file
 from .utils import (
@@ -227,19 +228,21 @@ def run_lora_training(
     loss_and_grad_fn = nn.value_and_grad(model, masked_ce_loss)
     
     # 4. The Training Loop with Gradient Accumulation
-    # 4. The Training Loop with Gradient Accumulation
     LOG.info(f"Starting manual training loop for {finetune_args['finetune_epochs']} epochs...")
     batch_size = finetune_args['batch_size']
     grad_accumulation_steps = finetune_args.get('gradient_accumulation_steps', 1)
-    grad_accumulation_steps = finetune_args.get('gradient_accumulation_steps', 1)
+
+    # Helper to create a zero-filled gradient accumulator that matches the model's structure
+    def zero_like_tree(tree):
+        return tree_map(lambda w: mx.zeros_like(w), tree)
+    
     model.train()
 
     for epoch in range(finetune_args['finetune_epochs']):
         epoch_loss = 0.0
         num_batches = 0
         
-        accumulated_grads = {k: mx.zeros_like(v) for k, v in model.trainable_parameters().items()}
-
+        accumulated_grads = zero_like_tree(model.trainable_parameters())
         
         for i in range(0, len(inputs), batch_size):
             batch_inputs = inputs[i : i + batch_size]
@@ -248,10 +251,10 @@ def run_lora_training(
             # Get loss and gradients, for the current micro-batch
             loss, grads = loss_and_grad_fn(model, batch_inputs, batch_labels)
             
-            # Accumulate gradients
-            for k, v in grads.items():
-                if k in accumulated_grads:
-                    accumulated_grads[k] += v
+            # Accumulate gradients using tree_map to preserve the nested structure
+            accumulated_grads = tree_map(
+                lambda acc, g: acc + g, accumulated_grads, grads
+            )
 
             epoch_loss += loss.item()
             num_batches += 1
@@ -261,7 +264,7 @@ def run_lora_training(
                 optimizer.update(model, accumulated_grads)
                 mx.eval(model.parameters(), optimizer.state)
                 #  Reset accumulated gradients 
-                accumulated_grads = {k: mx.zeros_like(v) for k, v in model.trainable_parameters().items()}
+                accumulated_grads = zero_like_tree(model.trainable_parameters())
          
         if num_batches > 0:
             avg_loss = epoch_loss / num_batches

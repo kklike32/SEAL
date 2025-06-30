@@ -1,0 +1,16 @@
+23:58:20 [INFO] TTT_server_mlx - Loading base model 'mlx-community/Meta-Llama-3-8B-Instruct'...
+Fetching 9 files:   0%|          | 0/9 [00:00<?, ?it/s]Fetching 9 files: 100%|██████████| 9/9 [00:00<00:00, 20229.76it/s]
+Fetching 9 files:   0%|          | 0/9 [00:00<?, ?it/s]Fetching 9 files: 100%|██████████| 9/9 [00:00<00:00, 90742.15it/s]
+23:58:44 [INFO] TTT_server_mlx - Initial model and tokenizer loaded.
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/keenankalra/Documents/SEAL/knowledge-incorporation/src/inner/TTT_server_mlx.py", line 221, in <module>
+    main()
+  File "/Users/keenankalra/Documents/SEAL/knowledge-incorporation/src/inner/TTT_server_mlx.py", line 86, in main
+    sock.bind(f"tcp://*:{args.zmq_port}")
+  File "/opt/homebrew/anaconda3/envs/seal/lib/python3.12/site-packages/zmq/sugar/socket.py", line 320, in bind
+    super().bind(addr)
+  File "zmq/backend/cython/_zmq.py", line 998, in zmq.backend.cython._zmq.Socket.bind
+  File "zmq/backend/cython/_zmq.py", line 187, in zmq.backend.cython._zmq._check_rc
+zmq.error.ZMQError: Address already in use (addr='tcp://*:5555')

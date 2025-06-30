@@ -15,6 +15,9 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 import time
 from typing import Dict
 
+from dotenv import load_dotenv
+load_dotenv()
+
 import mlx.core as mx
 import mlx.nn as nn
 import mlx.optimizers as optim

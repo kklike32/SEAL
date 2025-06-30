@@ -1,6 +1,14 @@
+# knowledge-incorporation/src/EM/train_SFT_mlx.py
+
 import argparse
 import os
-from mlx_lm import lora, load
+from pathlib import Path
+
+import mlx.optimizers as optim
+from datasets import load_dataset
+from mlx_lm.tuner.trainer import TrainingArgs, train
+from mlx_lm.tuner.utils import linear_to_lora_layers
+from mlx_lm.utils import load, save_config
 
 def parse_args():
     """
@@ -10,9 +18,9 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Supervised Fine-Tuning with MLX LoRA")
     
     # --- Paths and Model ---
-    parser.add_argument("--model", type=str, required=True, help="Hugging Face repo ID of the base model to fine-tune (e.g., 'mlx-community/Meta-Llama-3-8B-Instruct-MLX').")
-    parser.add_argument("--train_file", type=str, required=True, help="Path to the training dataset in .jsonl format (output of build_SFT_dataset.py).")
-    parser.add_argument("--output_dir", type=str, required=True, help="Directory to save the final, merged model.")
+    parser.add_argument("--model", type=str, required=True, help="Hugging Face repo ID of the base model to fine-tune.")
+    parser.add_argument("--train_file", type=str, required=True, help="Path to the training dataset in .jsonl format.")
+    parser.add_argument("--output_dir", type=str, required=True, help="Directory to save the fine-tuned LoRA adapter files.")
     
     # --- Training Hyperparameters ---
     parser.add_argument("--num_train_epochs", type=int, default=3, help="Number of training epochs.")
@@ -22,52 +30,93 @@ def parse_args():
     parser.add_argument("--lora_rank", type=int, default=64, help="The rank of the LoRA matrices.")
     parser.add_argument("--lora_alpha", type=int, default=128, help="The alpha for the LoRA scaling (often 2x rank).")
     parser.add_argument("--lora_dropout", type=float, default=0.05, help="Dropout probability for LoRA layers.")
-    parser.add_argument("--lora_layers", type=int, default=16, help="Number of layers to apply LoRA to, from the top down.")
+    parser.add_argument("--lora_layers", type=int, default=16, help="Number of layers to apply LoRA to.")
     
     # --- Other Training Args ---
     parser.add_argument("--batch_size", type=int, default=2, help="Batch size for training.")
-    parser.add_argument("--iters_per_report", type=int, default=10, help="Number of iterations between logging training loss.")
+    parser.add_argument("--max_seq_length", type=int, default=2048, help="Maximum sequence length.")
+    parser.add_argument("--steps_per_report", type=int, default=10, help="Number of iterations between logging training loss.")
     
     return parser.parse_args()
 
 def main():
     args = parse_args()
 
-    print("=" * 20)
-    print("Starting MLX Supervised Fine-Tuning (SFT)")
-    print(f"         Model: {args.model}")
-    print(f"Training data: {args.train_file}")
-    print(f"   Output dir: {args.output_dir}")
-    print("=" * 20)
+    # Provide clear feedback to the user about the upcoming training run
+    print("\n" + "=" * 50)
+    print("      Starting MLX Supervised Fine-Tuning (SFT)")
+    print("=" * 50)
+    print(f"| Base Model:         {args.model}")
+    print(f"| Training Data:      {args.train_file}")
+    print(f"| Adapter Output Dir: {args.output_dir}")
+    print(f"|--------------------------------------------------")
+    print(f"| Epochs:             {args.num_train_epochs}")
+    print(f"| Learning Rate:      {args.learning_rate}")
+    print(f"| Batch Size:         {args.batch_size}")
+    print(f"|--------------------------------------------------")
+    print(f"| LoRA Layers:        {args.lora_layers}")
+    print(f"| LoRA Rank:          {args.lora_rank}")
+    print(f"| LoRA Alpha:         {args.lora_alpha}")
+    print("=" * 50 + "\n")
 
-    # The fine_tune function handles loading the model, preparing the data,
-    # and running the training loop in a single, convenient call.
-    lora.fine_tune(
-        model=args.model,
-        # The SFT build script produces a file with a 'text' column, which is the default
-        # expected by the fine_tune function.
-        train_dataset_path=args.train_file,
-        # All hyperparameters are passed directly.
-        lora_layers=args.lora_layers,
-        lora_parameters={
-            "rank": args.lora_rank,
-            "alpha": args.lora_alpha,
-            "dropout": args.lora_dropout,
-            "scale": 10.0,
-        },
+    # 1. Load Model and Tokenizer
+    model, tokenizer = load(args.model)
+
+    # 2. Load and Prepare Dataset
+    # The original SEAL build script creates a .jsonl file with a "text" field,
+    # which is the default that the `train` function's data loader expects.
+    train_dataset = load_dataset("json", data_files={"train": args.train_file}, split="train")
+
+    # 3. Apply LoRA layers to the model
+    model.freeze()
+    lora_config = {
+        "rank": args.lora_rank,
+        "alpha": args.lora_alpha,
+        "dropout": args.lora_dropout,
+        "scale": 10.0
+    }
+    linear_to_lora_layers(model, args.lora_layers, lora_config)
+
+    # 4. Define Training Arguments
+    # Calculate total iterations based on epochs and dataset size
+    total_iters = (len(train_dataset) // args.batch_size) * args.num_train_epochs
+    
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    adapter_file = output_dir / "adapters.safetensors"
+
+    training_args = TrainingArgs(
         batch_size=args.batch_size,
-        iters=0, # iters=0 with epochs > 0 means train for that many epochs
-        num_train_epochs=args.num_train_epochs,
-        learning_rate=args.learning_rate,
-        # --- Crucially, save the merged model at the end ---
-        save_path=args.output_dir,
-        merge=True, # This fuses the adapter and saves the full model
+        iters=total_iters,
+        val_batches=0,
+        steps_per_report=args.steps_per_report,
+        steps_per_eval=total_iters + 1, # De-facto disable evaluation during training
+        steps_per_save=total_iters, # Save only once at the end
+        adapter_file=str(adapter_file),
+        max_seq_length=args.max_seq_length,
     )
 
-    print("\n" + "=" * 20)
+    # 5. Start Training by calling the correct low-level train function
+    print("Starting SFT training...")
+    train(
+        model=model,
+        # The TypeError confirmed that this version of `train` does not take `tokenizer`
+        args=training_args,
+        optimizer=optim.AdamW(learning_rate=args.learning_rate),
+        train_dataset=train_dataset,
+        val_dataset=None,
+    )
+
+    # 6. Save the configuration and tokenizer alongside the adapter
+    # This makes the adapter portable and easy to use later.
+    save_config(vars(args), output_dir / "adapter_config.json")
+    tokenizer.save_pretrained(output_dir)
+
+    print("\n" + "=" * 50)
     print("SFT complete.")
-    print(f"Final merged model saved to: {args.output_dir}")
-    print("=" * 20)
+    print(f"Final adapter saved to: {args.output_dir}")
+    print("You can now fuse this adapter with the base model to create a final merged model.")
+    print("=" * 50 + "\n")
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,516 @@
+❯ bash knowledge-incorporation/scripts/query_server_mlx.sh
+Launching MLX Query Server Client...
+Starting run: mlx_run_iter2
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[00.00] base 40.00% | adapter 40.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[00.01] base 40.00% | adapter 40.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[00.02] base 40.00% | adapter 40.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[00.03] base 40.00% | adapter 40.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[00.04] base 40.00% | adapter 40.00% ± 0.00% gain +0.00%
+Article 00  base 40.00% | adapter 40.00% ± 0.00% gain +0.00%
+[progress] overall (1 articles)  baseline 40.00% | adapter 40.00% | gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[01.00] base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[01.01] base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[01.02] base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[01.03] base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[01.04] base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+Article 01  base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+[progress] overall (2 articles)  baseline 20.00% | adapter 20.00% | gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[02.00] base 50.00% | adapter 50.00% ± 14.14% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[02.01] base 40.00% | adapter 50.00% ± 14.14% gain +10.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[02.02] base 50.00% | adapter 40.00% ± 0.00% gain -10.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[02.03] base 50.00% | adapter 40.00% ± 0.00% gain -10.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[02.04] base 40.00% | adapter 50.00% ± 14.14% gain +10.00%
+Article 02  base 46.00% | adapter 46.00% ± 5.48% gain +0.00%
+[progress] overall (3 articles)  baseline 28.67% | adapter 28.67% | gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[03.00] base 62.50% | adapter 50.00% ± 0.00% gain -12.50%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[03.01] base 50.00% | adapter 50.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[03.02] base 62.50% | adapter 12.50% ± 17.68% gain -50.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[03.03] base 75.00% | adapter 62.50% ± 17.68% gain -12.50%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[03.04] base 62.50% | adapter 50.00% ± 0.00% gain -12.50%
+Article 03  base 62.50% | adapter 45.00% ± 18.96% gain -17.50%
+[progress] overall (4 articles)  baseline 37.12% | adapter 32.75% | gain -4.38%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[04.00] base 0.00% | adapter 10.00% ± 14.14% gain +10.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[04.01] base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[04.02] base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[04.03] base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[04.04] base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+Article 04  base 0.00% | adapter 2.00% ± 4.47% gain +2.00%
+[progress] overall (5 articles)  baseline 29.70% | adapter 26.60% | gain -3.10%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[05.00] base 33.33% | adapter 33.33% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[05.01] base 33.33% | adapter 33.33% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[05.02] base 33.33% | adapter 33.33% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[05.03] base 33.33% | adapter 33.33% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[05.04] base 33.33% | adapter 33.33% ± 0.00% gain +0.00%
+Article 05  base 33.33% | adapter 33.33% ± 0.00% gain +0.00%
+[progress] overall (6 articles)  baseline 30.30% | adapter 27.72% | gain -2.58%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[06.00] base 20.00% | adapter 0.00% ± 0.00% gain -20.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[06.01] base 20.00% | adapter 0.00% ± 0.00% gain -20.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[06.02] base 20.00% | adapter 0.00% ± 0.00% gain -20.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[06.03] base 20.00% | adapter 0.00% ± 0.00% gain -20.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[06.04] base 20.00% | adapter 0.00% ± 0.00% gain -20.00%
+Article 06  base 20.00% | adapter 0.00% ± 0.00% gain -20.00%
+[progress] overall (7 articles)  baseline 28.83% | adapter 23.76% | gain -5.07%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[07.00] base 20.00% | adapter 20.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[07.01] base 20.00% | adapter 20.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[07.02] base 20.00% | adapter 20.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[07.03] base 20.00% | adapter 20.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[07.04] base 20.00% | adapter 20.00% ± 0.00% gain +0.00%
+Article 07  base 20.00% | adapter 20.00% ± 0.00% gain +0.00%
+[progress] overall (8 articles)  baseline 27.73% | adapter 23.29% | gain -4.44%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[08.00] base 50.00% | adapter 60.00% ± 0.00% gain +10.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[08.01] base 60.00% | adapter 60.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[08.02] base 40.00% | adapter 60.00% ± 0.00% gain +20.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[08.03] base 50.00% | adapter 60.00% ± 0.00% gain +10.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[08.04] base 60.00% | adapter 60.00% ± 0.00% gain +0.00%
+Article 08  base 52.00% | adapter 60.00% ± 0.00% gain +8.00%
+[progress] overall (9 articles)  baseline 30.43% | adapter 27.37% | gain -3.06%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[09.00] base 50.00% | adapter 50.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[09.01] base 50.00% | adapter 50.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[09.02] base 50.00% | adapter 50.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[09.03] base 50.00% | adapter 50.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[09.04] base 50.00% | adapter 50.00% ± 0.00% gain +0.00%
+Article 09  base 50.00% | adapter 50.00% ± 0.00% gain +0.00%
+[progress] overall (10 articles)  baseline 32.38% | adapter 29.63% | gain -2.75%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[10.00] base 20.00% | adapter 20.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[10.01] base 20.00% | adapter 20.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[10.02] base 20.00% | adapter 20.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[10.03] base 20.00% | adapter 20.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[10.04] base 20.00% | adapter 20.00% ± 0.00% gain +0.00%
+Article 10  base 20.00% | adapter 20.00% ± 0.00% gain +0.00%
+[progress] overall (11 articles)  baseline 31.26% | adapter 28.76% | gain -2.50%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[11.00] base 20.00% | adapter 20.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[11.01] base 10.00% | adapter 20.00% ± 0.00% gain +10.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[11.02] base 10.00% | adapter 20.00% ± 0.00% gain +10.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[11.03] base 20.00% | adapter 10.00% ± 14.14% gain -10.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[11.04] base 20.00% | adapter 20.00% ± 0.00% gain +0.00%
+Article 11  base 16.00% | adapter 18.00% ± 4.47% gain +2.00%
+[progress] overall (12 articles)  baseline 29.99% | adapter 27.86% | gain -2.12%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[12.00] base 70.00% | adapter 60.00% ± 0.00% gain -10.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[12.01] base 60.00% | adapter 60.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[12.02] base 60.00% | adapter 60.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[12.03] base 60.00% | adapter 60.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[12.04] base 60.00% | adapter 60.00% ± 0.00% gain +0.00%
+Article 12  base 62.00% | adapter 60.00% ± 0.00% gain -2.00%
+[progress] overall (13 articles)  baseline 32.45% | adapter 30.33% | gain -2.12%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[13.00] base 66.67% | adapter 50.00% ± 23.57% gain -16.66%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[13.01] base 50.00% | adapter 66.67% ± 0.00% gain +16.66%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[13.02] base 33.33% | adapter 66.67% ± 0.00% gain +33.33%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[13.03] base 50.00% | adapter 66.67% ± 0.00% gain +16.66%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[13.04] base 66.67% | adapter 66.67% ± 0.00% gain +0.00%
+Article 13  base 53.33% | adapter 63.34% ± 7.46% gain +10.00%
+[progress] overall (14 articles)  baseline 33.94% | adapter 32.69% | gain -1.25%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[14.00] base 60.00% | adapter 60.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[14.01] base 60.00% | adapter 60.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[14.02] base 60.00% | adapter 60.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[14.03] base 60.00% | adapter 60.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[14.04] base 60.00% | adapter 60.00% ± 0.00% gain +0.00%
+Article 14  base 60.00% | adapter 60.00% ± 0.00% gain +0.00%
+[progress] overall (15 articles)  baseline 35.68% | adapter 34.51% | gain -1.17%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[15.00] base 80.00% | adapter 80.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[15.01] base 80.00% | adapter 80.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[15.02] base 80.00% | adapter 80.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[15.03] base 80.00% | adapter 80.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[15.04] base 80.00% | adapter 80.00% ± 0.00% gain +0.00%
+Article 15  base 80.00% | adapter 80.00% ± 0.00% gain +0.00%
+[progress] overall (16 articles)  baseline 38.45% | adapter 37.35% | gain -1.09%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[16.00] base 35.71% | adapter 32.14% ± 5.05% gain -3.57%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[16.01] base 35.71% | adapter 28.57% ± 0.00% gain -7.14%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[16.02] base 35.71% | adapter 32.14% ± 5.05% gain -3.57%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[16.03] base 39.28% | adapter 32.14% ± 5.05% gain -7.14%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[16.04] base 39.28% | adapter 39.28% ± 5.06% gain +0.00%
+Article 16  base 37.14% | adapter 32.86% ± 3.91% gain -4.29%
+[progress] overall (17 articles)  baseline 38.37% | adapter 37.09% | gain -1.28%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[17.00] base 60.00% | adapter 60.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[17.01] base 60.00% | adapter 60.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[17.02] base 60.00% | adapter 60.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[17.03] base 60.00% | adapter 60.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[17.04] base 60.00% | adapter 60.00% ± 0.00% gain +0.00%
+Article 17  base 60.00% | adapter 60.00% ± 0.00% gain +0.00%
+[progress] overall (18 articles)  baseline 39.57% | adapter 38.36% | gain -1.21%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[18.00] base 40.00% | adapter 40.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[18.01] base 40.00% | adapter 40.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[18.02] base 40.00% | adapter 40.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[18.03] base 40.00% | adapter 40.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[18.04] base 40.00% | adapter 40.00% ± 0.00% gain +0.00%
+Article 18  base 40.00% | adapter 40.00% ± 0.00% gain +0.00%
+[progress] overall (19 articles)  baseline 39.59% | adapter 38.45% | gain -1.15%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[19.00] base 60.00% | adapter 60.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[19.01] base 60.00% | adapter 60.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[19.02] base 60.00% | adapter 60.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[19.03] base 60.00% | adapter 60.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[19.04] base 60.00% | adapter 60.00% ± 0.00% gain +0.00%
+Article 19  base 60.00% | adapter 60.00% ± 0.00% gain +0.00%
+[progress] overall (20 articles)  baseline 40.62% | adapter 39.53% | gain -1.09%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[20.00] base 66.67% | adapter 66.67% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[20.01] base 66.67% | adapter 66.67% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[20.02] base 66.67% | adapter 66.67% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[20.03] base 66.67% | adapter 66.67% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[20.04] base 66.67% | adapter 66.67% ± 0.00% gain +0.00%
+Article 20  base 66.67% | adapter 66.67% ± 0.00% gain +0.00%
+[progress] overall (21 articles)  baseline 41.86% | adapter 40.82% | gain -1.04%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[21.00] base 80.00% | adapter 80.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[21.01] base 80.00% | adapter 80.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[21.02] base 80.00% | adapter 80.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[21.03] base 80.00% | adapter 80.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[21.04] base 80.00% | adapter 80.00% ± 0.00% gain +0.00%
+Article 21  base 80.00% | adapter 80.00% ± 0.00% gain +0.00%
+[progress] overall (22 articles)  baseline 43.59% | adapter 42.60% | gain -0.99%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[22.00] base 40.00% | adapter 40.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[22.01] base 40.00% | adapter 40.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[22.02] base 40.00% | adapter 40.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[22.03] base 40.00% | adapter 40.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[22.04] base 40.00% | adapter 40.00% ± 0.00% gain +0.00%
+Article 22  base 40.00% | adapter 40.00% ± 0.00% gain +0.00%
+[progress] overall (23 articles)  baseline 43.43% | adapter 42.49% | gain -0.95%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[23.00] base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[23.01] base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[23.02] base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[23.03] base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[23.04] base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+Article 23  base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+[progress] overall (24 articles)  baseline 41.62% | adapter 40.72% | gain -0.91%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[24.00] base 20.00% | adapter 20.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[24.01] base 20.00% | adapter 20.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[24.02] base 20.00% | adapter 20.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[24.03] base 20.00% | adapter 20.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[24.04] base 20.00% | adapter 20.00% ± 0.00% gain +0.00%
+Article 24  base 20.00% | adapter 20.00% ± 0.00% gain +0.00%
+[progress] overall (25 articles)  baseline 40.76% | adapter 39.89% | gain -0.87%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[25.00] base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[25.01] base 0.00% | adapter 10.00% ± 14.14% gain +10.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[25.02] base 10.00% | adapter 10.00% ± 14.14% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[25.03] base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[25.04] base 10.00% | adapter 0.00% ± 0.00% gain -10.00%
+Article 25  base 4.00% | adapter 4.00% ± 5.48% gain +0.00%
+[progress] overall (26 articles)  baseline 39.35% | adapter 38.51% | gain -0.84%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[26.00] base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[26.01] base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[26.02] base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[26.03] base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[26.04] base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+Article 26  base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+[progress] overall (27 articles)  baseline 37.89% | adapter 37.08% | gain -0.81%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[27.00] base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[27.01] base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[27.02] base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[27.03] base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[27.04] base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+Article 27  base 0.00% | adapter 0.00% ± 0.00% gain +0.00%
+[progress] overall (28 articles)  baseline 36.53% | adapter 35.76% | gain -0.78%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[28.00] base 40.00% | adapter 40.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[28.01] base 40.00% | adapter 40.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[28.02] base 40.00% | adapter 60.00% ± 0.00% gain +20.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[28.03] base 40.00% | adapter 40.00% ± 0.00% gain +0.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[28.04] base 40.00% | adapter 40.00% ± 0.00% gain +0.00%
+Article 28  base 40.00% | adapter 44.00% ± 8.94% gain +4.00%
+[progress] overall (29 articles)  baseline 36.65% | adapter 36.04% | gain -0.61%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[29.00] base 53.33% | adapter 40.00% ± 0.00% gain -13.33%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[29.01] base 50.00% | adapter 40.00% ± 0.00% gain -10.00%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[29.02] base 46.66% | adapter 33.34% ± 9.43% gain -13.33%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[29.03] base 46.66% | adapter 43.34% ± 4.72% gain -3.33%
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+Sent request to TTT server (attempt 1/2, waiting ≤10 min)
+[29.04] base 40.00% | adapter 40.00% ± 0.00% gain +0.00%
+Article 29  base 47.33% | adapter 39.33% ± 3.65% gain -8.00%
+[progress] overall (30 articles)  baseline 37.01% | adapter 36.15% | gain -0.86%
+
+Wrote summary → knowledge-incorporation/mlx_experiments/results/query_server1_1/run_0629_192932.json
+Job finished. Results are in knowledge-incorporation/mlx_experiments/results/query_server1_1

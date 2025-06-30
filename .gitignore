@@ -5,5 +5,5 @@ models/
 .DS_Store
 test.py
 knowledge-incorporation/mlx_experiments/results/SFT/run1_merged/adapters.safetensors
-knowledge-incorporation/mlx_experiments/results/SFT/run1_merged/adapters.safetensors
 *.log
+*.safetensors

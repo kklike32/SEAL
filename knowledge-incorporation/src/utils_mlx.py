@@ -227,10 +227,13 @@ def run_lora_training(
     loss_and_grad_fn = nn.value_and_grad(model, masked_ce_loss)
     
     # 4. The Training Loop with Gradient Accumulation
+    # 4. The Training Loop with Gradient Accumulation
     LOG.info(f"Starting manual training loop for {finetune_args['finetune_epochs']} epochs...")
     batch_size = finetune_args['batch_size']
     grad_accumulation_steps = finetune_args.get('gradient_accumulation_steps', 1)
+    grad_accumulation_steps = finetune_args.get('gradient_accumulation_steps', 1)
     model.train()
+
     for epoch in range(finetune_args['finetune_epochs']):
         epoch_loss = 0.0
         num_batches = 0

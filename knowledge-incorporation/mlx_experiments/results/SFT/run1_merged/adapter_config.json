@@ -1,0 +1,14 @@
+{
+    "batch_size": 2,
+    "learning_rate": 2e-05,
+    "lora_alpha": 128,
+    "lora_dropout": 0.0,
+    "lora_layers": 16,
+    "lora_rank": 64,
+    "max_seq_length": 2048,
+    "model": "mlx-community/Meta-Llama-3-8B-Instruct",
+    "num_train_epochs": 3,
+    "output_dir": "knowledge-incorporation/mlx_experiments/results/SFT/run1_merged",
+    "steps_per_report": 10,
+    "train_file": "knowledge-incorporation/mlx_experiments/results/query_server1_1/sft_best1of5_0629_192932.jsonl"
+}

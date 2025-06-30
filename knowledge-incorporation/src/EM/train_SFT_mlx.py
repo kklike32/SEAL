@@ -9,6 +9,17 @@ from datasets import load_dataset
 from mlx_lm.tuner.trainer import TrainingArgs, train
 from mlx_lm.tuner.utils import linear_to_lora_layers
 from mlx_lm.utils import load, save_config
+from mlx_lm.tuner.trainer import iterate_batches as default_iter
+
+def encode_dataset(hf_ds, tok, max_len):
+    encoded = []
+    for ex in hf_ds:
+        p_ids = tok.encode(ex["prompt"])
+        c_ids = tok.encode(ex["completion"])
+        ids   = (p_ids + c_ids)[:max_len]
+        offset = len(p_ids)              # <- mask prompt!
+        encoded.append((ids, offset))
+    return encoded
 
 def parse_args():
     """
@@ -63,8 +74,6 @@ def main():
     model, tokenizer = load(args.model)
 
     # 2. Load and Prepare Dataset
-    # The original SEAL build script creates a .jsonl file with a "text" field,
-    # which is the default that the `train` function's data loader expects.
     train_dataset = load_dataset("json", data_files={"train": args.train_file}, split="train")
 
     # 3. Apply LoRA layers to the model
@@ -98,13 +107,14 @@ def main():
 
     # 5. Start Training by calling the correct low-level train function
     print("Starting SFT training...")
+    encoded_train = encode_dataset(train_dataset, tokenizer, args.max_seq_length)
     train(
         model=model,
-        # The TypeError confirmed that this version of `train` does not take `tokenizer`
         args=training_args,
         optimizer=optim.AdamW(learning_rate=args.learning_rate),
-        train_dataset=train_dataset,
-        val_dataset=None,
+        train_dataset=encoded_train,
+        iterate_batches=default_iter,
+        val_dataset=encoded_train[:1],
     )
 
     # 6. Save the configuration and tokenizer alongside the adapter

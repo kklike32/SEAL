@@ -107,6 +107,7 @@ def main():
                 "finetune_epochs": msg.get("finetune_epochs", 10),
                 "finetune_lr": msg.get("finetune_lr", 1e-3),
                 "batch_size": msg.get("batch_size", 1),
+                "gradient_accumulation_steps": msg.get("gradient_accumulation_steps", 1),
                 "end_mask_substring": msg.get("end_mask_substring", "")
             }
 

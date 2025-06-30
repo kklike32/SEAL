@@ -89,7 +89,6 @@ def send_round_trip(
         poller.register(sock, zmq.POLLIN)
 
         # build & send the request -------------------------
-        effective_batch_size = args.batch_size * args.gradient_accumulation_steps
         payload = {
             "train_sequences": train_sequences,
             "eval_questions": questions,
@@ -99,7 +98,8 @@ def send_round_trip(
             "lora_layers": args.lora_layers,
             "finetune_epochs": args.finetune_epochs,
             "finetune_lr": args.finetune_lr,
-            "batch_size": effective_batch_size,
+            "batch_size": args.batch_size,
+            "gradient_accumulation_steps": args.gradient_accumulation_steps,
             "end_mask_substring": end_mask_substring,
         }
 

@@ -226,28 +226,40 @@ def run_lora_training(
     # Create the gradient function using new custom masked loss function.
     loss_and_grad_fn = nn.value_and_grad(model, masked_ce_loss)
     
-    # 4. The Training Loop
+    # 4. The Training Loop with Gradient Accumulation
     LOG.info(f"Starting manual training loop for {finetune_args['finetune_epochs']} epochs...")
     batch_size = finetune_args['batch_size']
+    grad_accumulation_steps = finetune_args.get('gradient_accumulation_steps', 1)
     model.train()
     for epoch in range(finetune_args['finetune_epochs']):
         epoch_loss = 0.0
         num_batches = 0
-        # Create batches for the current epoch
+        
+        accumulated_grads = {k: mx.zeros_like(v) for k, v in model.trainable_parameters().items()}
+
+        
         for i in range(0, len(inputs), batch_size):
             batch_inputs = inputs[i : i + batch_size]
             batch_labels = labels[i : i + batch_size]
-
-            # LOG.info(f"Running batch {num_batches}... Shape of inputs: {batch_inputs.shape}, Dtype: {batch_inputs.dtype}")
-            # LOG.info(f"Shape of labels: {batch_labels.shape}, Dtype: {batch_labels.dtype}")
             
-            # Get loss and gradients, then update model
+            # Get loss and gradients, for the current micro-batch
             loss, grads = loss_and_grad_fn(model, batch_inputs, batch_labels)
-            optimizer.update(model, grads)
-            mx.eval(model.parameters(), optimizer.state)
+            
+            # Accumulate gradients
+            for k, v in grads.items():
+                if k in accumulated_grads:
+                    accumulated_grads[k] += v
+
             epoch_loss += loss.item()
             num_batches += 1
-        
+
+            # Perform optimizer step after accumulating gradients for the specified number of steps                                                          │
+            if (i // batch_size + 1) % grad_accumulation_steps == 0:
+                optimizer.update(model, accumulated_grads)
+                mx.eval(model.parameters(), optimizer.state)
+                #  Reset accumulated gradients 
+                accumulated_grads = {k: mx.zeros_like(v) for k, v in model.trainable_parameters().items()}
+         
         if num_batches > 0:
             avg_loss = epoch_loss / num_batches
             LOG.info(f"Epoch {epoch + 1}/{finetune_args['finetune_epochs']} | Average Loss: {avg_loss:.4f}")

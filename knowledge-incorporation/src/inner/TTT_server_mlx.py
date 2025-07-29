@@ -51,25 +51,27 @@ class ServerState:
         self._model_id = model_id
         self.model, self.tokenizer = load(self._model_id)
         
-        # Cache original weights for fast restoration
-        LOG.info("Caching original model weights for fast restoration...")
-        self._original_weights = {}
-        for name, param in self.model.named_parameters():
-            self._original_weights[name] = param.copy()
+        # Save the initial model weights to a temporary file for fast restoration
+        LOG.info("Saving original model state for fast restoration...")
+        import tempfile
+        import os
         
-        LOG.info("Initial model and tokenizer loaded with %d weight tensors cached.", 
-                len(self._original_weights))
+        self._temp_dir = tempfile.mkdtemp()
+        self._weights_path = os.path.join(self._temp_dir, "original_weights.safetensors")
+        
+        # Save the original model weights
+        self.model.save_weights(self._weights_path)
+        
+        LOG.info("Initial model and tokenizer loaded. Original weights saved for restoration.")
 
     def restore_base_model(self):
-        """Restores the model to its original state by restoring cached weights."""
+        """Restores the model to its original state by reloading saved weights."""
         LOG.debug("Restoring original model weights...")
         import time
         restore_start = time.time()
         
-        # Restore original weights instead of reloading the entire model
-        for name, param in self.model.named_parameters():
-            if name in self._original_weights:
-                param[:] = self._original_weights[name]
+        # Load the original weights back
+        self.model.load_weights(self._weights_path)
         
         # Force MLX to synchronize the model state
         import mlx.core as mlx
@@ -78,6 +80,15 @@ class ServerState:
         
         restore_time = time.time() - restore_start
         LOG.debug("Model weights restored in %.3f seconds.", restore_time)
+    
+    def __del__(self):
+        """Clean up temporary files when the server shuts down."""
+        import shutil
+        if hasattr(self, '_temp_dir'):
+            try:
+                shutil.rmtree(self._temp_dir)
+            except:
+                pass  # Ignore cleanup errors
 
 # ---------------------------  MAIN SERVER LOGIC  -------------------------- #
 

@@ -31,7 +31,7 @@ def parse_args():
     parser.add_argument("--model_id", type=str, default="mlx-community/Meta-Llama-3-8B-Instruct", help="The base model ID for the Actor and Critic.")
     
     # Output and saving arguments
-    parser.add_argument("--output_dir", type=str, default="logs/rl_training", help="Directory to save models and logs.")
+    parser.add_argument("--output_dir", type=str, default="knowledge-incorporation/logs/rl_training", help="Directory to save models and logs.")
     parser.add_argument("--save_every", type=int, default=2, help="Save a checkpoint every N PPO steps.")
 
     # PPO configuration arguments
@@ -113,7 +113,7 @@ class RLActor(nn.Module):
         logits = self.model(full_sequence)
         
         # Convert to log probabilities
-        log_probs = nn.log_softmax(logits, axis=-1)
+        log_probs = mx.log_softmax(logits, axis=-1)
         
         # Extract log probabilities for the response tokens
         # We want log_probs for positions [len(input_ids):len(input_ids)+len(response_ids)]

@@ -1,6 +1,6 @@
 # knowledge-incorporation/src/rl/ppo_buffer.py
 import numpy as np
-import mlx.core as mlx
+import mlx.core as mx
 
 class PPOBuffer:
     """
@@ -69,10 +69,10 @@ class PPOBuffer:
         data = dict(
             states=self.states,
             actions=self.actions,
-            returns=mlx.array(self.returns),
-            advantages=mlx.array(self.advantages),
-            log_probs=mlx.array(self.log_probs),
-            values=mlx.array(self.values)
+            returns=mx.array(self.returns),
+            advantages=mx.array(self.advantages),
+            log_probs=mx.array(self.log_probs),
+            values=mx.array(self.values)
         )
 
         # Reset buffer

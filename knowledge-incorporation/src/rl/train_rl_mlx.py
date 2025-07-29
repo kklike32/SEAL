@@ -1,16 +1,20 @@
 # knowledge-incorporation/src/rl/train_rl_mlx.py
 import sys
 import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-
 import argparse
 import logging
-import mlx.core as mlx
-from mlx_lm import load as mlx_lm_load
+
+# Add knowledge-incorporation directory to path for cleaner imports
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+sys.path.insert(0, project_root)
+
+import mlx.core as mx
 import mlx.nn as nn
+from mlx_lm import load as mlx_lm_load, generate as mlx_lm_generate
 from transformers import AutoTokenizer
 from trl import PPOConfig
 
+# Import using relative imports from the src directory
 from src.rl.dataset import build_dataset, get_squad_prompts
 from src.rl.reward import initialize_reward_client, get_reward, close_reward_client
 from src.rl.ppo_mlx import MLXPPO
@@ -83,8 +87,50 @@ class RLActor(nn.Module):
         """
         Generate a completion from a prompt using mlx_lm's generate function.
         """
-        from mlx_lm import generate as mlx_lm_generate
         return mlx_lm_generate(self.model, self.tokenizer, prompt, max_tokens=max_tokens)
+    
+    def compute_log_probs(self, input_ids, response_ids):
+        """
+        Compute log probabilities for the response tokens given the input.
+        """
+        # Ensure inputs are MLX arrays
+        if not isinstance(input_ids, mx.array):
+            input_ids = mx.array(input_ids)
+        if not isinstance(response_ids, mx.array):
+            response_ids = mx.array(response_ids)
+            
+        # Ensure proper shape (batch_size, sequence_length)
+        if input_ids.ndim == 1:
+            input_ids = input_ids.reshape(1, -1)
+        if response_ids.ndim == 1:
+            response_ids = response_ids.reshape(1, -1)
+        
+        # Concatenate prompt and response
+        full_sequence = mx.concatenate([input_ids, response_ids], axis=-1)
+        
+        # Get logits for the full sequence
+        logits = self.model(full_sequence)
+        
+        # Convert to log probabilities
+        log_probs = mx.log_softmax(logits, axis=-1)
+        
+        # Extract log probabilities for the response tokens
+        # We want log_probs for positions [len(input_ids):len(input_ids)+len(response_ids)]
+        response_start = input_ids.shape[-1]
+        response_end = response_start + response_ids.shape[-1]
+        
+        # Get the log probs for response tokens (shifted by 1 for next token prediction)
+        response_log_probs = log_probs[:, response_start-1:response_end-1, :]
+        
+        # Gather the log probabilities for the actual response tokens
+        response_token_log_probs = mx.take_along_axis(
+            response_log_probs, 
+            response_ids.reshape(1, -1, 1), 
+            axis=-1
+        ).squeeze(-1)
+        
+        # Return mean log probability
+        return mx.mean(response_token_log_probs)
 
 class RLCritic(nn.Module):
     """
@@ -94,21 +140,72 @@ class RLCritic(nn.Module):
         super().__init__()
         self.model, _ = mlx_lm_load(model_id)
         
-        # Debugging: Print the model's architecture
-        # print("Model Architecture:")
-        # print(self.model)
-        
         # Determine the hidden_size from the model's architecture
-        hidden_size = self.model.layers[-1].mlp.down_proj.weight.shape[-1]
+        # For Llama models, we need to find the correct hidden dimension
+        hidden_size = None
+        
+        # Try multiple ways to get the hidden size
+        if hasattr(self.model, 'model') and hasattr(self.model.model, 'layers'):
+            # For models like LlamaForCausalLM
+            if len(self.model.model.layers) > 0:
+                last_layer = self.model.model.layers[-1]
+                if hasattr(last_layer, 'mlp') and hasattr(last_layer.mlp, 'down_proj'):
+                    hidden_size = last_layer.mlp.down_proj.weight.shape[0]
+                elif hasattr(last_layer, 'self_attn') and hasattr(last_layer.self_attn, 'o_proj'):
+                    hidden_size = last_layer.self_attn.o_proj.weight.shape[0]
+        
+        # Fallback: try to get from embedding layer
+        if hidden_size is None:
+            if hasattr(self.model, 'model') and hasattr(self.model.model, 'embed_tokens'):
+                hidden_size = self.model.model.embed_tokens.weight.shape[-1]
+        
+        # Last resort: use common Llama-3-8B size
+        if hidden_size is None:
+            hidden_size = 4096
+            print(f"Warning: Could not determine hidden size, using default: {hidden_size}")
+        else:
+            print(f"Determined hidden_size: {hidden_size}")
+        
+        self.hidden_size = hidden_size
         self.value_head = nn.Linear(hidden_size, 1)
 
     def __call__(self, x):
         """
         Forward pass to get the value estimate.
         """
-        hidden_states = self.model(x)
+        # The key issue: we need hidden states, not logits
+        # The model(x) call typically returns logits for language models
+        
+        if hasattr(self.model, 'model'):
+            # For models with .model attribute (like LlamaForCausalLM)
+            # Get the base model outputs (hidden states)
+            hidden_states = self.model.model(x)
+            # hidden_states might be a tuple, extract the actual states
+            if isinstance(hidden_states, tuple):
+                hidden_states = hidden_states[0]
+        else:
+            # Fallback: direct model call (this might give logits)
+            outputs = self.model(x)
+            # If this is logits, we need to handle it differently
+            if outputs.shape[-1] > self.hidden_size:
+                # This is likely logits (vocab_size dimension), not hidden states
+                # We need to get the hidden states instead
+                raise ValueError(f"Model output shape {outputs.shape} suggests logits, not hidden states. "
+                               f"Need to access model.model instead of model directly.")
+            hidden_states = outputs
+        
         print("Shape of hidden_states:", hidden_states.shape)
-        value = self.value_head(hidden_states[:, -1, :])
+        
+        # Take the last token's hidden state
+        last_hidden = hidden_states[:, -1, :]
+        print("Shape of last_hidden:", last_hidden.shape)
+        
+        # Verify dimensions match
+        if last_hidden.shape[-1] != self.hidden_size:
+            raise ValueError(f"Hidden state dimension {last_hidden.shape[-1]} doesn't match "
+                           f"expected dimension {self.hidden_size}")
+        
+        value = self.value_head(last_hidden)
         return value
 
 def main():
@@ -154,14 +251,43 @@ def main():
             
             response = actor_model.generate(prompt)
             
-            prompt_tensor = actor_model.tokenizer.encode(prompt, return_tensors="mlx")
-            response_tensor = actor_model.tokenizer.encode(response, return_tensors="mlx")
+            # Encode the text to tensors - handle different tokenizer return formats
+            prompt_encoded = actor_model.tokenizer.encode(prompt)
+            response_encoded = actor_model.tokenizer.encode(response)
+            
+            # Convert to MLX arrays with proper shape handling
+            if isinstance(prompt_encoded, list):
+                prompt_tensor = mx.array(prompt_encoded).reshape(1, -1)
+            elif isinstance(prompt_encoded, mx.array):
+                prompt_tensor = prompt_encoded.reshape(1, -1) if prompt_encoded.ndim == 1 else prompt_encoded
+            else:
+                # Handle other formats (e.g., torch tensors, numpy arrays)
+                prompt_tensor = mx.array(prompt_encoded).reshape(1, -1)
+                
+            if isinstance(response_encoded, list):
+                response_tensor = mx.array(response_encoded).reshape(1, -1)
+            elif isinstance(response_encoded, mx.array):
+                response_tensor = response_encoded.reshape(1, -1) if response_encoded.ndim == 1 else response_encoded
+            else:
+                # Handle other formats
+                response_tensor = mx.array(response_encoded).reshape(1, -1)
+            
+            print(f"Prompt tensor shape: {prompt_tensor.shape}")
+            print(f"Response tensor shape: {response_tensor.shape}")
+            
+            # Get value from critic
             value = critic_model(prompt_tensor)
-            log_prob = actor_model.model(response_tensor).log_softmax(axis=-1)
+            
+            # Compute log probabilities properly using the actor's method
+            log_prob = actor_model.compute_log_probs(prompt_tensor, response_tensor)
 
             reward = get_reward(prompt, response)
             
-            ppo_buffer.add(prompt, response, reward, value.item(), log_prob.item())
+            # Convert scalar values properly
+            value_scalar = float(value.item()) if hasattr(value, 'item') else float(value)
+            log_prob_scalar = float(log_prob.item()) if hasattr(log_prob, 'item') else float(log_prob)
+            
+            ppo_buffer.add(prompt, response, reward, value_scalar, log_prob_scalar)
 
         ppo_buffer.finish_path()
 

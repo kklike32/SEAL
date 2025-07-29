@@ -3,6 +3,7 @@ import sys
 import os
 import argparse
 import logging
+import time
 
 # Add knowledge-incorporation directory to path for cleaner imports
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
@@ -83,7 +84,7 @@ class RLActor(nn.Module):
         super().__init__()
         self.model, self.tokenizer = mlx_lm_load(model_id)
 
-    def generate(self, prompt: str, max_tokens: int = 100):
+    def generate(self, prompt: str, max_tokens: int = 1000):
         """
         Generate a completion from a prompt using mlx_lm's generate function.
         """
@@ -194,11 +195,8 @@ class RLCritic(nn.Module):
                                f"Need to access model.model instead of model directly.")
             hidden_states = outputs
         
-        print("Shape of hidden_states:", hidden_states.shape)
-        
         # Take the last token's hidden state
         last_hidden = hidden_states[:, -1, :]
-        print("Shape of last_hidden:", last_hidden.shape)
         
         # Verify dimensions match
         if last_hidden.shape[-1] != self.hidden_size:
@@ -212,6 +210,9 @@ def main():
     """
     The main function for the RL training loop.
     """
+    
+    print(f"MLX is using default device: {mx.default_device()}")
+    
     args = parse_args()
 
     # Create output directory
@@ -246,7 +247,9 @@ def main():
         logging.info(f"--- PPO Step {step + 1}/{args.total_ppo_steps} ---")
         
         # --- Rollout Phase ---
+        rollout_start_time = time.time()
         for i in range(args.batch_size):
+            sample_start_time = time.time()
             prompt = prompts[step * args.batch_size + i]
             
             response = actor_model.generate(prompt)
@@ -272,9 +275,6 @@ def main():
                 # Handle other formats
                 response_tensor = mx.array(response_encoded).reshape(1, -1)
             
-            print(f"Prompt tensor shape: {prompt_tensor.shape}")
-            print(f"Response tensor shape: {response_tensor.shape}")
-            
             # Get value from critic
             value = critic_model(prompt_tensor)
             
@@ -288,11 +288,17 @@ def main():
             log_prob_scalar = float(log_prob.item()) if hasattr(log_prob, 'item') else float(log_prob)
             
             ppo_buffer.add(prompt, response, reward, value_scalar, log_prob_scalar)
+            
+            sample_time = time.time() - sample_start_time
+            if (i + 1) % 10 == 0:  # Log every 10 samples
+                logging.info(f"    Sample {i+1}/{args.batch_size} complete. Time: {sample_time:.1f}s")
+        
+        rollout_time = time.time() - rollout_start_time
+        logging.info(f"  Rollout complete in {rollout_time:.1f}s. Starting learning phase...")
 
         ppo_buffer.finish_path()
 
         # --- Learning Phase ---
-        logging.info("  Rollout complete. Starting learning phase...")
         buffer_data = ppo_buffer.get()
         stats = ppo_trainer.learn(buffer_data)
         logging.info(f"  Learning complete. Stats: {stats}")

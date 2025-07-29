@@ -65,7 +65,7 @@ class MLXPPO:
         returns = buffer_data["returns"]
 
         # Training loop
-        for _ in range(self.config.ppo_epochs):
+        for _ in range(self.config.num_ppo_epochs):
             # Create mini-batches
             indices = np.arange(len(states))
             np.random.shuffle(indices)

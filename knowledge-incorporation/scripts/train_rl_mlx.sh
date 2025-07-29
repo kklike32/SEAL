@@ -7,9 +7,9 @@
 
 # --- Configuration ---
 MODEL_ID="mlx-community/Meta-Llama-3-8B-Instruct"
-OUTPUT_DIR="mlx_experiments/rl_training_run_1"
+OUTPUT_DIR="logs/rl_training_run_2"
 TOTAL_STEPS=20
-SAVE_EVERY=5
+SAVE_EVERY=4
 
 # --- Argument Array ---
 # Using an array to safely handle arguments
@@ -25,6 +25,11 @@ ARGS=(
 
 # --- Execution ---
 echo "Starting RL training..."
+
+# MLX Performance optimizations for Apple Silicon
+export MLX_GPU_MEMORY_LIMIT=0.9
+export PYTORCH_ENABLE_MPS_FALLBACK=1
+export MLX_ENABLE_UNIFIED_MEMORY=1
 
 python knowledge-incorporation/src/rl/train_rl_mlx.py "${ARGS[@]}"
 

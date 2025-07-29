@@ -18,10 +18,10 @@ from typing import Dict
 from dotenv import load_dotenv
 load_dotenv()
 
-import mlx.core as mx
+import mlx.core as mlx
 import mlx.nn as nn
 import mlx.optimizers as optim
-import mlx.utils as mx_utils
+import mlx.utils as mlx_utils
 import zmq
 from datasets import Dataset
 from mlx_lm.utils import load

@@ -28,24 +28,24 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Train a PPO agent to generate self-edits.")
     
     # Model and tokenizer arguments
-    parser.add_argument("--model_id", type=str, default="mlx-community/Qwen1.5-7B-Chat-MLX-4bit", help="The base model ID for the Actor and Critic.")
+    parser.add_argument("--model_id", type=str, default="mlx-community/Meta-Llama-3-8B-Instruct", help="The base model ID for the Actor and Critic.")
     
     # Output and saving arguments
     parser.add_argument("--output_dir", type=str, default="logs/rl_training", help="Directory to save models and logs.")
-    parser.add_argument("--save_every", type=int, default=5, help="Save a checkpoint every N PPO steps.")
+    parser.add_argument("--save_every", type=int, default=2, help="Save a checkpoint every N PPO steps.")
 
     # PPO configuration arguments
     parser.add_argument("--learning_rate", type=float, default=1.41e-5, help="Learning rate for the PPO agent.")
-    parser.add_argument("--batch_size", type=int, default=256, help="Batch size for PPO training (rollout buffer size).")
-    parser.add_argument("--mini_batch_size", type=int, default=64, help="Mini-batch size for PPO training.")
-    parser.add_argument("--ppo_epochs", type=int, default=4, help="Number of PPO epochs per rollout.")
+    parser.add_argument("--batch_size", type=int, default=8, help="Batch size for PPO training (rollout buffer size).")
+    parser.add_argument("--mini_batch_size", type=int, default=4, help="Mini-batch size for PPO training.")
+    parser.add_argument("--ppo_epochs", type=int, default=2, help="Number of PPO epochs per rollout.")
     parser.add_argument("--clip_param", type=float, default=0.2, help="PPO clipping parameter.")
     parser.add_argument("--vf_coeff", type=float, default=0.5, help="Value function coefficient in the PPO loss.")
     
     # Other arguments
     parser.add_argument("--seed", type=int, default=0, help="Random seed.")
     parser.add_argument("--reward_port", type=int, default=5555, help="Port for the reward server.")
-    parser.add_argument("--total_ppo_steps", type=int, default=20, help="Total number of PPO steps (rollouts).")
+    parser.add_argument("--total_ppo_steps", type=int, default=3, help="Total number of PPO steps (rollouts).")
 
     return parser.parse_args()
 
@@ -84,7 +84,7 @@ class RLActor(nn.Module):
         super().__init__()
         self.model, self.tokenizer = mlx_lm_load(model_id)
 
-    def generate(self, prompt: str, max_tokens: int = 1000):
+    def generate(self, prompt: str, max_tokens: int = 250):
         """
         Generate a completion from a prompt using mlx_lm's generate function.
         """
@@ -113,7 +113,7 @@ class RLActor(nn.Module):
         logits = self.model(full_sequence)
         
         # Convert to log probabilities
-        log_probs = mx.log_softmax(logits, axis=-1)
+        log_probs = nn.log_softmax(logits, axis=-1)
         
         # Extract log probabilities for the response tokens
         # We want log_probs for positions [len(input_ids):len(input_ids)+len(response_ids)]
@@ -137,12 +137,12 @@ class RLCritic(nn.Module):
     """
     A model with a value head to act as our Critic.
     """
-    def __init__(self, model_id: str):
+    def __init__(self, shared_model, shared_tokenizer):
         super().__init__()
-        self.model, _ = mlx_lm_load(model_id)
+        self.model = shared_model  # Reuse the actor's model
+        self.tokenizer = shared_tokenizer
         
-        # Determine the hidden_size from the model's architecture
-        # For Llama models, we need to find the correct hidden dimension
+        # Determine the hidden_size from the shared model
         hidden_size = None
         
         # Try multiple ways to get the hidden size
@@ -232,7 +232,7 @@ def main():
     )
 
     actor_model = RLActor(args.model_id)
-    critic_model = RLCritic(args.model_id)
+    critic_model = RLCritic(actor_model.model, actor_model.tokenizer)
     
     dataset = build_dataset()
     prompts = get_squad_prompts(dataset, num_samples=args.batch_size * args.total_ppo_steps)

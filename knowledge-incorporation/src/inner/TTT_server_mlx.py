@@ -49,17 +49,35 @@ class ServerState:
     def __init__(self, model_id: str):
         LOG.info("Loading base model '%s'...", model_id)
         self._model_id = model_id
-        _, self.tokenizer = load(self._model_id)
+        self.model, self.tokenizer = load(self._model_id)
         
-        self.model = None
-        self.restore_base_model() # Perform initial load
-        LOG.info("Initial model and tokenizer loaded.")
+        # Cache original weights for fast restoration
+        LOG.info("Caching original model weights for fast restoration...")
+        self._original_weights = {}
+        for name, param in self.model.named_parameters():
+            self._original_weights[name] = param.copy()
+        
+        LOG.info("Initial model and tokenizer loaded with %d weight tensors cached.", 
+                len(self._original_weights))
 
     def restore_base_model(self):
-        """Restores the model to its original, pre-fine-tuning state."""
-        LOG.debug("Loading fresh model instance to ensure pristine state.")
-        self.model, _ = load(self._model_id)
+        """Restores the model to its original state by restoring cached weights."""
+        LOG.debug("Restoring original model weights...")
+        import time
+        restore_start = time.time()
+        
+        # Restore original weights instead of reloading the entire model
+        for name, param in self.model.named_parameters():
+            if name in self._original_weights:
+                param[:] = self._original_weights[name]
+        
+        # Force MLX to synchronize the model state
+        import mlx.core as mlx
+        mlx.eval(self.model)
         gc.collect()
+        
+        restore_time = time.time() - restore_start
+        LOG.debug("Model weights restored in %.3f seconds.", restore_time)
 
 # ---------------------------  MAIN SERVER LOGIC  -------------------------- #
 

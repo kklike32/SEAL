@@ -1,16 +1,20 @@
+# knowledge-incorporation/src/rl/train_rl_mlx.py
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+
 import argparse
-import mlx.core as mx
+import logging
+import mlx.core as mlx
+from mlx_lm import load as mlx_lm_load
 import mlx.nn as nn
-import mlx_lm.core as lm_core
 from transformers import AutoTokenizer
 from trl import PPOConfig
-import os
-import logging
 
-from knowledge-incorporation.src.rl.dataset import build_dataset, get_squad_prompts
-from knowledge-incorporation.src.rl.reward import initialize_reward_client, get_reward, close_reward_client
-from knowledge-incorporation.src.rl.ppo_mlx import MLXPPO
-from knowledge-incorporation.src.rl.ppo_buffer import PPOBuffer
+from src.rl.dataset import build_dataset, get_squad_prompts
+from src.rl.reward import initialize_reward_client, get_reward, close_reward_client
+from src.rl.ppo_mlx import MLXPPO
+from src.rl.ppo_buffer import PPOBuffer
 
 def parse_args():
     """
@@ -22,7 +26,7 @@ def parse_args():
     parser.add_argument("--model_id", type=str, default="mlx-community/Qwen1.5-7B-Chat-MLX-4bit", help="The base model ID for the Actor and Critic.")
     
     # Output and saving arguments
-    parser.add_argument("--output_dir", type=str, default="mlx_experiments/rl_training", help="Directory to save models and logs.")
+    parser.add_argument("--output_dir", type=str, default="logs/rl_training", help="Directory to save models and logs.")
     parser.add_argument("--save_every", type=int, default=5, help="Save a checkpoint every N PPO steps.")
 
     # PPO configuration arguments
@@ -73,13 +77,14 @@ class RLActor(nn.Module):
     """
     def __init__(self, model_id: str):
         super().__init__()
-        self.model, self.tokenizer = lm_core.load(model_id)
+        self.model, self.tokenizer = mlx_lm_load(model_id)
 
     def generate(self, prompt: str, max_tokens: int = 100):
         """
-        Generate a completion from a prompt.
+        Generate a completion from a prompt using mlx_lm's generate function.
         """
-        return lm_core.generate(self.model, self.tokenizer, prompt, max_tokens=max_tokens)
+        from mlx_lm import generate as mlx_lm_generate
+        return mlx_lm_generate(self.model, self.tokenizer, prompt, max_tokens=max_tokens)
 
 class RLCritic(nn.Module):
     """
@@ -87,16 +92,22 @@ class RLCritic(nn.Module):
     """
     def __init__(self, model_id: str):
         super().__init__()
-        self.model, _ = lm_core.load(model_id)
+        self.model, _ = mlx_lm_load(model_id)
         
-        # Add a value head
-        self.value_head = nn.Linear(self.model.config.hidden_size, 1)
+        # Debugging: Print the model's architecture
+        # print("Model Architecture:")
+        # print(self.model)
+        
+        # Determine the hidden_size from the model's architecture
+        hidden_size = self.model.layers[-1].mlp.down_proj.weight.shape[-1]
+        self.value_head = nn.Linear(hidden_size, 1)
 
     def __call__(self, x):
         """
         Forward pass to get the value estimate.
         """
         hidden_states = self.model(x)
+        print("Shape of hidden_states:", hidden_states.shape)
         value = self.value_head(hidden_states[:, -1, :])
         return value
 
@@ -116,10 +127,10 @@ def main():
         learning_rate=args.learning_rate,
         batch_size=args.batch_size,
         mini_batch_size=args.mini_batch_size,
-        ppo_epochs=args.ppo_epochs,
+        num_ppo_epochs=args.ppo_epochs,
         seed=args.seed,
-        clip_param=args.clip_param,
-        vf_coeff=args.vf_coeff
+        cliprange=args.clip_param,
+        vf_coef=args.vf_coeff
     )
 
     actor_model = RLActor(args.model_id)
@@ -143,8 +154,8 @@ def main():
             
             response = actor_model.generate(prompt)
             
-            prompt_tensor = actor_model.tokenizer.encode(prompt, return_tensors="mx")
-            response_tensor = actor_model.tokenizer.encode(response, return_tensors="mx")
+            prompt_tensor = actor_model.tokenizer.encode(prompt, return_tensors="mlx")
+            response_tensor = actor_model.tokenizer.encode(response, return_tensors="mlx")
             value = critic_model(prompt_tensor)
             log_prob = actor_model.model(response_tensor).log_softmax(axis=-1)
 

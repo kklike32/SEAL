@@ -6,7 +6,7 @@
 # You can start it with: bash knowledge-incorporation/scripts/TTT_server_mlx.sh
 
 # --- Configuration ---
-MODEL_ID="mlx-community/Qwen1.5-7B-Chat-MLX-4bit"
+MODEL_ID="mlx-community/Meta-Llama-3-8B-Instruct"
 OUTPUT_DIR="mlx_experiments/rl_training_run_1"
 TOTAL_STEPS=20
 SAVE_EVERY=5

@@ -18,7 +18,7 @@ ARGS=(
     --output_dir "$OUTPUT_DIR"
     --total_ppo_steps "$TOTAL_STEPS"
     --save_every "$SAVE_EVERY"
-    --batch_size3 32           # Much smaller for testing
+    --batch_size 32           # Much smaller for testing
     --mini_batch_size 4      # Smaller mini-batch
     --ppo_epochs 2           # Fewer epochs
     # You can override other parameters here, for example:

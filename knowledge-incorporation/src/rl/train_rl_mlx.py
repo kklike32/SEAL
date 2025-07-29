@@ -84,7 +84,7 @@ class RLActor(nn.Module):
         super().__init__()
         self.model, self.tokenizer = mlx_lm_load(model_id)
 
-    def generate(self, prompt: str, max_tokens: int = 250):
+    def generate(self, prompt: str, max_tokens: int = 125):
         """
         Generate a completion from a prompt using mlx_lm's generate function.
         """
@@ -113,7 +113,7 @@ class RLActor(nn.Module):
         logits = self.model(full_sequence)
         
         # Convert to log probabilities
-        log_probs = mx.log_softmax(logits, axis=-1)
+        log_probs = nn.log_softmax(logits, axis=-1)
         
         # Extract log probabilities for the response tokens
         # We want log_probs for positions [len(input_ids):len(input_ids)+len(response_ids)]
@@ -242,17 +242,37 @@ def main():
 
     logging.info("RL Training Script - Production Setup")
     logging.info("------------------------------------")
+    logging.info(f"Model ID: {args.model_id}")
+    logging.info(f"Output Directory: {args.output_dir}")
+    logging.info(f"Batch Size: {args.batch_size}")
+    logging.info(f"Mini Batch Size: {args.mini_batch_size}")
+    logging.info(f"Learning Rate: {args.learning_rate}")
+    logging.info(f"Total PPO Steps: {args.total_ppo_steps}")
+    logging.info(f"PPO Epochs per Step: {args.ppo_epochs}")
+    logging.info(f"Max Tokens per Generation: 125")
+    logging.info(f"Reward Server Port: {args.reward_port}")
+    logging.info("------------------------------------")
 
     for step in range(args.total_ppo_steps):
         logging.info(f"--- PPO Step {step + 1}/{args.total_ppo_steps} ---")
         
         # --- Rollout Phase ---
         rollout_start_time = time.time()
+        logging.info(f"  Starting rollout phase with {args.batch_size} samples...")
+        
+        rollout_rewards = []
+        rollout_values = []
+        rollout_log_probs = []
+        
         for i in range(args.batch_size):
             sample_start_time = time.time()
             prompt = prompts[step * args.batch_size + i]
             
+            logging.info(f"    Sample {i+1}: Generating response...")
+            generation_start = time.time()
             response = actor_model.generate(prompt)
+            generation_time = time.time() - generation_start
+            logging.info(f"    Sample {i+1}: Generation complete in {generation_time:.2f}s (length: {len(response)} chars)")
             
             # Encode the text to tensors - handle different tokenizer return formats
             prompt_encoded = actor_model.tokenizer.encode(prompt)
@@ -276,43 +296,78 @@ def main():
                 response_tensor = mx.array(response_encoded).reshape(1, -1)
             
             # Get value from critic
+            critic_start = time.time()
             value = critic_model(prompt_tensor)
+            critic_time = time.time() - critic_start
             
             # Compute log probabilities properly using the actor's method
+            logprob_start = time.time()
             log_prob = actor_model.compute_log_probs(prompt_tensor, response_tensor)
+            logprob_time = time.time() - logprob_start
 
+            logging.info(f"    Sample {i+1}: Computing reward via TTT server...")
+            reward_start = time.time()
             reward = get_reward(prompt, response)
+            reward_time = time.time() - reward_start
+            logging.info(f"    Sample {i+1}: Reward computation complete in {reward_time:.2f}s (reward: {reward:.4f})")
             
             # Convert scalar values properly
             value_scalar = float(value.item()) if hasattr(value, 'item') else float(value)
             log_prob_scalar = float(log_prob.item()) if hasattr(log_prob, 'item') else float(log_prob)
             
+            rollout_rewards.append(reward)
+            rollout_values.append(value_scalar)
+            rollout_log_probs.append(log_prob_scalar)
+            
             ppo_buffer.add(prompt, response, reward, value_scalar, log_prob_scalar)
             
             sample_time = time.time() - sample_start_time
-            if (i + 1) % 10 == 0:  # Log every 10 samples
-                logging.info(f"    Sample {i+1}/{args.batch_size} complete. Time: {sample_time:.1f}s")
+            logging.info(f"    Sample {i+1}: Complete in {sample_time:.2f}s total "
+                        f"(gen: {generation_time:.2f}s, critic: {critic_time:.3f}s, "
+                        f"logprob: {logprob_time:.3f}s, reward: {reward_time:.2f}s)")
         
         rollout_time = time.time() - rollout_start_time
-        logging.info(f"  Rollout complete in {rollout_time:.1f}s. Starting learning phase...")
+        avg_reward = sum(rollout_rewards) / len(rollout_rewards)
+        avg_value = sum(rollout_values) / len(rollout_values)
+        avg_log_prob = sum(rollout_log_probs) / len(rollout_log_probs)
+        
+        logging.info(f"  Rollout complete in {rollout_time:.1f}s")
+        logging.info(f"  Rollout stats - Avg Reward: {avg_reward:.4f}, Avg Value: {avg_value:.4f}, Avg LogProb: {avg_log_prob:.4f}")
+        logging.info(f"  Starting learning phase...")
 
         ppo_buffer.finish_path()
 
         # --- Learning Phase ---
+        learning_start_time = time.time()
         buffer_data = ppo_buffer.get()
+        logging.info(f"  Learning phase: Processing {len(buffer_data['rewards'])} samples...")
         stats = ppo_trainer.learn(buffer_data)
-        logging.info(f"  Learning complete. Stats: {stats}")
+        learning_time = time.time() - learning_start_time
+        logging.info(f"  Learning complete in {learning_time:.2f}s")
+        logging.info(f"  Learning stats: {stats}")
 
         # --- Checkpointing ---
         if (step + 1) % args.save_every == 0:
             checkpoint_path = os.path.join(args.output_dir, f"checkpoint_step_{step + 1}")
+            logging.info(f"  Saving checkpoint to {checkpoint_path}")
             save_models(actor_model, critic_model, checkpoint_path)
+            logging.info(f"  Checkpoint saved successfully")
+        
+        step_total_time = time.time() - rollout_start_time
+        logging.info(f"--- PPO Step {step + 1} Complete in {step_total_time:.1f}s ---")
+        logging.info("")
 
     final_model_path = os.path.join(args.output_dir, "final_model")
+    logging.info(f"Saving final model to {final_model_path}")
     save_models(actor_model, critic_model, final_model_path)
+    logging.info("Final model saved successfully")
 
     close_reward_client()
-    logging.info("Training complete.")
+    logging.info("Reward client connection closed")
+    logging.info("=== RL Training Complete ===")
+    logging.info(f"Total training steps: {args.total_ppo_steps}")
+    logging.info(f"Final model saved at: {final_model_path}")
+    logging.info("=============================")
 
 if __name__ == "__main__":
     main()

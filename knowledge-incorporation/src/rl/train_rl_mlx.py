@@ -217,6 +217,10 @@ def main():
 
     critic_model = RLCritic(actor_model.model, actor_model.tokenizer)
     
+    # Set random seed for reproducible dataset sampling
+    import random
+    random.seed(args.seed)
+    
     dataset = build_dataset()
     prompts = get_squad_prompts(dataset, num_samples=args.batch_size * args.total_ppo_steps)
     ppo_buffer = PPOBuffer(buffer_size=args.batch_size)

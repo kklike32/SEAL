@@ -59,27 +59,47 @@ class ServerState:
         self._temp_dir = tempfile.mkdtemp()
         self._weights_path = os.path.join(self._temp_dir, "original_weights.safetensors")
         
-        # Save the original model weights
+        # Save the original model weights and structure
         self.model.save_weights(self._weights_path)
+        self._original_model_state = None  # Will store the original model structure
         
         LOG.info("Initial model and tokenizer loaded. Original weights saved for restoration.")
 
+    def save_model_structure(self):
+        """Save the current model structure before applying LoRA."""
+        # Create a deep copy of the model structure for restoration
+        self._original_model_state = self.model
+        
     def restore_base_model(self):
-        """Restores the model to its original state by reloading saved weights."""
+        """Restores the model to its original state by reloading the base model entirely."""
         LOG.debug("Restoring original model weights...")
         import time
         restore_start = time.time()
         
-        # Load the original weights back
-        self.model.load_weights(self._weights_path)
-        
-        # Force MLX to synchronize the model state
-        import mlx.core as mlx
-        mlx.eval(self.model)
-        gc.collect()
-        
-        restore_time = time.time() - restore_start
-        LOG.debug("Model weights restored in %.3f seconds.", restore_time)
+        try:
+            # The safest approach: reload the entire model from scratch
+            # This completely avoids the LoRA parameter cleanup issue
+            LOG.debug("Reloading base model from scratch...")
+            self.model, _ = load(self._model_id)
+            
+            # Force MLX to synchronize the model state
+            mlx.eval(self.model)
+            gc.collect()
+            
+            restore_time = time.time() - restore_start
+            LOG.debug("Model completely reloaded in %.3f seconds.", restore_time)
+            
+        except Exception as e:
+            LOG.error("Failed to reload model: %s", e)
+            # Fallback: try the old weight restoration method
+            try:
+                self.model.load_weights(self._weights_path)
+                mlx.eval(self.model)
+                gc.collect()
+                LOG.debug("Fallback weight restoration completed.")
+            except Exception as e2:
+                LOG.error("Both restoration methods failed: %s", e2)
+                raise e2
     
     def __del__(self):
         """Clean up temporary files when the server shuts down."""

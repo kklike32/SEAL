@@ -35,7 +35,11 @@ class MLXPPO:
         padded_list = []
         for t in tensors:
             padding_size = max_len - t.shape[-1]
-            padded_t = mx.pad(t, [(0, 0), (0, padding_size)], constant_values=pad_value)
+            # Handle both 1D and 2D tensors
+            if len(t.shape) == 1:
+                padded_t = mx.pad(t, [(0, padding_size)], constant_values=pad_value)
+            else:
+                padded_t = mx.pad(t, [(0, 0), (0, padding_size)], constant_values=pad_value)
             padded_list.append(padded_t)
         return mx.concatenate(padded_list, axis=0)
 

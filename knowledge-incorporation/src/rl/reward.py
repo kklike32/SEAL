@@ -42,14 +42,19 @@ def get_reward(prompt: str, generated_completion: str) -> float:
     try:
         # --- 1. Prepare data in the format the server expects ---
 
-        # The server expects `train_sequences` as a list of dicts with a "text" key.
-        train_sequence_text = f"{prompt}{generated_completion}"
-        train_sequences = [{"text": train_sequence_text}]
+        # The server expects `train_sequences` as a list of strings, not dicts with "text" key.
+        # Format: "{title}\n{completion_text}" based on TRAINING_SEQUENCE_TEMPLATE
+        
+        # Parse the title from the prompt
+        title_match = re.search(r"Title:\s*(.*?)\n\n", prompt, re.DOTALL)
+        title = title_match.group(1).strip() if title_match else "Unknown"
+        
+        # Create training sequence in the format the server expects
+        training_sequence = f"{title}\n{generated_completion}"
+        train_sequences = [training_sequence]
 
         # The server needs `eval_questions` to measure performance gain.
-        # We need to parse the prompt and construct the proper data structure.
         # Parse the prompt format: "Title: ... Context: ... Question: ... Answer:"
-        title_match = re.search(r"Title:\s*(.*?)\n\n", prompt, re.DOTALL)
         context_match = re.search(r"Context:\s*(.*?)\n\n---\n\n", prompt, re.DOTALL)
         question_match = re.search(r"Question:\s*(.*?)\n\nAnswer:", prompt, re.DOTALL)
         
@@ -59,7 +64,7 @@ def get_reward(prompt: str, generated_completion: str) -> float:
         else:
             # Construct the proper eval_question format expected by the server
             eval_questions = [{
-                "title": title_match.group(1).strip(),
+                "title": title,
                 "context": context_match.group(1).strip(),
                 "question": question_match.group(1).strip(),
                 "answer": ""  # We don't need the answer for evaluation
@@ -73,6 +78,13 @@ def get_reward(prompt: str, generated_completion: str) -> float:
             "finetune_epochs": 5,
             "lora_rank": 8,
         }
+
+        print(f"Sending to TTT server:")
+        print(f"  - Train sequences: {len(train_sequences)} items")
+        print(f"  - Eval questions: {len(eval_questions)} items")
+        print(f"  - Training sequence preview: {training_sequence[:100]}...")
+        if eval_questions:
+            print(f"  - Question: {eval_questions[0]['question']}")
 
         # Send the request
         socket.send_json(message)

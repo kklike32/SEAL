@@ -10,6 +10,9 @@ MODEL_ID="mlx-community/Meta-Llama-3-8B-Instruct"
 OUTPUT_DIR="logs/rl_training_run_5"
 TOTAL_STEPS=8
 SAVE_EVERY=2
+BATCH_SIZE=8
+MINI_BATCH_SIZE=4
+PPO_EPOCHS=2
 
 # Create output directory if it doesn't exist
 mkdir -p "$OUTPUT_DIR"
@@ -21,9 +24,9 @@ ARGS=(
     --output_dir "$OUTPUT_DIR"
     --total_ppo_steps "$TOTAL_STEPS"
     --save_every "$SAVE_EVERY"
-    --batch_size 8            # Reduced for better memory usage
-    --mini_batch_size 4       # Smaller mini-batch
-    --ppo_epochs 2            # Fewer epochs
+    --batch_size "$BATCH_SIZE"
+    --mini_batch_size "$MINI_BATCH_SIZE"
+    --ppo_epochs "$PPO_EPOCHS"
     --learning_rate 1.41e-5   # Default SEAL learning rate
 )
 
@@ -34,8 +37,8 @@ echo "========================================"
 echo "Model: $MODEL_ID"
 echo "Output Directory: $OUTPUT_DIR"
 echo "Total PPO Steps: $TOTAL_STEPS"
-echo "Batch Size: 8"
-echo "Mini Batch Size: 4"
+echo "Batch Size: $BATCH_SIZE"
+echo "Mini Batch Size: $MINI_BATCH_SIZE"
 echo "Learning Rate: 1.41e-5"
 echo "========================================"
 

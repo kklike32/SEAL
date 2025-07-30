@@ -34,9 +34,9 @@ def test_reward_integration():
         
         # Test with a simple completion
         print("3. Testing reward computation...")
-        test_completion = " The answer is that this is a test completion for SEAL."
+        test_completion = "Saint Bernadette Soubirous was the person to whom the Virgin Mary allegedly appeared in 1858 in Lourdes, France."
         
-        print(f"Prompt: {prompt}")
+        print(f"Prompt: {prompt[:200]}...")
         print(f"Completion: {test_completion}")
         print("Sending to TTT server...")
         

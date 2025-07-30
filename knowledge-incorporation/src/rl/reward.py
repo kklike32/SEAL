@@ -2,6 +2,7 @@
 import zmq
 import json
 import time
+import re
 
 # Global ZMQ context and socket
 context = None
@@ -19,6 +20,8 @@ def initialize_reward_client(port: int = 5555):
         print(f"Initializing ZMQ client to connect to port {port}...")
         context = zmq.Context()
         socket = context.socket(zmq.REQ)
+        # Set a timeout for receiving messages to prevent indefinite blocking
+        socket.setsockopt(zmq.RCVTIMEO, 5000) # 5 seconds
         socket.connect(f"tcp://localhost:{port}")
 
 def get_reward(prompt: str, generated_completion: str) -> float:
@@ -37,14 +40,30 @@ def get_reward(prompt: str, generated_completion: str) -> float:
         raise ConnectionError("Reward client is not initialized. Call initialize_reward_client() first.")
 
     try:
-        # Construct the message to send to the server
-        # This needs to match the format expected by TTT_server_mlx.py
+        # --- 1. Prepare data in the format the server expects ---
+
+        # The server expects `train_sequences` as a list of dicts with a "text" key.
+        train_sequence_text = f"{prompt}{generated_completion}"
+        train_sequences = [{"text": train_sequence_text}]
+
+        # The server needs `eval_questions` to measure performance gain.
+        # We can parse the question directly from the prompt.
+        # This assumes the prompt always follows the "Question: ... Answer:" format.
+        question_match = re.search(r"Question:\s*(.*)\s*\n\nAnswer:", prompt, re.DOTALL)
+        if not question_match:
+            print("Warning: Could not parse question from prompt. Evaluation may be inaccurate.")
+            eval_questions = []
+        else:
+            # The server's evaluation function expects the full prompt for context.
+            eval_questions = [prompt]
+
+        # --- 2. Construct the message for the server ---
         message = {
-            "prompt": prompt,
-            "completion": generated_completion,
-            # We can add other parameters here if needed by the server
-            "eval_rounds": 1, 
-            "train_kwargs": {}
+            "train_sequences": train_sequences,
+            "eval_questions": eval_questions,
+            # You can also include fine-tuning parameters if needed
+            "finetune_epochs": 5,
+            "lora_rank": 8,
         }
 
         # Send the request
@@ -53,13 +72,27 @@ def get_reward(prompt: str, generated_completion: str) -> float:
         # Wait for the reply
         response = socket.recv_json()
 
-        # The reward is the mean_gain
-        reward = response.get("mean_gain", 0.0)
+        # --- 3. Extract the correct reward key from the response ---
+        if "error" in response:
+            print(f"Server returned an error: {response['error']}")
+            return 0.0
+
+        # The key for performance gain is 'adapter_gain', not 'mean_gain'.
+        reward = response.get("adapter_gain", 0.0)
+        
+        print(
+            f"Server Response -> "
+            f"Baseline Acc: {response.get('baseline_accuracy', 'N/A'):.3f}, "
+            f"Adapter Acc: {response.get('adapter_accuracy', 'N/A'):.3f}, "
+            f"Gain (Reward): {reward:.3f}"
+        )
         return float(reward)
 
+    except zmq.Again:
+        print("Error: No response from TTT server (timeout). Is the server running?")
+        return 0.0
     except Exception as e:
-        print(f"Error communicating with TTT server: {e}")
-        # Return a neutral reward in case of an error
+        print(f"An error occurred while communicating with TTT server: {e}")
         return 0.0
 
 def close_reward_client():
@@ -82,12 +115,12 @@ if __name__ == '__main__':
         initialize_reward_client()
 
         # Create a dummy prompt and completion for testing
-        dummy_prompt = "Title: Test\n\nContext: This is a test.\n\n---\n\nQuestion: What is this?\n\nAnswer:"
-        dummy_completion = "This is a simple test of the reward system."
+        dummy_prompt = "Title: ZMQ Reward System\n\nContext: The client sends a request to the server to get a reward.\n\n---\n\nQuestion: What does the client send to the server?\n\nAnswer:"
+        dummy_completion = "The client sends a JSON object containing training sequences and evaluation questions."
 
         print("Sending a test request to the TTT server...")
         reward = get_reward(dummy_prompt, dummy_completion)
-        print(f"Received reward: {reward}")
+        print(f"\nFinal received reward: {reward}")
 
     finally:
         close_reward_client()

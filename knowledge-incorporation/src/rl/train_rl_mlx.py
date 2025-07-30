@@ -95,43 +95,30 @@ class RLActor(nn.Module):
         Compute log probabilities for the response tokens given the input.
         """
         # Ensure inputs are MLX arrays
-        if not isinstance(input_ids, mx.array):
-            input_ids = mx.array(input_ids)
-        if not isinstance(response_ids, mx.array):
-            response_ids = mx.array(response_ids)
-            
-        # Ensure proper shape (batch_size, sequence_length)
-        if input_ids.ndim == 1:
-            input_ids = input_ids.reshape(1, -1)
-        if response_ids.ndim == 1:
-            response_ids = response_ids.reshape(1, -1)
-        
-        # Concatenate prompt and response
+        if input_ids.ndim == 1: input_ids = mx.expand_dims(input_ids, 0)
+        if response_ids.ndim == 1: response_ids = mx.expand_dims(response_ids, 0)
+
         full_sequence = mx.concatenate([input_ids, response_ids], axis=-1)
-        
-        # Get logits for the full sequence
         logits = self.model(full_sequence)
-        
-        # Convert to log probabilities
         log_probs = nn.log_softmax(logits, axis=-1)
+
+        # We want the log probs for the response part, which are predicted from
+        # the sequence up to that point.
+        response_start_idx = input_ids.shape[-1]
         
-        # Extract log probabilities for the response tokens
-        # We want log_probs for positions [len(input_ids):len(input_ids)+len(response_ids)]
-        response_start = input_ids.shape[-1]
-        response_end = response_start + response_ids.shape[-1]
-        
-        # Get the log probs for response tokens (shifted by 1 for next token prediction)
-        response_log_probs = log_probs[:, response_start-1:response_end-1, :]
-        
+        # The logits for the first response token are at index (response_start_idx - 1)
+        response_logits_indices = slice(response_start_idx - 1, -1)
+        response_log_probs = log_probs[:, response_logits_indices, :]
+
         # Gather the log probabilities for the actual response tokens
-        response_token_log_probs = mx.take_along_axis(
-            response_log_probs, 
-            response_ids.reshape(1, -1, 1), 
+        gathered = mx.take_along_axis(
+            response_log_probs,
+            mx.expand_dims(response_ids, -1),
             axis=-1
         ).squeeze(-1)
-        
-        # Return mean log probability
-        return mx.mean(response_token_log_probs)
+
+        # Return the SUM of log probabilities for the sequence
+        return mx.sum(gathered, axis=-1)
 
 class RLCritic(nn.Module):
     """
@@ -232,6 +219,12 @@ def main():
     )
 
     actor_model = RLActor(args.model_id)
+
+    # Set it to the end-of-sentence token for padding consistency.
+    if actor_model.tokenizer.pad_token_id is None:
+        logging.info("Tokenizer missing pad_token_id. Setting to eos_token_id.")
+        actor_model.tokenizer.pad_token_id = actor_model.tokenizer.eos_token_id
+
     critic_model = RLCritic(actor_model.model, actor_model.tokenizer)
     
     dataset = build_dataset()
@@ -304,7 +297,6 @@ def main():
             logprob_start = time.time()
             log_prob = actor_model.compute_log_probs(prompt_tensor, response_tensor)
             logprob_time = time.time() - logprob_start
-
             logging.info(f"    Sample {i+1}: Computing reward via TTT server...")
             reward_start = time.time()
             reward = get_reward(prompt, response)

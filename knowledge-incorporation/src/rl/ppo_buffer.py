@@ -67,12 +67,13 @@ class PPOBuffer:
         self.advantages = (self.advantages - adv_mean) / (adv_std + 1e-8)
 
         data = dict(
-            states=self.states,
-            actions=self.actions,
-            returns=mx.array(self.returns),
-            advantages=mx.array(self.advantages),
-            log_probs=mx.array(self.log_probs),
-            values=mx.array(self.values)
+            states=np.array(self.states[:self.ptr]),
+            actions=np.array(self.actions[:self.ptr]),
+            rewards=np.array(self.rewards[:self.ptr]),
+            returns=mx.array(self.returns[:self.ptr]),
+            advantages=mx.array(self.advantages[:self.ptr]),
+            log_probs=mx.array(self.log_probs[:self.ptr]),
+            values=mx.array(self.values[:self.ptr])
         )
 
         # Reset buffer

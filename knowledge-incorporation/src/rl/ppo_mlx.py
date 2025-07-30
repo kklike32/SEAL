@@ -45,10 +45,24 @@ class MLXPPO:
         This is the function that will be differentiated.
         """
         # --- Actor Loss (Policy Gradient) ---
-        logits = actor_model(response_batch, attention_mask=attention_mask)
+        # Compute new log probabilities for the response tokens
+        # We need to pass the full sequence (prompt + response) to get proper log probs
+        full_sequences = mx.concatenate([prompt_batch, response_batch], axis=-1)
+        logits = actor_model(full_sequences)
         log_probs_all = mx.log_softmax(logits, axis=-1)
+        
+        # Extract log probs for response tokens only
+        prompt_length = prompt_batch.shape[-1]
+        response_length = response_batch.shape[-1]
+        
+        # The logits for response tokens start at prompt_length - 1 (because of causal modeling)
+        response_logits = log_probs_all[:, prompt_length-1:prompt_length-1+response_length, :]
+        
+        # Gather log probabilities for actual response tokens
         response_batch_expanded = mx.expand_dims(response_batch, -1)
-        gathered_log_probs = mx.take_along_axis(log_probs_all, response_batch_expanded, axis=-1).squeeze(-1)
+        gathered_log_probs = mx.take_along_axis(response_logits, response_batch_expanded, axis=-1).squeeze(-1)
+        
+        # Sum log probabilities for the entire response sequence (with attention mask)
         new_log_probs = mx.sum(gathered_log_probs * attention_mask, axis=-1)
 
         # --- Critic Loss (Value Function) ---
@@ -57,11 +71,11 @@ class MLXPPO:
         # --- PPO Objective ---
         ratio = mx.exp(new_log_probs - old_log_probs_batch)
         policy_loss_1 = advantages_batch * ratio
-        policy_loss_2 = advantages_batch * mx.clip(ratio, 1.0 - self.config.clip_param, 1.0 + self.config.clip_param)
+        policy_loss_2 = advantages_batch * mx.clip(ratio, 1.0 - self.config.cliprange, 1.0 + self.config.cliprange)
         policy_loss = -mx.mean(mx.minimum(policy_loss_1, policy_loss_2))
         
         value_loss = mx.mean((returns_batch - values) ** 2)
-        total_loss = policy_loss + self.config.vf_coeff * value_loss
+        total_loss = policy_loss + self.config.vf_coef * value_loss
 
         # value_and_grad expects (loss, auxiliary_data)
         return total_loss, (policy_loss, value_loss)
@@ -91,8 +105,8 @@ class MLXPPO:
                 batch_returns = returns[mini_batch_indices_mx]
                 batch_old_log_probs = old_log_probs[mini_batch_indices_mx]
 
-                prompt_tokens_list = [self.tokenizer.encode(p, return_tensors="mx") for p in batch_prompts]
-                response_tokens_list = [self.tokenizer.encode(r, return_tensors="mx") for r in batch_responses]
+                prompt_tokens_list = [mx.array(self.tokenizer.encode(p)) for p in batch_prompts]
+                response_tokens_list = [mx.array(self.tokenizer.encode(r)) for r in batch_responses]
 
                 batch_prompt = self._pad_and_stack_tensors(prompt_tokens_list, self.tokenizer.pad_token_id)
                 batch_response = self._pad_and_stack_tensors(response_tokens_list, self.tokenizer.pad_token_id)

@@ -161,35 +161,25 @@ class RLCritic(nn.Module):
         """
         Forward pass to get the value estimate.
         """
-        # The key issue: we need hidden states, not logits
-        # The model(x) call typically returns logits for language models
+        # For the critic, we only need a scalar value estimate from the prompt
+        # We'll use the model's output logits and project to a value
         
-        if hasattr(self.model, 'model'):
-            # For models with .model attribute (like LlamaForCausalLM)
-            # Get the base model outputs (hidden states)
-            hidden_states = self.model.model(x)
-            # hidden_states might be a tuple, extract the actual states
-            if isinstance(hidden_states, tuple):
-                hidden_states = hidden_states[0]
+        # Get the model's output (logits)
+        outputs = self.model(x)
+        
+        # Take the last token's output and project to hidden size if needed
+        last_token_output = outputs[:, -1, :]  # Shape: [batch_size, vocab_size]
+        
+        # If the output is logits (vocab_size), we need to project to hidden_size
+        if last_token_output.shape[-1] != self.hidden_size:
+            # Create a simple projection layer if it doesn't exist
+            if not hasattr(self, 'projection'):
+                self.projection = nn.Linear(last_token_output.shape[-1], self.hidden_size)
+            last_hidden = self.projection(last_token_output)
         else:
-            # Fallback: direct model call (this might give logits)
-            outputs = self.model(x)
-            # If this is logits, we need to handle it differently
-            if outputs.shape[-1] > self.hidden_size:
-                # This is likely logits (vocab_size dimension), not hidden states
-                # We need to get the hidden states instead
-                raise ValueError(f"Model output shape {outputs.shape} suggests logits, not hidden states. "
-                               f"Need to access model.model instead of model directly.")
-            hidden_states = outputs
+            last_hidden = last_token_output
         
-        # Take the last token's hidden state
-        last_hidden = hidden_states[:, -1, :]
-        
-        # Verify dimensions match
-        if last_hidden.shape[-1] != self.hidden_size:
-            raise ValueError(f"Hidden state dimension {last_hidden.shape[-1]} doesn't match "
-                           f"expected dimension {self.hidden_size}")
-        
+        # Project to value
         value = self.value_head(last_hidden)
         return value
 
@@ -262,14 +252,28 @@ def main():
             prompt = prompts[step * args.batch_size + i]
             
             logging.info(f"    Sample {i+1}: Generating response...")
+            logging.info(f"    Sample {i+1}: Prompt: {prompt[:100]}...")  # Log first 100 chars of prompt
             generation_start = time.time()
-            response = actor_model.generate(prompt)
+            full_response = actor_model.generate(prompt)
+            
+            # Extract just the completion (action) by removing the prompt
+            # mlx_lm_generate returns the full sequence including the prompt
+            if full_response.startswith(prompt):
+                completion = full_response[len(prompt):]
+            else:
+                # Fallback: assume the generated text is the completion
+                completion = full_response
+            
             generation_time = time.time() - generation_start
-            logging.info(f"    Sample {i+1}: Generation complete in {generation_time:.2f}s (length: {len(response)} chars)")
+            logging.info(f"    Sample {i+1}: Generation complete in {generation_time:.2f}s (completion length: {len(completion)} chars)")
+            logging.info(f"    Sample {i+1}: Generated completion: {completion[:200]}...")  # Log first 200 chars
+            
+            # The action is the completion, not the full response
+            action = completion
             
             # Encode the text to tensors - handle different tokenizer return formats
             prompt_encoded = actor_model.tokenizer.encode(prompt)
-            response_encoded = actor_model.tokenizer.encode(response)
+            action_encoded = actor_model.tokenizer.encode(action)
             
             # Convert to MLX arrays with proper shape handling
             if isinstance(prompt_encoded, list):
@@ -280,13 +284,13 @@ def main():
                 # Handle other formats (e.g., torch tensors, numpy arrays)
                 prompt_tensor = mx.array(prompt_encoded).reshape(1, -1)
                 
-            if isinstance(response_encoded, list):
-                response_tensor = mx.array(response_encoded).reshape(1, -1)
-            elif isinstance(response_encoded, mx.array):
-                response_tensor = response_encoded.reshape(1, -1) if response_encoded.ndim == 1 else response_encoded
+            if isinstance(action_encoded, list):
+                action_tensor = mx.array(action_encoded).reshape(1, -1)
+            elif isinstance(action_encoded, mx.array):
+                action_tensor = action_encoded.reshape(1, -1) if action_encoded.ndim == 1 else action_encoded
             else:
                 # Handle other formats
-                response_tensor = mx.array(response_encoded).reshape(1, -1)
+                action_tensor = mx.array(action_encoded).reshape(1, -1)
             
             # Get value from critic
             critic_start = time.time()
@@ -295,11 +299,11 @@ def main():
             
             # Compute log probabilities properly using the actor's method
             logprob_start = time.time()
-            log_prob = actor_model.compute_log_probs(prompt_tensor, response_tensor)
+            log_prob = actor_model.compute_log_probs(prompt_tensor, action_tensor)
             logprob_time = time.time() - logprob_start
             logging.info(f"    Sample {i+1}: Computing reward via TTT server...")
             reward_start = time.time()
-            reward = get_reward(prompt, response)
+            reward = get_reward(prompt, action)
             reward_time = time.time() - reward_start
             logging.info(f"    Sample {i+1}: Reward computation complete in {reward_time:.2f}s (reward: {reward:.4f})")
             
@@ -311,7 +315,7 @@ def main():
             rollout_values.append(value_scalar)
             rollout_log_probs.append(log_prob_scalar)
             
-            ppo_buffer.add(prompt, response, reward, value_scalar, log_prob_scalar)
+            ppo_buffer.add(prompt, action, reward, value_scalar, log_prob_scalar)
             
             sample_time = time.time() - sample_start_time
             logging.info(f"    Sample {i+1}: Complete in {sample_time:.2f}s total "

@@ -47,15 +47,23 @@ def get_reward(prompt: str, generated_completion: str) -> float:
         train_sequences = [{"text": train_sequence_text}]
 
         # The server needs `eval_questions` to measure performance gain.
-        # We can parse the question directly from the prompt.
-        # This assumes the prompt always follows the "Question: ... Answer:" format.
-        question_match = re.search(r"Question:\s*(.*)\s*\n\nAnswer:", prompt, re.DOTALL)
-        if not question_match:
-            print("Warning: Could not parse question from prompt. Evaluation may be inaccurate.")
+        # We need to parse the prompt and construct the proper data structure.
+        # Parse the prompt format: "Title: ... Context: ... Question: ... Answer:"
+        title_match = re.search(r"Title:\s*(.*?)\n\n", prompt, re.DOTALL)
+        context_match = re.search(r"Context:\s*(.*?)\n\n---\n\n", prompt, re.DOTALL)
+        question_match = re.search(r"Question:\s*(.*?)\n\nAnswer:", prompt, re.DOTALL)
+        
+        if not (title_match and context_match and question_match):
+            print("Warning: Could not parse prompt structure. Evaluation may be inaccurate.")
             eval_questions = []
         else:
-            # The server's evaluation function expects the full prompt for context.
-            eval_questions = [prompt]
+            # Construct the proper eval_question format expected by the server
+            eval_questions = [{
+                "title": title_match.group(1).strip(),
+                "context": context_match.group(1).strip(),
+                "question": question_match.group(1).strip(),
+                "answer": ""  # We don't need the answer for evaluation
+            }]
 
         # --- 2. Construct the message for the server ---
         message = {

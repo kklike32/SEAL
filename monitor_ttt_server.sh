@@ -3,7 +3,7 @@
 # TTT Server Monitor - Automatically restarts the server when it crashes
 # Run this in Terminal 1 instead of the regular TTT server script
 
-echo "🔄 TTT Server Monitor Starting..."
+echo "TTT Server Monitor Starting..."
 echo "================================="
 
 cd /Users/keenan/Documents/SEAL
@@ -13,7 +13,7 @@ MAX_RESTARTS=10
 
 while [ $RESTART_COUNT -lt $MAX_RESTARTS ]; do
     echo ""
-    echo "🚀 Starting TTT Server (Attempt $((RESTART_COUNT + 1))/$MAX_RESTARTS)..."
+    echo "Starting TTT Server (Attempt $((RESTART_COUNT + 1))/$MAX_RESTARTS)..."
     echo "Time: $(date)"
     
     # Start the TTT server
@@ -24,10 +24,10 @@ while [ $RESTART_COUNT -lt $MAX_RESTARTS ]; do
     RESTART_COUNT=$((RESTART_COUNT + 1))
     
     echo ""
-    echo "⚠️  TTT Server stopped (Exit code: $EXIT_CODE)"
+    echo "   TTT Server stopped (Exit code: $EXIT_CODE)"
     
     if [ $RESTART_COUNT -lt $MAX_RESTARTS ]; then
-        echo "🔄 Restarting in 5 seconds..."
+        echo "  Restarting in 5 seconds..."
         echo "   This is normal - the server crashes after each request due to weight restoration issues"
         echo "   The RL training will continue working with automatic restarts"
         
@@ -37,10 +37,10 @@ while [ $RESTART_COUNT -lt $MAX_RESTARTS ]; do
         # Short wait before restart
         sleep 5
     else
-        echo "❌ Maximum restart attempts reached. Please check for persistent issues."
+        echo "Maximum restart attempts reached. Please check for persistent issues."
         break
     fi
 done
 
 echo ""
-echo "🔚 TTT Server Monitor stopped."
+echo "TTT Server Monitor stopped."

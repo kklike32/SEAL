@@ -51,7 +51,7 @@ if ! nc -z localhost 5555; then
     echo "Continuing in 5 seconds..."
     sleep 5
 fi
-echo "✅ TTT server connection available"
+echo "TTT server connection available"
 
 # MLX Performance optimizations for Apple Silicon
 export MLX_GPU_MEMORY_LIMIT=0.9

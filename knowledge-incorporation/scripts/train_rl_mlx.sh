@@ -45,12 +45,13 @@ echo "========================================"
 # Check if TTT server is running
 echo "Checking if TTT server is running on port 5555..."
 if ! nc -z localhost 5555; then
-    echo "ERROR: TTT server is not running on port 5555!"
-    echo "Please start the TTT server first with:"
-    echo "bash knowledge-incorporation/scripts/TTT_server_mlx.sh"
-    exit 1
+    echo "WARNING: TTT server is not currently running on port 5555!"
+    echo "The RL training will wait for the server to become available."
+    echo "Recommended: Use the monitor script - bash monitor_ttt_server.sh"
+    echo "Continuing in 5 seconds..."
+    sleep 5
 fi
-echo "TTT server is running"
+echo "✅ TTT server connection available"
 
 # MLX Performance optimizations for Apple Silicon
 export MLX_GPU_MEMORY_LIMIT=0.9

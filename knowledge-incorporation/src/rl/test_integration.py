@@ -48,11 +48,11 @@ def test_reward_integration():
         close_reward_client()
         print("✓ Reward client closed")
         
-        print(f"\n✅ Integration test successful! Reward: {reward}")
+        print(f"\nIntegration test successful! Reward: {reward}")
         return True
         
     except Exception as e:
-        print(f"❌ Integration test failed: {e}")
+        print(f"Integration test failed: {e}")
         import traceback
         traceback.print_exc()
         return False

@@ -4,15 +4,7 @@ import mlx.core as mx
 import mlx.nn as nn
 from mlx.optimizers import Adam
 import numpy as np
-
-class PPOConfig:
-    """Configuration for PPO training."""
-    def __init__(self, learning_rate=1.41e-5, mini_batch_size=4, ppo_epochs=2, cliprange=0.2, vf_coef=0.5):
-        self.learning_rate = learning_rate
-        self.mini_batch_size = mini_batch_size
-        self.ppo_epochs = ppo_epochs
-        self.cliprange = cliprange
-        self.vf_coef = vf_coef
+from trl import PPOConfig
 
 class MLXPPO:
     """
@@ -96,15 +88,20 @@ class MLXPPO:
         """
         The main learning loop. Trains the models on the data in the buffer.
         """
-        prompts, responses, rewards, values, log_probs = buffer_data
-        returns = self._compute_returns(rewards, values)
-        advantages = returns - values
+        # Extract data from the dictionary returned by PPOBuffer.get()
+        prompts = buffer_data['states']  # states are prompts in our case
+        responses = buffer_data['actions']  # actions are responses in our case
+        rewards = buffer_data['rewards']
+        values = buffer_data['values']
+        log_probs = buffer_data['log_probs']
+        returns = buffer_data['returns']
+        advantages = buffer_data['advantages']
 
         logging.info(f"Learning phase: Processing {len(prompts)} samples...")
 
         stats = {"policy_loss": 0.0, "value_loss": 0.0, "total_loss": 0.0}
 
-        for epoch in range(self.config.ppo_epochs):
+        for epoch in range(self.config.num_ppo_epochs):
             # Convert prompts and responses to token lists
             prompt_tokens_list = [self.tokenizer.encode(p) for p in prompts]
             response_tokens_list = [self.tokenizer.encode(r) for r in responses]
@@ -116,9 +113,9 @@ class MLXPPO:
                 # Get batch data
                 batch_prompt_tokens = prompt_tokens_list[i:end_idx]
                 batch_response_tokens = response_tokens_list[i:end_idx]
-                batch_advantages = mx.array(advantages[i:end_idx])
-                batch_returns = mx.array(returns[i:end_idx])
-                batch_old_log_probs = mx.array(log_probs[i:end_idx])
+                batch_advantages = advantages[i:end_idx]  # advantages is already an MLX array
+                batch_returns = returns[i:end_idx]  # returns is already an MLX array
+                batch_old_log_probs = log_probs[i:end_idx]  # log_probs is already an MLX array
 
                 # Pad and stack tensors
                 batch_prompt = self._pad_and_stack_tensors([mx.array(t) for t in batch_prompt_tokens], self.tokenizer.pad_token_id)
@@ -162,16 +159,22 @@ class MLXPPO:
                     return value_loss
 
                 # Create gradient functions using MLX pattern
-                actor_loss_and_grad_fn = nn.value_and_grad(self.actor_model.model, actor_loss_fn)
+                actor_loss_and_grad_fn = nn.value_and_grad(self.actor_model, actor_loss_fn)
                 critic_loss_and_grad_fn = nn.value_and_grad(self.critic_model, critic_loss_fn)
                 
                 # Compute gradients and update
-                actor_loss, actor_grads = actor_loss_and_grad_fn(self.actor_model.model, batch_prompt, batch_response, batch_advantages, batch_old_log_probs, attention_mask)
+                actor_loss, actor_grads = actor_loss_and_grad_fn(self.actor_model, batch_prompt, batch_response, batch_advantages, batch_old_log_probs, attention_mask)
                 critic_loss, critic_grads = critic_loss_and_grad_fn(self.critic_model, batch_prompt, batch_returns)
                 
+                # Ensure computations are evaluated (MLX lazy evaluation)
+                mx.eval(actor_loss, actor_grads, critic_loss, critic_grads)
+                
                 # Update models
-                self.actor_optimizer.update(self.actor_model.model, actor_grads)
+                self.actor_optimizer.update(self.actor_model, actor_grads)
                 self.critic_optimizer.update(self.critic_model, critic_grads)
+                
+                # Evaluate updated models
+                mx.eval(self.actor_model, self.critic_model)
 
                 # Track stats
                 stats["policy_loss"] += float(actor_loss)
@@ -179,7 +182,7 @@ class MLXPPO:
                 stats["total_loss"] += float(actor_loss + critic_loss)
 
         # Average the stats
-        num_updates = self.config.ppo_epochs * ((len(prompts) + self.config.mini_batch_size - 1) // self.config.mini_batch_size)
+        num_updates = self.config.num_ppo_epochs * ((len(prompts) + self.config.mini_batch_size - 1) // self.config.mini_batch_size)
         for key in stats:
             stats[key] /= num_updates
 

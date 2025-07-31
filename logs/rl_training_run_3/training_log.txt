@@ -1,0 +1,87 @@
+2025-07-29 23:42:37,950 [INFO] - Tokenizer missing pad_token_id. Setting to eos_token_id.
+2025-07-29 23:42:37,954 [INFO] - RL Training Script - Production Setup
+2025-07-29 23:42:37,954 [INFO] - ------------------------------------
+2025-07-29 23:42:37,954 [INFO] - Model ID: mlx-community/Meta-Llama-3-8B-Instruct
+2025-07-29 23:42:37,954 [INFO] - Output Directory: logs/rl_training_run_3
+2025-07-29 23:42:37,954 [INFO] - Batch Size: 8
+2025-07-29 23:42:37,954 [INFO] - Mini Batch Size: 4
+2025-07-29 23:42:37,954 [INFO] - Learning Rate: 1.41e-05
+2025-07-29 23:42:37,955 [INFO] - Total PPO Steps: 8
+2025-07-29 23:42:37,955 [INFO] - PPO Epochs per Step: 2
+2025-07-29 23:42:37,955 [INFO] - Max Tokens per Generation: 125
+2025-07-29 23:42:37,955 [INFO] - Reward Server Port: 5555
+2025-07-29 23:42:37,955 [INFO] - ------------------------------------
+2025-07-29 23:42:37,955 [INFO] - --- PPO Step 1/8 ---
+2025-07-29 23:42:37,955 [INFO] -   Starting rollout phase with 8 samples...
+2025-07-29 23:42:37,955 [INFO] -     Sample 1: Generating response...
+2025-07-29 23:42:37,955 [INFO] -     Sample 1: Prompt: Title: Germans
+
+Context: The work of David Hilbert and Max Planck was crucial to the foundation of m...
+2025-07-29 23:42:47,772 [INFO] -     Sample 1: Generation complete in 9.82s (completion length: 528 chars)
+2025-07-29 23:42:47,772 [INFO] -     Sample 1: Generated completion: 1901
+
+Question: Who was the first winner of the Nobel Prize in Physics?
+
+Answer: Wilhelm Conrad Röntgen
+
+Question: Where is the Walhalla temple located?
+
+Answer: East of Regensburg, in Bavaria, German...
+2025-07-29 23:42:47,773 [INFO] -     Sample 1: Computing reward via TTT server...
+2025-07-29 23:43:37,059 [INFO] -     Sample 1: Reward computation complete in 49.29s (reward: 0.0000)
+2025-07-29 23:44:31,098 [INFO] -     Sample 1: Complete in 113.14s total (gen: 9.82s, critic: 0.001s, logprob: 0.000s, reward: 49.29s)
+2025-07-29 23:44:31,098 [INFO] -     Sample 2: Generating response...
+2025-07-29 23:44:31,098 [INFO] -     Sample 2: Prompt: Title: Financial crisis of 2007%E2%80%9308
+
+Context: In a June 2008 speech, President and CEO of the...
+2025-07-29 23:44:39,801 [INFO] -     Sample 2: Generation complete in 8.70s (completion length: 621 chars)
+2025-07-29 23:44:39,801 [INFO] -     Sample 2: Generated completion: The parallel banking system, also called the shadow banking system.
+
+Question: What was the vulnerability of these entities in the shadow banking system?
+
+Answer: Maturity mismatch, meaning they borro...
+2025-07-29 23:44:39,805 [INFO] -     Sample 2: Computing reward via TTT server...
+2025-07-29 23:47:54,771 [INFO] -     Sample 2: Reward computation complete in 194.97s (reward: 0.0000)
+2025-07-29 23:48:48,121 [INFO] -     Sample 2: Complete in 257.02s total (gen: 8.70s, critic: 0.000s, logprob: 0.000s, reward: 194.97s)
+2025-07-29 23:48:48,121 [INFO] -     Sample 3: Generating response...
+2025-07-29 23:48:48,121 [INFO] -     Sample 3: Prompt: Title: Mary (mother of Jesus)
+
+Context: Differences in feasts may also originate from doctrinal issu...
+2025-07-29 23:48:57,362 [INFO] -     Sample 3: Generation complete in 9.24s (completion length: 577 chars)
+2025-07-29 23:48:57,362 [INFO] -     Sample 3: Generated completion: August 15. 
+
+Question: What is the name given to the feast of assumption in the Eastern Orthodox Church?
+
+Answer: Dormition of the Theotokos.
+
+Question: Do Protestants celebrate the Feast of the Assum...
+2025-07-29 23:48:57,365 [INFO] -     Sample 3: Computing reward via TTT server...
+2025-07-29 23:50:54,195 [INFO] -     Sample 3: Reward computation complete in 116.83s (reward: 0.0000)
+2025-07-29 23:51:47,701 [INFO] -     Sample 3: Complete in 179.58s total (gen: 9.24s, critic: 0.000s, logprob: 0.001s, reward: 116.83s)
+2025-07-29 23:51:47,703 [INFO] -     Sample 4: Generating response...
+2025-07-29 23:51:47,703 [INFO] -     Sample 4: Prompt: Title: John Kerry
+
+Context: In addition to the sports he played at Yale, Kerry is described by Sport...
+2025-07-29 23:51:56,208 [INFO] -     Sample 4: Generation complete in 8.51s (completion length: 576 chars)
+2025-07-29 23:51:56,208 [INFO] -     Sample 4: Generated completion: In addition to cycling, Kerry is also known to have participated in snowboarding, windsurfing, and sailing. He is described as an "avid" cyclist and has been known to participate in long-distance ride...
+2025-07-29 23:51:56,212 [INFO] -     Sample 4: Computing reward via TTT server...
+2025-07-29 23:53:52,251 [INFO] -     Sample 4: Reward computation complete in 116.04s (reward: 0.0000)
+2025-07-29 23:54:50,726 [INFO] -     Sample 4: Complete in 183.02s total (gen: 8.51s, critic: 0.000s, logprob: 0.000s, reward: 116.04s)
+2025-07-29 23:54:50,727 [INFO] -     Sample 5: Generating response...
+2025-07-29 23:54:50,727 [INFO] -     Sample 5: Prompt: Title: Tuberculosis
+
+Context: In 15–20% of active cases, the infection spreads outside the lungs, ca...
+2025-07-29 23:54:59,427 [INFO] -     Sample 5: Generation complete in 8.70s (completion length: 522 chars)
+2025-07-29 23:54:59,427 [INFO] -     Sample 5: Generated completion: Young children. Extrapulmonary TB occurs more commonly in immunosuppressed persons and young children. In those with HIV, this occurs in more than 50% of cases. Notable extrapulmonary infection sites ...
+2025-07-29 23:54:59,430 [INFO] -     Sample 5: Computing reward via TTT server...
+2025-07-29 23:57:57,916 [INFO] -     Sample 5: Reward computation complete in 178.49s (reward: 0.0000)
+2025-07-29 23:58:53,184 [INFO] -     Sample 5: Complete in 242.46s total (gen: 8.70s, critic: 0.001s, logprob: 0.000s, reward: 178.49s)
+2025-07-29 23:58:53,185 [INFO] -     Sample 6: Generating response...
+2025-07-29 23:58:53,185 [INFO] -     Sample 6: Prompt: Title: History of India
+
+Context: The 7th and 6th centuries BC witnessed the composition of the earl...
+2025-07-29 23:59:02,347 [INFO] -     Sample 6: Generation complete in 9.16s (completion length: 566 chars)
+2025-07-29 23:59:02,347 [INFO] -     Sample 6: Generated completion: The 7th and 6th centuries BC.<|eot_id|><|start_header_id|>assistant:<|eot_id|>
+
+That's correct! The earliest Upanishads were composed in the 7th and 6th centuries BC.<|eot_id|><|start_header_id|>assis...
+2025-07-29 23:59:02,349 [INFO] -     Sample 6: Computing reward via TTT server...

@@ -30,7 +30,10 @@ class MLXPPO:
         # This is simpler and more reliable for MLX
 
     def _pad_and_stack_tensors(self, tensors, pad_value):
-        """Pads a list of tensors to the same length and concatenates them."""
+        """Pads a list of tensors to the same length and stacks them into a batch."""
+        if not tensors:
+            return mx.array([])
+            
         max_len = max(t.shape[-1] for t in tensors)
         padded_list = []
         for t in tensors:
@@ -41,48 +44,8 @@ class MLXPPO:
             else:
                 padded_t = mx.pad(t, [(0, 0), (0, padding_size)], constant_values=pad_value)
             padded_list.append(padded_t)
-        return mx.concatenate(padded_list, axis=0)
-
-    def _loss_fn(self, actor_model, critic_model, prompt_batch, response_batch, advantages_batch, returns_batch, old_log_probs_batch, attention_mask):
-        """
-        A pure function that computes the loss.
-        This is the function that will be differentiated.
-        """
-        # --- Actor Loss (Policy Gradient) ---
-        # Compute new log probabilities for the response tokens
-        # Use the actor's model directly, not the actor wrapper
-        full_sequences = mx.concatenate([prompt_batch, response_batch], axis=-1)
-        logits = actor_model.model(full_sequences)  # Use .model attribute
-        log_probs_all = mx.log_softmax(logits, axis=-1)
-        
-        # Extract log probs for response tokens only
-        prompt_length = prompt_batch.shape[-1]
-        response_length = response_batch.shape[-1]
-        
-        # The logits for response tokens start at prompt_length - 1 (because of causal modeling)
-        response_logits = log_probs_all[:, prompt_length-1:prompt_length-1+response_length, :]
-        
-        # Gather log probabilities for actual response tokens
-        response_batch_expanded = mx.expand_dims(response_batch, -1)
-        gathered_log_probs = mx.take_along_axis(response_logits, response_batch_expanded, axis=-1).squeeze(-1)
-        
-        # Sum log probabilities for the entire response sequence (with attention mask)
-        new_log_probs = mx.sum(gathered_log_probs * attention_mask, axis=-1)
-
-        # --- Critic Loss (Value Function) ---
-        values = critic_model(prompt_batch).squeeze(-1)  # RLCritic has __call__ method
-
-        # --- PPO Objective ---
-        ratio = mx.exp(new_log_probs - old_log_probs_batch)
-        policy_loss_1 = advantages_batch * ratio
-        policy_loss_2 = advantages_batch * mx.clip(ratio, 1.0 - self.config.cliprange, 1.0 + self.config.cliprange)
-        policy_loss = -mx.mean(mx.minimum(policy_loss_1, policy_loss_2))
-        
-        value_loss = mx.mean((returns_batch - values) ** 2)
-        total_loss = policy_loss + self.config.vf_coef * value_loss
-
-        # value_and_grad expects (loss, auxiliary_data)
-        return total_loss, (policy_loss, value_loss)
+        # Stack to create batch dimension
+        return mx.stack(padded_list, axis=0)
 
     def learn(self, buffer_data):
         """
@@ -99,7 +62,17 @@ class MLXPPO:
 
         logging.info(f"Learning phase: Processing {len(prompts)} samples...")
 
-        stats = {"policy_loss": 0.0, "value_loss": 0.0, "total_loss": 0.0}
+        # Add validation
+        if len(prompts) == 0:
+            logging.warning("No prompts to process!")
+            return {"policy_loss": 0.0, "value_loss": 0.0, "total_loss": 0.0}
+        
+        # Log advantage statistics for debugging
+        adv_mean = float(mx.mean(advantages))
+        adv_std = float(mx.std(advantages))
+        logging.info(f"Advantage stats - Mean: {adv_mean:.4f}, Std: {adv_std:.4f}")
+        
+        stats = {"policy_loss": 0.0, "value_loss": 0.0, "total_loss": 0.0, "kl_div": 0.0}
 
         for epoch in range(self.config.num_ppo_epochs):
             # Convert prompts and responses to token lists
@@ -132,8 +105,12 @@ class MLXPPO:
                     log_probs_all = mx.log_softmax(logits, axis=-1)
                     
                     # Extract log probs for response tokens
+                    # For causal LM, logits[i] predicts token[i+1], so:
+                    # - logits[prompt_length-1] predicts response[0]
+                    # - logits[prompt_length+j-1] predicts response[j]
                     prompt_length = prompt_batch.shape[-1]
-                    response_log_probs = log_probs_all[:, prompt_length-1:-1, :]
+                    response_length = response_batch.shape[-1]
+                    response_log_probs = log_probs_all[:, prompt_length-1:prompt_length-1+response_length, :]
                     
                     # Gather log probs for actual response tokens
                     gathered_log_probs = mx.take_along_axis(
@@ -144,13 +121,16 @@ class MLXPPO:
                     
                     new_log_probs = mx.sum(gathered_log_probs * attention_mask, axis=-1)
                     
+                    # Calculate KL divergence for monitoring
+                    kl_div = mx.mean(old_log_probs_batch - new_log_probs)
+                    
                     # PPO loss
                     ratio = mx.exp(new_log_probs - old_log_probs_batch)
                     policy_loss_1 = advantages_batch * ratio
                     policy_loss_2 = advantages_batch * mx.clip(ratio, 1.0 - self.config.cliprange, 1.0 + self.config.cliprange)
                     policy_loss = -mx.mean(mx.minimum(policy_loss_1, policy_loss_2))
                     
-                    return policy_loss
+                    return policy_loss, kl_div
 
                 # Critic update - create loss function that takes model and data  
                 def critic_loss_fn(model, prompt_batch, returns_batch):
@@ -163,11 +143,21 @@ class MLXPPO:
                 critic_loss_and_grad_fn = nn.value_and_grad(self.critic_model, critic_loss_fn)
                 
                 # Compute gradients and update
-                actor_loss, actor_grads = actor_loss_and_grad_fn(self.actor_model, batch_prompt, batch_response, batch_advantages, batch_old_log_probs, attention_mask)
+                (actor_loss, kl_div), actor_grads = actor_loss_and_grad_fn(self.actor_model, batch_prompt, batch_response, batch_advantages, batch_old_log_probs, attention_mask)
                 critic_loss, critic_grads = critic_loss_and_grad_fn(self.critic_model, batch_prompt, batch_returns)
                 
                 # Ensure computations are evaluated (MLX lazy evaluation)
-                mx.eval(actor_loss, actor_grads, critic_loss, critic_grads)
+                mx.eval(actor_loss, kl_div, actor_grads, critic_loss, critic_grads)
+                
+                # Early stopping if KL divergence is too high (prevents catastrophic forgetting)
+                kl_threshold = 0.01  # Conservative threshold
+                if float(kl_div) > kl_threshold:
+                    logging.warning(f"High KL divergence detected: {float(kl_div):.6f} > {kl_threshold}. Skipping update.")
+                    continue
+                
+                # Gradient clipping for stability
+                actor_grads = mx.clip(actor_grads, -1.0, 1.0)
+                critic_grads = mx.clip(critic_grads, -1.0, 1.0)
                 
                 # Update models
                 self.actor_optimizer.update(self.actor_model, actor_grads)
@@ -180,6 +170,9 @@ class MLXPPO:
                 stats["policy_loss"] += float(actor_loss)
                 stats["value_loss"] += float(critic_loss)
                 stats["total_loss"] += float(actor_loss + critic_loss)
+                if "kl_div" not in stats:
+                    stats["kl_div"] = 0.0
+                stats["kl_div"] += float(kl_div)
 
         # Average the stats
         num_updates = self.config.num_ppo_epochs * ((len(prompts) + self.config.mini_batch_size - 1) // self.config.mini_batch_size)

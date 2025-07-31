@@ -5,5 +5,4 @@ models/
 test.py
 *.log
 *.safetensors
-knowledge-incorporation/RL_IMPLEMENTATION_SUMMARY.md
-knowledge-incorporation/RL_IMPLEMENTATION_SUMMARY.pdf
+RL_IMPLEMENTATION_SUMMARY*

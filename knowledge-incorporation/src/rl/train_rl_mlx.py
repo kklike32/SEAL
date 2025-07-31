@@ -73,8 +73,10 @@ def save_models(actor, critic, path):
     """
     logging.info(f"Saving models to {path}...")
     os.makedirs(path, exist_ok=True)
+    # Save the raw model weights, not the wrapper
     actor.model.save_weights(os.path.join(path, "actor.safetensors"))
-    critic.model.save_weights(os.path.join(path, "critic.safetensors"))
+    # Save the entire critic model including value head
+    critic.save_weights(os.path.join(path, "critic.safetensors"))
 
 class RLActor(nn.Module):
     """
@@ -124,12 +126,11 @@ class RLCritic(nn.Module):
     """
     A model with a value head to act as our Critic.
     """
-    def __init__(self, shared_model, shared_tokenizer):
+    def __init__(self, model_id: str):
         super().__init__()
-        self.model = shared_model  # Reuse the actor's model
-        self.tokenizer = shared_tokenizer
+        self.model, self.tokenizer = mlx_lm_load(model_id)
         
-        # Determine the hidden_size from the shared model
+        # Determine the hidden_size from the model
         hidden_size = None
         
         # Try multiple ways to get the hidden size
@@ -215,7 +216,8 @@ def main():
         logging.info("Tokenizer missing pad_token_id. Setting to eos_token_id.")
         actor_model.tokenizer.pad_token_id = actor_model.tokenizer.eos_token_id
 
-    critic_model = RLCritic(actor_model.model, actor_model.tokenizer)
+    # Create a separate critic model - load a fresh copy to avoid parameter conflicts
+    critic_model = RLCritic(args.model_id)  # Load its own model instead of sharing
     
     # Set random seed for reproducible dataset sampling
     import random

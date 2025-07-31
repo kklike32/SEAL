@@ -20,8 +20,8 @@ def initialize_reward_client(port: int = 5555):
         print(f"Initializing ZMQ client to connect to port {port}...")
         context = zmq.Context()
         socket = context.socket(zmq.REQ)
-        # Set a longer timeout since TTT operations can take time
-        socket.setsockopt(zmq.RCVTIMEO, 120000)  # 2 minutes
+        # Increase timeout further since TTT operations can take very long
+        socket.setsockopt(zmq.RCVTIMEO, 180000)  # 3 minutes
         socket.setsockopt(zmq.SNDTIMEO, 30000)   # 30 seconds for sending
         socket.connect(f"tcp://localhost:{port}")
 
@@ -73,7 +73,7 @@ def get_reward(prompt: str, generated_completion: str, max_retries: int = 3) -> 
             message = {
                 "train_sequences": train_sequences,
                 "eval_questions": eval_questions,
-                "finetune_epochs": 3,  # Reduced for faster testing
+                "finetune_epochs": 1,  # Reduced from 3 to 1 for much faster TTT
                 "lora_rank": 8,
             }
 
@@ -135,7 +135,7 @@ def _reconnect_socket():
         if socket:
             socket.close()
         socket = context.socket(zmq.REQ)
-        socket.setsockopt(zmq.RCVTIMEO, 120000)  # 2 minutes
+        socket.setsockopt(zmq.RCVTIMEO, 180000)  # 3 minutes
         socket.setsockopt(zmq.SNDTIMEO, 30000)   # 30 seconds
         socket.connect(f"tcp://localhost:5555")
         print("  - Socket reconnected")

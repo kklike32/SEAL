@@ -1,5 +1,6 @@
 # knowledge-incorporation/src/rl/ppo_mlx.py
 import logging
+import gc
 import mlx.core as mx
 import mlx.nn as nn
 from mlx.optimizers import Adam
@@ -166,6 +167,12 @@ class MLXPPO:
                 # Evaluate updated models
                 mx.eval(self.actor_model, self.critic_model)
 
+                # Clean up intermediate tensors after each mini-batch
+                del batch_prompt, batch_response, attention_mask
+                del batch_advantages, batch_returns, batch_old_log_probs
+                del actor_grads, critic_grads
+                gc.collect()
+
                 # Track stats
                 stats["policy_loss"] += float(actor_loss)
                 stats["value_loss"] += float(critic_loss)
@@ -173,6 +180,10 @@ class MLXPPO:
                 if "kl_div" not in stats:
                     stats["kl_div"] = 0.0
                 stats["kl_div"] += float(kl_div)
+                
+        # Clean up after all epochs
+        del prompt_tokens_list, response_tokens_list
+        gc.collect()
 
         # Average the stats
         num_updates = self.config.num_ppo_epochs * ((len(prompts) + self.config.mini_batch_size - 1) // self.config.mini_batch_size)

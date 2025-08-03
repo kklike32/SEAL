@@ -4,6 +4,8 @@ import os
 import argparse
 import logging
 import time
+import gc
+import psutil
 
 # Add knowledge-incorporation directory to path for cleaner imports
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
@@ -36,8 +38,8 @@ def parse_args():
 
     # PPO configuration arguments
     parser.add_argument("--learning_rate", type=float, default=1.41e-5, help="Learning rate for the PPO agent.")
-    parser.add_argument("--batch_size", type=int, default=8, help="Batch size for PPO training (rollout buffer size).")
-    parser.add_argument("--mini_batch_size", type=int, default=4, help="Mini-batch size for PPO training.")
+    parser.add_argument("--batch_size", type=int, default=4, help="Batch size for PPO training (rollout buffer size).")
+    parser.add_argument("--mini_batch_size", type=int, default=2, help="Mini-batch size for PPO training.")
     parser.add_argument("--ppo_epochs", type=int, default=2, help="Number of PPO epochs per rollout.")
     parser.add_argument("--clip_param", type=float, default=0.2, help="PPO clipping parameter.")
     parser.add_argument("--vf_coeff", type=float, default=0.5, help="Value function coefficient in the PPO loss.")
@@ -66,6 +68,29 @@ def setup_logging(output_dir):
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(log_formatter)
     logger.addHandler(console_handler)
+
+def log_memory_usage():
+    """Log current memory usage to monitor for leaks."""
+    try:
+        process = psutil.Process()
+        memory_mb = process.memory_info().rss / 1024 / 1024
+        memory_percent = process.memory_percent()
+        logging.info(f"Memory usage: {memory_mb:.1f} MB ({memory_percent:.1f}%)")
+    except ImportError:
+        # Fallback if psutil not available
+        logging.info("Memory monitoring unavailable (psutil not installed)")
+
+def cleanup_tensors(*tensors):
+    """Explicitly clean up MLX tensors and force garbage collection."""
+    for tensor in tensors:
+        if tensor is not None:
+            # Force evaluation before deletion
+            try:
+                mx.eval(tensor)
+            except:
+                pass
+            del tensor
+    gc.collect()
 
 def save_models(actor, critic, path):
     """
@@ -120,7 +145,13 @@ class RLActor(nn.Module):
         ).squeeze(-1)
 
         # Return the SUM of log probabilities for the sequence
-        return mx.sum(gathered, axis=-1)
+        result = mx.sum(gathered, axis=-1)
+        
+        # Force evaluation and cleanup intermediate tensors
+        mx.eval(result)
+        del full_sequence, logits, log_probs, response_log_probs, gathered
+        
+        return result
 
 class RLCritic(nn.Module):
     """
@@ -301,21 +332,27 @@ def main():
             # Get value from critic
             critic_start = time.time()
             value = critic_model(prompt_tensor)
+            mx.eval(value)  # Force immediate evaluation
             critic_time = time.time() - critic_start
             
             # Compute log probabilities properly using the actor's method
             logprob_start = time.time()
             log_prob = actor_model.compute_log_probs(prompt_tensor, action_tensor)
+            mx.eval(log_prob)  # Force immediate evaluation
             logprob_time = time.time() - logprob_start
+            
+            # Convert scalar values immediately and clean up tensors
+            value_scalar = float(value.item()) if hasattr(value, 'item') else float(value)
+            log_prob_scalar = float(log_prob.item()) if hasattr(log_prob, 'item') else float(log_prob)
+            
+            # Immediate cleanup of large tensors
+            cleanup_tensors(prompt_tensor, action_tensor, value, log_prob)
+            
             logging.info(f"    Sample {i+1}: Computing reward via TTT server...")
             reward_start = time.time()
             reward = get_reward(prompt, action)
             reward_time = time.time() - reward_start
             logging.info(f"    Sample {i+1}: Reward computation complete in {reward_time:.2f}s (reward: {reward:.4f})")
-            
-            # Convert scalar values properly
-            value_scalar = float(value.item()) if hasattr(value, 'item') else float(value)
-            log_prob_scalar = float(log_prob.item()) if hasattr(log_prob, 'item') else float(log_prob)
             
             rollout_rewards.append(reward)
             rollout_values.append(value_scalar)
@@ -327,6 +364,10 @@ def main():
             logging.info(f"    Sample {i+1}: Complete in {sample_time:.2f}s total "
                         f"(gen: {generation_time:.2f}s, critic: {critic_time:.3f}s, "
                         f"logprob: {logprob_time:.3f}s, reward: {reward_time:.2f}s)")
+            
+            # Log memory usage every 2 samples to monitor for leaks
+            if (i + 1) % 2 == 0:
+                log_memory_usage()
         
         rollout_time = time.time() - rollout_start_time
         avg_reward = sum(rollout_rewards) / len(rollout_rewards)
@@ -343,10 +384,16 @@ def main():
         learning_start_time = time.time()
         buffer_data = ppo_buffer.get()
         logging.info(f"  Learning phase: Processing {len(buffer_data['rewards'])} samples...")
+        log_memory_usage()  # Check memory before learning
         stats = ppo_trainer.learn(buffer_data)
         learning_time = time.time() - learning_start_time
         logging.info(f"  Learning complete in {learning_time:.2f}s")
         logging.info(f"  Learning stats: {stats}")
+        
+        # Force cleanup after learning phase
+        del buffer_data
+        gc.collect()
+        log_memory_usage()  # Check memory after cleanup
 
         # --- Checkpointing ---
         if (step + 1) % args.save_every == 0:

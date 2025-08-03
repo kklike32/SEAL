@@ -102,7 +102,7 @@ class MLXPPO:
                     # Compute new log probabilities
                     full_sequences = mx.concatenate([prompt_batch, response_batch], axis=-1)
                     logits = model(full_sequences)
-                    log_probs_all = mx.log_softmax(logits, axis=-1)
+                    log_probs_all = nn.log_softmax(logits, axis=-1)
                     
                     # Extract log probs for response tokens
                     # For causal LM, logits[i] predicts token[i+1], so:

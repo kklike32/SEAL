@@ -28,7 +28,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Train a PPO agent to generate self-edits.")
     
     # Model and tokenizer arguments
-    parser.add_argument("--model_id", type=str, default="mlx-community/Meta-Llama-3-8B-Instruct", help="The base model ID for the Actor and Critic.")
+    parser.add_argument("--model_id", type=str, default="mlx-community/Meta-Llama-3-8B-Instruct-4bit", help="The base model ID for the Actor and Critic.")
     
     # Output and saving arguments
     parser.add_argument("--output_dir", type=str, default="knowledge-incorporation/logs/rl_training", help="Directory to save models and logs.")

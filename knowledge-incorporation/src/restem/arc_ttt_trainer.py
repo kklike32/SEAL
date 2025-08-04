@@ -354,34 +354,6 @@ class ARCTTTTrainer:
         
         return model
     
-    def _create_training_dataset(self, texts: List[str]) -> List[Dict]:
-        """Create training dataset from text samples."""
-        if not texts:
-            return []
-        
-        dataset = []
-        for text in texts:
-            # Tokenize the text
-            tokens = self.tokenizer.encode(text, return_tensors="pt")
-            
-            # Find the assistant response start (last occurrence of [128007, 271])
-            assistant_start = -1
-            for i in range(len(tokens[0]) - 1):
-                if tokens[0][i] == 128007 and tokens[0][i + 1] == 271:
-                    assistant_start = i + 2
-            
-            # Create labels - mask everything before assistant response
-            labels = tokens[0].clone()
-            if assistant_start > 0:
-                labels[:assistant_start] = -100
-            
-            dataset.append({
-                "input_ids": tokens[0],
-                "labels": labels
-            })
-        
-        return dataset
-    
     def _train_adapter(
         self, 
         model, 

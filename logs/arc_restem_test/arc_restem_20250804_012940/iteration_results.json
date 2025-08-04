@@ -1,0 +1,30 @@
+{
+  "iteration_name": "arc_restem_20250804_012940",
+  "timestamp": "2025-08-04T01:29:40.279405",
+  "num_tasks": 1,
+  "n_configs_per_task": 1,
+  "phase_results": {
+    "phase1": {
+      "configs_generated": 1,
+      "configs_dir": "logs/arc_restem_test/arc_restem_20250804_012940/phase1_configs"
+    },
+    "phase2": {
+      "adapters_trained": 0,
+      "adapters_dir": "logs/arc_restem_test/arc_restem_20250804_012940/phase2_adapters"
+    },
+    "phase3": {
+      "evaluations_completed": 1,
+      "evaluations_dir": "logs/arc_restem_test/arc_restem_20250804_012940/phase3_evaluations"
+    },
+    "phase4": {
+      "success": false,
+      "error": "No training data"
+    }
+  },
+  "summary": {
+    "total_configurations": 1,
+    "successful_configurations": 0,
+    "success_rate": 0.0,
+    "iteration_dir": "logs/arc_restem_test/arc_restem_20250804_012940"
+  }
+}

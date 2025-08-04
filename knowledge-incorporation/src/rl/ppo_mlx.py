@@ -151,10 +151,12 @@ class MLXPPO:
                 mx.eval(actor_loss, kl_div, actor_grads, critic_loss, critic_grads)
                 
                 # Early stopping if KL divergence is too high (prevents catastrophic forgetting)
-                kl_threshold = 0.01  # Conservative threshold
+                kl_threshold = 0.5  # Increased from 0.01 to allow learning - this was the main issue!
                 if float(kl_div) > kl_threshold:
                     logging.warning(f"High KL divergence detected: {float(kl_div):.6f} > {kl_threshold}. Skipping update.")
                     continue
+                else:
+                    logging.info(f"KL divergence OK: {float(kl_div):.6f} <= {kl_threshold}. Proceeding with update.")
                 
                 # Gradient clipping for stability
                 actor_grads = mx.clip(actor_grads, -1.0, 1.0)

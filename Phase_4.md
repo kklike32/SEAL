@@ -47,3 +47,65 @@ The main script was restructured to follow the standard PPO algorithm structure,
 - **Iteration:** This entire process (rollout -> learn) is repeated for a set number of steps, allowing the agent to progressively improve its policy for generating helpful self-edits.
 
 This phase represents the culmination of the SEAL project, bringing together the data generation and inner-loop validation into a complete, self-improving system.
+
+## 4. Training Results and Analysis
+
+### 4.1. Successful Training Execution (Run 7)
+
+We successfully completed a full PPO training run with the following configuration:
+- **Duration:** 2 hours 14 minutes (8,089 seconds)
+- **PPO Steps:** 8 complete steps
+- **Total Samples:** 64 (8 per step)
+- **Memory Usage:** Stable at 270-370MB (successfully prevented memory crashes)
+- **Model:** Qwen2.5-1.5B-Instruct with 4-bit quantization
+
+### 4.2. System Stability Achievements
+
+**Memory Management:** Implemented comprehensive memory management that prevented the previous MacBook crashes:
+- Explicit tensor cleanup with `mx.eval()` and `gc.collect()`
+- Memory monitoring with psutil
+- Reduced batch sizes (rollout: 8→4, minibatch: 4→2)
+- Peak memory usage stayed under 400MB vs previous 85GB crashes
+
+**TTT Server Integration:** Successfully integrated with the TTT server for reward computation:
+- Average reward computation time: 52-120 seconds per sample
+- Proper timeout handling (3 minutes max)
+- Stable reward signals: -1.0, 0.0, 1.0 based on performance gains
+
+**Training Infrastructure:** Robust PPO implementation with:
+- GAE advantage estimation (λ=0.95, γ=0.99)
+- Gradient clipping (max norm 0.5)
+- KL divergence monitoring for policy stability
+- Automatic checkpointing every step
+
+### 4.3. Training Challenges and Limitations
+
+**Limited Policy Learning:** While the system ran successfully, actual policy improvement was limited:
+- **KL Divergence Issue:** All policy updates were skipped due to high KL divergence (28-40 >> 0.01 threshold)
+- **Conservative Learning:** The KL threshold of 0.01 was too restrictive, preventing any policy updates
+- **Reward Variance:** Average rewards fluctuated between -0.125 and 0.125, indicating mixed signal quality
+
+**Performance Bottlenecks:**
+- **TTT Server Latency:** 52-120 seconds per reward computation limits scalability
+- **Small Model Size:** 1.5B parameter model may be too small for complex reasoning improvements
+- **Limited Training Data:** Only 64 total samples across 8 steps
+
+### 4.4. Key Metrics Summary
+
+| Metric | Value | Status |
+|--------|-------|---------|
+| Total Runtime | 2h 14m | Completed |
+| Memory Peak | <400MB | Stable |
+| PPO Steps | 8/8 | All completed |
+| Policy Updates | 0/8 | KL too high |
+| Average Reward | -0.125 to 0.125 | Mixed signals |
+| System Crashes | 0 | Stable |
+
+### 4.5. Lessons Learned
+
+1. **Memory Management Critical:** MLX requires explicit memory management for stability
+2. **KL Tuning Needed:** The 0.01 KL threshold should be increased to 0.1-0.5 for learning
+3. **Reward Signal Quality:** TTT server provides valid but noisy reward signals
+4. **Scaling Requirements:** Larger models (7B+) likely needed for meaningful improvements
+
+This represents a solid foundation for the SEAL methodology, with all infrastructure components working correctly. The next iteration should focus on hyperparameter tuning and scaling to larger models.

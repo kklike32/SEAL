@@ -19,7 +19,7 @@ from trl import PPOConfig
 
 # Import using relative imports from the src directory
 from src.rl.dataset import build_dataset, get_squad_prompts
-from src.rl.reward import initialize_reward_client, get_reward, close_reward_client
+from src.rl.reward import initialize_reward_client, get_reward, close_reward_client, preprocess_reward
 from src.rl.ppo_mlx import MLXPPO
 from src.rl.ppo_buffer import PPOBuffer
 
@@ -30,24 +30,24 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Train a PPO agent to generate self-edits.")
     
     # Model and tokenizer arguments
-    parser.add_argument("--model_id", type=str, default="mlx-community/Meta-Llama-3-8B-Instruct-4bit", help="The base model ID for the Actor and Critic.")
+    parser.add_argument("--model_id", type=str, default="mlx-community/Meta-Llama-3-8B-Instruct", help="The base model ID for the Actor and Critic.")  # Using Llama-3-8B without quantization
     
     # Output and saving arguments
     parser.add_argument("--output_dir", type=str, default="knowledge-incorporation/logs/rl_training", help="Directory to save models and logs.")
     parser.add_argument("--save_every", type=int, default=2, help="Save a checkpoint every N PPO steps.")
 
     # PPO configuration arguments
-    parser.add_argument("--learning_rate", type=float, default=1.41e-5, help="Learning rate for the PPO agent.")
-    parser.add_argument("--batch_size", type=int, default=4, help="Batch size for PPO training (rollout buffer size).")
-    parser.add_argument("--mini_batch_size", type=int, default=2, help="Mini-batch size for PPO training.")
-    parser.add_argument("--ppo_epochs", type=int, default=2, help="Number of PPO epochs per rollout.")
+    parser.add_argument("--learning_rate", type=float, default=3e-5, help="Learning rate for the PPO agent.")  # Increased from 1.41e-5
+    parser.add_argument("--batch_size", type=int, default=16, help="Batch size for PPO training (rollout buffer size).")  # Increased from 4
+    parser.add_argument("--mini_batch_size", type=int, default=8, help="Mini-batch size for PPO training.")  # Increased from 2
+    parser.add_argument("--ppo_epochs", type=int, default=4, help="Number of PPO epochs per rollout.")  # Increased from 2
     parser.add_argument("--clip_param", type=float, default=0.2, help="PPO clipping parameter.")
     parser.add_argument("--vf_coeff", type=float, default=0.5, help="Value function coefficient in the PPO loss.")
     
     # Other arguments
     parser.add_argument("--seed", type=int, default=0, help="Random seed.")
     parser.add_argument("--reward_port", type=int, default=5555, help="Port for the reward server.")
-    parser.add_argument("--total_ppo_steps", type=int, default=3, help="Total number of PPO steps (rollouts).")
+    parser.add_argument("--total_ppo_steps", type=int, default=20, help="Total number of PPO steps (rollouts).")  # Increased from 3
 
     return parser.parse_args()
 
@@ -350,15 +350,16 @@ def main():
             
             logging.info(f"    Sample {i+1}: Computing reward via TTT server...")
             reward_start = time.time()
-            reward = get_reward(prompt, action)
+            raw_reward = get_reward(prompt, action)
+            processed_reward = preprocess_reward(raw_reward, action)  
             reward_time = time.time() - reward_start
-            logging.info(f"    Sample {i+1}: Reward computation complete in {reward_time:.2f}s (reward: {reward:.4f})")
+            logging.info(f"    Sample {i+1}: Reward computation complete in {reward_time:.2f}s (raw: {raw_reward:.4f} → processed: {processed_reward:.4f})")
             
-            rollout_rewards.append(reward)
+            rollout_rewards.append(processed_reward)  # Use processed reward
             rollout_values.append(value_scalar)
             rollout_log_probs.append(log_prob_scalar)
             
-            ppo_buffer.add(prompt, action, reward, value_scalar, log_prob_scalar)
+            ppo_buffer.add(prompt, action, processed_reward, value_scalar, log_prob_scalar)
             
             sample_time = time.time() - sample_start_time
             logging.info(f"    Sample {i+1}: Complete in {sample_time:.2f}s total "

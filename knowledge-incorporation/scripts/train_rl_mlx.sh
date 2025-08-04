@@ -6,13 +6,13 @@
 # You can start it with: bash knowledge-incorporation/scripts/TTT_server_mlx.sh
 
 # --- Configuration ---
-MODEL_ID="mlx-community/Meta-Llama-3-8B-Instruct-4bit"
-OUTPUT_DIR="logs/rl_training_run_7"
-TOTAL_STEPS=8
-SAVE_EVERY=2
-BATCH_SIZE=8
-MINI_BATCH_SIZE=4
-PPO_EPOCHS=2
+MODEL_ID="mlx-community/Meta-Llama-3-8B-Instruct"
+OUTPUT_DIR="logs/rl_training_run_8"  
+TOTAL_STEPS=16  
+SAVE_EVERY=4  
+BATCH_SIZE=16  
+MINI_BATCH_SIZE=8  
+PPO_EPOCHS=4  
 
 # Create output directory if it doesn't exist
 mkdir -p "$OUTPUT_DIR"
@@ -27,7 +27,7 @@ ARGS=(
     --batch_size "$BATCH_SIZE"
     --mini_batch_size "$MINI_BATCH_SIZE"
     --ppo_epochs "$PPO_EPOCHS"
-    --learning_rate 1.41e-5   # Default SEAL learning rate
+    --learning_rate 3e-5
 )
 
 # --- Execution ---
@@ -39,7 +39,7 @@ echo "Output Directory: $OUTPUT_DIR"
 echo "Total PPO Steps: $TOTAL_STEPS"
 echo "Batch Size: $BATCH_SIZE"
 echo "Mini Batch Size: $MINI_BATCH_SIZE"
-echo "Learning Rate: 1.41e-5"
+echo "Learning Rate: 3e-5"
 echo "========================================"
 
 # Check if TTT server is running

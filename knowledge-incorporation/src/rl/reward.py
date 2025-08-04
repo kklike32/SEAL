@@ -128,6 +128,46 @@ def get_reward(prompt: str, generated_completion: str, max_retries: int = 3) -> 
 
     return 0.0
 
+def preprocess_reward(raw_reward: float, completion: str) -> float:
+    """
+    Preprocesses the raw reward to improve learning signal.
+    
+    Args:
+        raw_reward: Raw reward from TTT server (-1.0 to 1.0)
+        completion: The generated completion string
+    
+    Returns:
+        Processed reward with better learning signal
+    """
+    # Scale the reward to be more significant
+    scaled_reward = raw_reward * 2.0  # Scale from [-1,1] to [-2,2]
+    
+    # Add completion quality bonuses/penalties
+    completion_len = len(completion.strip())
+    
+    # Penalty for very short completions (likely low quality)
+    if completion_len < 20:
+        scaled_reward -= 0.5
+        
+    # Penalty for very long completions (likely repetitive/off-topic)
+    elif completion_len > 500:
+        scaled_reward -= 0.3
+        
+    # Small bonus for reasonable length completions
+    elif 50 <= completion_len <= 200:
+        scaled_reward += 0.2
+    
+    # Penalty for repetitive text (simple heuristic)
+    words = completion.lower().split()
+    if len(words) > 10:
+        unique_words = len(set(words))
+        repetition_ratio = unique_words / len(words)
+        if repetition_ratio < 0.5:  # More than 50% repeated words
+            scaled_reward -= 0.4
+    
+    # Clamp final reward to reasonable range
+    return max(-3.0, min(3.0, scaled_reward))
+
 def _reconnect_socket():
     """Helper function to reconnect the ZMQ socket."""
     global socket, context

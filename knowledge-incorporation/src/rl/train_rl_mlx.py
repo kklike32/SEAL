@@ -255,7 +255,7 @@ def main():
     random.seed(args.seed)
     
     dataset = build_dataset()
-    prompts = get_squad_prompts(dataset, num_samples=args.batch_size * args.total_ppo_steps)
+    prompt_answer_pairs = get_squad_prompts(dataset, num_samples=args.batch_size * args.total_ppo_steps)
     ppo_buffer = PPOBuffer(buffer_size=args.batch_size)
 
     ppo_trainer = MLXPPO(actor_model, critic_model, actor_model.tokenizer, ppo_config)
@@ -286,10 +286,11 @@ def main():
         
         for i in range(args.batch_size):
             sample_start_time = time.time()
-            prompt = prompts[step * args.batch_size + i]
+            prompt, gold_answer = prompt_answer_pairs[step * args.batch_size + i]  # Unpack tuple
             
             logging.info(f"    Sample {i+1}: Generating response...")
             logging.info(f"    Sample {i+1}: Prompt: {prompt[:100]}...")  # Log first 100 chars of prompt
+            logging.info(f"    Sample {i+1}: Gold answer: {gold_answer}")  # Log gold answer for verification
             generation_start = time.time()
             full_response = actor_model.generate(prompt)
             
@@ -350,7 +351,7 @@ def main():
             
             logging.info(f"    Sample {i+1}: Computing reward via TTT server...")
             reward_start = time.time()
-            raw_reward = get_reward(prompt, action)
+            raw_reward = get_reward(prompt, action, gold_answer)  # Pass gold answer!
             processed_reward = preprocess_reward(raw_reward, action)  
             reward_time = time.time() - reward_start
             logging.info(f"    Sample {i+1}: Reward computation complete in {reward_time:.2f}s (raw: {raw_reward:.4f} → processed: {processed_reward:.4f})")

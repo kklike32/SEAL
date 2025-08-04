@@ -42,9 +42,9 @@ def get_squad_prompts(dataset, num_samples: int = 100):
         num_samples (int): The number of samples to extract.
 
     Returns:
-        A list of prompts (strings).
+        A list of tuples: (prompt_string, gold_answer).
     """
-    prompts = []
+    prompt_answer_pairs = []
     
     # Handle synthetic data format
     if isinstance(dataset, list):
@@ -64,18 +64,20 @@ def get_squad_prompts(dataset, num_samples: int = 100):
         
         for item in sampled_questions:
             prompt = f"Title: {item['title']}\n\nContext: {item['context']}\n\n---\n\nQuestion: {item['question']}\n\nAnswer:"
-            prompts.append(prompt)
+            gold_answer = item['answer']
+            prompt_answer_pairs.append((prompt, gold_answer))
             
-        print(f"Sampled {len(prompts)} prompts from {len(all_questions)} total questions across {len(dataset)} articles")
+        print(f"Sampled {len(prompt_answer_pairs)} prompt-answer pairs from {len(all_questions)} total questions across {len(dataset)} articles")
         
     else:
         # Handle original SQuAD format
         for i in range(min(num_samples, len(dataset))):
             item = dataset[i]
             prompt = f"Title: {item['title']}\n\nContext: {item['context']}\n\n---\n\nQuestion: {item['question']}\n\nAnswer:"
-            prompts.append(prompt)
+            gold_answer = item['answers']['text'][0] if item['answers']['text'] else ""
+            prompt_answer_pairs.append((prompt, gold_answer))
     
-    return prompts
+    return prompt_answer_pairs
 
 if __name__ == '__main__':
     # Example of how to use the functions

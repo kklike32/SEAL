@@ -53,7 +53,7 @@ def setup_logging(log_dir: str, log_level: str = "INFO") -> None:
     # Configure logging
     logging.basicConfig(
         level=getattr(logging, log_level.upper()),
-        format='%(asctime)s [%(levelname)8s] %(name)s: %(message)s',
+        format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
         handlers=[
             logging.FileHandler(log_file),
             logging.StreamHandler(sys.stdout)
@@ -181,6 +181,11 @@ def main():
                        help="Logging level")
     
     args = parser.parse_args()
+    
+    # Configure MLX memory settings for Apple Silicon
+    os.environ['MLX_GPU_MEMORY_LIMIT'] = '0.7'  # Use 70% of GPU memory
+    os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
+    os.environ['MLX_ENABLE_UNIFIED_MEMORY'] = '1'
     
     # Debug: Show detected paths
     print(f"Script location: {os.path.abspath(__file__)}")

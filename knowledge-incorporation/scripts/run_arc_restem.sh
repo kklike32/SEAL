@@ -43,11 +43,22 @@ OUTPUT_DIR="logs/arc_restem_experiments"       # Results output
 # N_CONFIGS=15
 # RESTEM_EPOCHS=8
 
+# HIGH PERFORMANCE MODE (for M4 Pro/Max with 32GB+)
+# MAX_TASKS=8
+# N_CONFIGS=20
+# RESTEM_EPOCHS=10
+
 # DEBUG MODE
 # MAX_TASKS=1
 # N_CONFIGS=3
 # RESTEM_EPOCHS=2
 # LOG_LEVEL="DEBUG"
+
+# LOW MEMORY MODE (for systems with limited GPU memory)
+# MAX_TASKS=1
+# N_CONFIGS=2
+# RESTEM_EPOCHS=1
+# LOG_LEVEL="INFO"
 
 # ================================
 # SCRIPT EXECUTION
@@ -85,6 +96,13 @@ if ! python3 -c "import mlx" 2>/dev/null; then
     echo "WARNING: MLX not found. Installing requirements..."
     pip install -r requirements_mlx.txt
 fi
+
+# Configure MLX memory settings for Apple Silicon
+export MLX_GPU_MEMORY_LIMIT=0.8
+export PYTORCH_ENABLE_MPS_FALLBACK=1
+export MLX_ENABLE_UNIFIED_MEMORY=1
+
+echo "MLX memory configuration applied (80% GPU memory limit for high-memory system)"
 
 # Create timestamp for this run
 TIMESTAMP=$(date '+%Y%m%d_%H%M%S')

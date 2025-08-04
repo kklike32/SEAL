@@ -7,7 +7,7 @@
 
 # --- Configuration ---
 MODEL_ID="mlx-community/Meta-Llama-3-8B-Instruct-4bit"
-OUTPUT_DIR="logs/rl_training_run_6"
+OUTPUT_DIR="logs/rl_training_run_7"
 TOTAL_STEPS=8
 SAVE_EVERY=2
 BATCH_SIZE=8

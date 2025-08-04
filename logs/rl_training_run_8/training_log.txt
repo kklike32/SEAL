@@ -1,0 +1,196 @@
+2025-08-03 21:26:35,933 [INFO] - Tokenizer missing pad_token_id. Setting to eos_token_id.
+2025-08-03 21:26:42,873 [INFO] - RL Training Script - Production Setup
+2025-08-03 21:26:42,874 [INFO] - ------------------------------------
+2025-08-03 21:26:42,874 [INFO] - Model ID: mlx-community/Meta-Llama-3-8B-Instruct
+2025-08-03 21:26:42,874 [INFO] - Output Directory: logs/rl_training_run_8
+2025-08-03 21:26:42,874 [INFO] - Batch Size: 16
+2025-08-03 21:26:42,874 [INFO] - Mini Batch Size: 8
+2025-08-03 21:26:42,874 [INFO] - Learning Rate: 3e-05
+2025-08-03 21:26:42,874 [INFO] - Total PPO Steps: 16
+2025-08-03 21:26:42,874 [INFO] - PPO Epochs per Step: 4
+2025-08-03 21:26:42,874 [INFO] - Max Tokens per Generation: 125
+2025-08-03 21:26:42,874 [INFO] - Reward Server Port: 5555
+2025-08-03 21:26:42,874 [INFO] - ------------------------------------
+2025-08-03 21:26:42,874 [INFO] - --- PPO Step 1/16 ---
+2025-08-03 21:26:42,874 [INFO] -   Starting rollout phase with 16 samples...
+2025-08-03 21:26:42,874 [INFO] -     Sample 1: Generating response...
+2025-08-03 21:26:42,874 [INFO] -     Sample 1: Prompt: Title: Germans
+
+Context: The work of David Hilbert and Max Planck was crucial to the foundation of m...
+2025-08-03 21:26:42,874 [INFO] -     Sample 1: Gold answer: 1901
+2025-08-03 21:27:43,281 [INFO] -     Sample 1: Generation complete in 60.41s (completion length: 4 chars)
+2025-08-03 21:27:43,282 [INFO] -     Sample 1: Generated completion (clean): 1901
+2025-08-03 21:27:45,010 [INFO] -     Sample 1: Computing reward via TTT server...
+2025-08-03 21:28:59,616 [INFO] -     Sample 1: Reward computation complete in 74.61s (raw: 0.0000 → processed: 0.0000)
+2025-08-03 21:28:59,618 [INFO] -     Sample 1: Complete in 136.74s total (gen: 60.41s, critic: 0.782s, logprob: 0.505s, reward: 74.61s)
+2025-08-03 21:28:59,618 [INFO] -     Sample 2: Generating response...
+2025-08-03 21:28:59,618 [INFO] -     Sample 2: Prompt: Title: Financial crisis of 2007%E2%80%9308
+
+Context: In a June 2008 speech, President and CEO of the...
+2025-08-03 21:28:59,619 [INFO] -     Sample 2: Gold answer: "parallel" banking system
+2025-08-03 21:31:08,060 [INFO] -     Sample 2: Generation complete in 128.44s (completion length: 96 chars)
+2025-08-03 21:31:08,063 [INFO] -     Sample 2: Generated completion (clean): A "run" on the entities in the "parallel" banking system, also called the shadow banking system.
+2025-08-03 21:31:09,481 [INFO] -     Sample 2: Computing reward via TTT server...
+2025-08-03 21:33:41,220 [INFO] -     Sample 2: Reward computation complete in 151.74s (raw: 0.0000 → processed: 0.0000)
+2025-08-03 21:33:41,221 [INFO] -     Sample 2: Complete in 281.60s total (gen: 128.44s, critic: 0.669s, logprob: 0.664s, reward: 151.74s)
+2025-08-03 21:33:41,223 [INFO] - Memory usage: 406.1 MB (0.8%)
+2025-08-03 21:33:41,223 [INFO] -     Sample 3: Generating response...
+2025-08-03 21:33:41,223 [INFO] -     Sample 3: Prompt: Title: Mary (mother of Jesus)
+
+Context: Differences in feasts may also originate from doctrinal issu...
+2025-08-03 21:33:41,224 [INFO] -     Sample 3: Gold answer: August 15
+2025-08-03 21:35:56,123 [INFO] -     Sample 3: Generation complete in 134.90s (completion length: 10 chars)
+2025-08-03 21:35:56,123 [INFO] -     Sample 3: Generated completion (clean): August 15.
+2025-08-03 21:35:57,313 [INFO] -     Sample 3: Computing reward via TTT server...
+2025-08-03 21:38:22,508 [INFO] -     Sample 3: Reward computation complete in 145.19s (raw: 0.0000 → processed: 0.0000)
+2025-08-03 21:38:22,508 [INFO] -     Sample 3: Complete in 281.29s total (gen: 134.90s, critic: 0.516s, logprob: 0.508s, reward: 145.19s)
+2025-08-03 21:38:22,508 [INFO] -     Sample 4: Generating response...
+2025-08-03 21:38:22,508 [INFO] -     Sample 4: Prompt: Title: John Kerry
+
+Context: In addition to the sports he played at Yale, Kerry is described by Sport...
+2025-08-03 21:38:22,508 [INFO] -     Sample 4: Gold answer: snowboarder, windsurfer, and sailor
+2025-08-03 21:40:33,689 [INFO] -     Sample 4: Generation complete in 131.18s (completion length: 137 chars)
+2025-08-03 21:40:33,690 [INFO] -     Sample 4: Generated completion (clean): According to the text, John Kerry participates in the following sports in addition to cycling:
+
+1. Snowboarding
+2. Windsurfing
+3. Sailing
+2025-08-03 21:40:34,614 [INFO] -     Sample 4: Computing reward via TTT server...
+2025-08-03 21:42:53,779 [INFO] -     Sample 4: Reward computation complete in 139.16s (raw: 0.0000 → processed: 0.0000)
+2025-08-03 21:42:53,780 [INFO] -     Sample 4: Complete in 271.27s total (gen: 131.18s, critic: 0.353s, logprob: 0.504s, reward: 139.16s)
+2025-08-03 21:42:53,780 [INFO] - Memory usage: 354.9 MB (0.7%)
+2025-08-03 21:42:53,780 [INFO] -     Sample 5: Generating response...
+2025-08-03 21:42:53,780 [INFO] -     Sample 5: Prompt: Title: Tuberculosis
+
+Context: In 15–20% of active cases, the infection spreads outside the lungs, ca...
+2025-08-03 21:42:53,781 [INFO] -     Sample 5: Gold answer: young children
+2025-08-03 21:45:03,226 [INFO] -     Sample 5: Generation complete in 129.44s (completion length: 15 chars)
+2025-08-03 21:45:03,226 [INFO] -     Sample 5: Generated completion (clean): Young children.
+2025-08-03 21:45:05,072 [INFO] -     Sample 5: Computing reward via TTT server...
+2025-08-03 21:47:30,174 [INFO] -     Sample 5: Reward computation complete in 145.10s (raw: 0.0000 → processed: 0.0000)
+2025-08-03 21:47:30,177 [INFO] -     Sample 5: Complete in 276.40s total (gen: 129.44s, critic: 0.836s, logprob: 0.828s, reward: 145.10s)
+2025-08-03 21:47:30,177 [INFO] -     Sample 6: Generating response...
+2025-08-03 21:47:30,177 [INFO] -     Sample 6: Prompt: Title: History of India
+
+Context: The 7th and 6th centuries BC witnessed the composition of the earl...
+2025-08-03 21:47:30,178 [INFO] -     Sample 6: Gold answer: 7th and 6th centuries BC
+2025-08-03 21:49:42,387 [INFO] -     Sample 6: Generation complete in 132.21s (completion length: 70 chars)
+2025-08-03 21:49:42,389 [INFO] -     Sample 6: Generated completion (clean): The earliest Upanishads were composed in the 7th and 6th centuries BC.
+2025-08-03 21:49:43,466 [INFO] -     Sample 6: Computing reward via TTT server...
+2025-08-03 21:52:08,888 [INFO] -     Sample 6: Reward computation complete in 145.42s (raw: 0.0000 → processed: 0.0000)
+2025-08-03 21:52:08,889 [INFO] -     Sample 6: Complete in 278.71s total (gen: 132.21s, critic: 0.512s, logprob: 0.507s, reward: 145.42s)
+2025-08-03 21:52:08,889 [INFO] - Memory usage: 354.9 MB (0.7%)
+2025-08-03 21:52:08,889 [INFO] -     Sample 7: Generating response...
+2025-08-03 21:52:08,889 [INFO] -     Sample 7: Prompt: Title: Electric motor
+
+Context: An advantage of the universal motor is that AC supplies may be used ...
+2025-08-03 21:52:08,889 [INFO] -     Sample 7: Gold answer: Multiple taps on the field coil provide
+2025-08-03 21:54:18,239 [INFO] -     Sample 7: Generation complete in 129.35s (completion length: 74 chars)
+2025-08-03 21:54:18,240 [INFO] -     Sample 7: Generated completion (clean): Multiple taps on the field coil provide (imprecise) stepped speed control.
+2025-08-03 21:54:19,745 [INFO] -     Sample 7: Computing reward via TTT server...
+2025-08-03 21:56:45,674 [INFO] -     Sample 7: Reward computation complete in 145.93s (raw: 0.0000 → processed: 0.0000)
+2025-08-03 21:56:45,676 [INFO] -     Sample 7: Complete in 276.79s total (gen: 129.35s, critic: 0.673s, logprob: 0.667s, reward: 145.93s)
+2025-08-03 21:56:45,676 [INFO] -     Sample 8: Generating response...
+2025-08-03 21:56:45,676 [INFO] -     Sample 8: Prompt: Title: Asthma
+
+Context: The evidence for the effectiveness of measures to prevent the development of...
+2025-08-03 21:56:45,676 [INFO] -     Sample 8: Gold answer: The evidence for the effectiveness of measures to prevent
+2025-08-03 21:59:01,960 [INFO] -     Sample 8: Generation complete in 136.28s (completion length: 92 chars)
+2025-08-03 21:59:01,961 [INFO] -     Sample 8: Generated completion (clean): The evidence for the effectiveness of measures to prevent the development of asthma is weak.
+2025-08-03 21:59:03,351 [INFO] -     Sample 8: Computing reward via TTT server...
+2025-08-03 22:01:29,388 [INFO] -     Sample 8: Reward computation complete in 146.04s (raw: 0.0000 → processed: 0.0000)
+2025-08-03 22:01:29,390 [INFO] -     Sample 8: Complete in 283.71s total (gen: 136.28s, critic: 0.669s, logprob: 0.662s, reward: 146.04s)
+2025-08-03 22:01:29,390 [INFO] - Memory usage: 353.0 MB (0.7%)
+2025-08-03 22:01:29,390 [INFO] -     Sample 9: Generating response...
+2025-08-03 22:01:29,391 [INFO] -     Sample 9: Prompt: Title: Cotton
+
+Context: The public sector effort continues with the goal to create a high-quality, d...
+2025-08-03 22:01:29,391 [INFO] -     Sample 9: Gold answer: public relations
+2025-08-03 22:03:41,353 [INFO] -     Sample 9: Generation complete in 131.96s (completion length: 176 chars)
+2025-08-03 22:03:41,354 [INFO] -     Sample 9: Generated completion (clean): The seeming result of donating genetic cotton sequencing to the public is that it gives the companies (Monsanto and Illumina) some recognition for sequencing the cotton genome.
+2025-08-03 22:03:42,769 [INFO] -     Sample 9: Computing reward via TTT server...
+2025-08-03 22:06:09,522 [INFO] -     Sample 9: Reward computation complete in 146.75s (raw: 0.0000 → processed: 0.0000)
+2025-08-03 22:06:09,522 [INFO] -     Sample 9: Complete in 280.13s total (gen: 131.96s, critic: 0.669s, logprob: 0.665s, reward: 146.75s)
+2025-08-03 22:06:09,522 [INFO] -     Sample 10: Generating response...
+2025-08-03 22:06:09,523 [INFO] -     Sample 10: Prompt: Title: Adult contemporary music
+
+Context: In addition to Celine Dion, who has had significant succes...
+2025-08-03 22:06:09,523 [INFO] -     Sample 10: Gold answer: AC
+2025-08-03 22:08:26,022 [INFO] -     Sample 10: Generation complete in 136.50s (completion length: 34 chars)
+2025-08-03 22:08:26,023 [INFO] -     Sample 10: Generated completion (clean): The Adult Contemporary (AC) chart.
+2025-08-03 22:08:26,787 [INFO] -     Sample 10: Computing reward via TTT server...
+2025-08-03 22:10:45,662 [INFO] -     Sample 10: Reward computation complete in 138.87s (raw: 0.0000 → processed: 0.0000)
+2025-08-03 22:10:45,662 [INFO] -     Sample 10: Complete in 276.14s total (gen: 136.50s, critic: 0.353s, logprob: 0.344s, reward: 138.87s)
+2025-08-03 22:10:45,663 [INFO] - Memory usage: 352.8 MB (0.7%)
+2025-08-03 22:10:45,663 [INFO] -     Sample 11: Generating response...
+2025-08-03 22:10:45,663 [INFO] -     Sample 11: Prompt: Title: IPod
+
+Context: In September 2007, during a lawsuit with patent holding company Burst.com, App...
+2025-08-03 22:10:45,663 [INFO] -     Sample 11: Gold answer: UK
+2025-08-03 22:12:56,056 [INFO] -     Sample 11: Generation complete in 130.39s (completion length: 107 chars)
+2025-08-03 22:12:56,058 [INFO] -     Sample 11: Generated completion (clean): According to the text, Kane Kramer applied for a UK patent for his design of a "plastic music box" in 1981.
+2025-08-03 22:12:56,974 [INFO] -     Sample 11: Computing reward via TTT server...
+2025-08-03 22:15:18,762 [INFO] -     Sample 11: Reward computation complete in 141.79s (raw: 0.0000 → processed: 0.0000)
+2025-08-03 22:15:18,763 [INFO] -     Sample 11: Complete in 273.10s total (gen: 130.39s, critic: 0.354s, logprob: 0.503s, reward: 141.79s)
+2025-08-03 22:15:18,764 [INFO] -     Sample 12: Generating response...
+2025-08-03 22:15:18,764 [INFO] -     Sample 12: Prompt: Title: United States presidential election, 2004
+
+Context: Just eight months into his presidency, th...
+2025-08-03 22:15:18,764 [INFO] -     Sample 12: Gold answer: eight months
+2025-08-03 22:17:30,448 [INFO] -     Sample 12: Generation complete in 131.68s (completion length: 33 chars)
+2025-08-03 22:17:30,449 [INFO] -     Sample 12: Generated completion (clean): Eight months into his presidency.
+2025-08-03 22:17:31,527 [INFO] -     Sample 12: Computing reward via TTT server...
+2025-08-03 22:20:05,281 [INFO] -     Sample 12: Reward computation complete in 153.75s (raw: 0.0000 → processed: 0.0000)
+2025-08-03 22:20:05,282 [INFO] -     Sample 12: Complete in 286.52s total (gen: 131.68s, critic: 0.513s, logprob: 0.505s, reward: 153.75s)
+2025-08-03 22:20:05,282 [INFO] - Memory usage: 353.8 MB (0.7%)
+2025-08-03 22:20:05,282 [INFO] -     Sample 13: Generating response...
+2025-08-03 22:20:05,283 [INFO] -     Sample 13: Prompt: Title: House music
+
+Context: Early house music was generally dance-based music characterized by repe...
+2025-08-03 22:20:05,283 [INFO] -     Sample 13: Gold answer: it was more electronic and minimalistic
+2025-08-03 22:22:13,894 [INFO] -     Sample 13: Generation complete in 128.61s (completion length: 200 chars)
+2025-08-03 22:22:13,895 [INFO] -     Sample 13: Generated completion (clean): According to the text, some differences between House and Disco music are:
+
+* House music is more electronic and minimalistic, whereas Disco music is not specified as being electronic or minimalistic.
+2025-08-03 22:22:15,133 [INFO] -     Sample 13: Computing reward via TTT server...
+2025-08-03 22:24:39,768 [INFO] -     Sample 13: Reward computation complete in 144.63s (raw: 0.0000 → processed: 0.0000)
+2025-08-03 22:24:39,769 [INFO] -     Sample 13: Complete in 274.49s total (gen: 128.61s, critic: 0.515s, logprob: 0.662s, reward: 144.63s)
+2025-08-03 22:24:39,769 [INFO] -     Sample 14: Generating response...
+2025-08-03 22:24:39,770 [INFO] -     Sample 14: Prompt: Title: Frédéric Chopin
+
+Context: Chopin arrived in Paris in late September 1831; he would never retu...
+2025-08-03 22:24:39,770 [INFO] -     Sample 14: Gold answer: September 1831
+2025-08-03 22:26:52,886 [INFO] -     Sample 14: Generation complete in 133.12s (completion length: 20 chars)
+2025-08-03 22:26:52,887 [INFO] -     Sample 14: Generated completion (clean): Late September 1831.
+2025-08-03 22:26:53,966 [INFO] -     Sample 14: Computing reward via TTT server...
+2025-08-03 22:29:19,570 [INFO] -     Sample 14: Reward computation complete in 145.60s (raw: 0.0000 → processed: 0.0000)
+2025-08-03 22:29:19,571 [INFO] -     Sample 14: Complete in 279.80s total (gen: 133.12s, critic: 0.512s, logprob: 0.504s, reward: 145.60s)
+2025-08-03 22:29:19,572 [INFO] - Memory usage: 352.8 MB (0.7%)
+2025-08-03 22:29:19,572 [INFO] -     Sample 15: Generating response...
+2025-08-03 22:29:19,572 [INFO] -     Sample 15: Prompt: Title: Cotton
+
+Context: The public sector effort continues with the goal to create a high-quality, d...
+2025-08-03 22:29:19,572 [INFO] -     Sample 15: Gold answer: 2010
+2025-08-03 22:31:27,581 [INFO] -     Sample 15: Generation complete in 128.01s (completion length: 200 chars)
+2025-08-03 22:31:27,582 [INFO] -     Sample 15: Generated completion (clean): According to the text, the sequencing of the D genome of G. raimondii was mostly completed in 2010, when two companies (Monsanto and Illumina) completed enough Illumina sequencing to cover the D genom
+2025-08-03 22:31:29,014 [INFO] -     Sample 15: Computing reward via TTT server...
+2025-08-03 22:33:59,229 [INFO] -     Sample 15: Reward computation complete in 150.21s (raw: 0.0000 → processed: 0.0000)
+2025-08-03 22:33:59,231 [INFO] -     Sample 15: Complete in 279.66s total (gen: 128.01s, critic: 0.669s, logprob: 0.667s, reward: 150.21s)
+2025-08-03 22:33:59,231 [INFO] -     Sample 16: Generating response...
+2025-08-03 22:33:59,231 [INFO] -     Sample 16: Prompt: Title: Westminster Abbey
+
+Context: It suffered damage during the turbulent 1640s, when it was attack...
+2025-08-03 22:33:59,231 [INFO] -     Sample 16: Gold answer: 1640s
+2025-08-03 22:36:10,881 [INFO] -     Sample 16: Generation complete in 131.65s (completion length: 53 chars)
+2025-08-03 22:36:10,882 [INFO] -     Sample 16: Generated completion (clean): The abbey suffered damage during the turbulent 1640s.
+2025-08-03 22:36:11,642 [INFO] -     Sample 16: Computing reward via TTT server...
+2025-08-03 22:38:34,308 [INFO] -     Sample 16: Reward computation complete in 142.67s (raw: 0.0000 → processed: 0.0000)
+2025-08-03 22:38:34,309 [INFO] -     Sample 16: Complete in 275.08s total (gen: 131.65s, critic: 0.352s, logprob: 0.344s, reward: 142.67s)
+2025-08-03 22:38:34,309 [INFO] - Memory usage: 352.8 MB (0.7%)
+2025-08-03 22:38:34,309 [INFO] -   Rollout complete in 4311.4s
+2025-08-03 22:38:34,309 [INFO] -   Rollout stats - Avg Reward: 0.0000, Avg Value: 0.0183, Avg LogProb: -37.1250
+2025-08-03 22:38:34,309 [INFO] -   Starting learning phase...
+2025-08-03 22:38:37,888 [INFO] -   Learning phase: Processing 16 samples...
+2025-08-03 22:38:37,888 [INFO] - Memory usage: 385.4 MB (0.8%)
+2025-08-03 22:38:37,888 [INFO] - Learning phase: Processing 16 samples...
+2025-08-03 22:38:38,083 [INFO] - Advantage stats - Mean: -0.0000, Std: 1.0000

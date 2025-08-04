@@ -5,6 +5,7 @@ import argparse
 import logging
 import time
 import gc
+import json
 import psutil
 
 # Add knowledge-incorporation directory to path for cleaner imports
@@ -102,6 +103,24 @@ def save_models(actor, critic, path):
     actor.model.save_weights(os.path.join(path, "actor.safetensors"))
     # Save the entire critic model including value head
     critic.save_weights(os.path.join(path, "critic.safetensors"))
+
+def save_training_state(step, path):
+    """Save training progress to enable resuming after crashes."""
+    state_file = os.path.join(path, "training_state.json")
+    state = {
+        "completed_steps": step,
+        "timestamp": time.time()
+    }
+    with open(state_file, 'w') as f:
+        json.dump(state, f)
+
+def load_training_state(path):
+    """Load training state to resume from crashes."""
+    state_file = os.path.join(path, "training_state.json")
+    if os.path.exists(state_file):
+        with open(state_file, 'r') as f:
+            return json.load(f)
+    return None
 
 class RLActor(nn.Module):
     """
@@ -305,7 +324,16 @@ def main():
     logging.info(f"Reward Server Port: {args.reward_port}")
     logging.info("------------------------------------")
 
-    for step in range(args.total_ppo_steps):
+    # Check for previous training state to resume from crashes
+    training_state = load_training_state(args.output_dir)
+    start_step = 0
+    if training_state:
+        start_step = training_state["completed_steps"]
+        logging.info(f"🔄 RESUMING from step {start_step + 1} (previous crash detected)")
+    else:
+        logging.info("🚀 STARTING fresh training")
+
+    for step in range(start_step, args.total_ppo_steps):
         logging.info(f"--- PPO Step {step + 1}/{args.total_ppo_steps} ---")
         
         # --- Rollout Phase ---
@@ -421,6 +449,9 @@ def main():
         gc.collect()
         log_memory_usage()  # Check memory after cleanup
 
+        # --- Save progress after each step to enable crash recovery ---
+        save_training_state(step + 1, args.output_dir)
+
         # --- Checkpointing ---
         if (step + 1) % args.save_every == 0:
             checkpoint_path = os.path.join(args.output_dir, f"checkpoint_step_{step + 1}")
@@ -430,6 +461,16 @@ def main():
         
         step_total_time = time.time() - rollout_start_time
         logging.info(f"--- PPO Step {step + 1} Complete in {step_total_time:.1f}s ---")
+        
+        # Emergency memory check - if usage is too high, force cleanup
+        try:
+            memory_percent = psutil.virtual_memory().percent
+            if memory_percent > 95:
+                logging.warning(f"🚨 HIGH MEMORY USAGE: {memory_percent:.1f}% - forcing aggressive cleanup")
+                gc.collect()
+                mx.eval(mx.array([0.0]))  # Force MLX cleanup
+        except:
+            pass
         logging.info("")
 
     final_model_path = os.path.join(args.output_dir, "final_model")

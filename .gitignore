@@ -7,3 +7,6 @@ test.py
 *.safetensors
 RL_IMPLEMENTATION_SUMMARY*
 TRAINING_FIXES*
+RESTEM_IMPLEMENTATION_SUMMARY*
+knowledge-incorporation/src/rl_ppo_backup
+ARC_RESTEM_*.md

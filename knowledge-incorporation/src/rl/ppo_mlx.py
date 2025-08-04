@@ -154,6 +154,12 @@ class MLXPPO:
                 kl_threshold = 0.5  # Increased from 0.01 to allow learning - this was the main issue!
                 if float(kl_div) > kl_threshold:
                     logging.warning(f"High KL divergence detected: {float(kl_div):.6f} > {kl_threshold}. Skipping update.")
+                    # Clean up before skipping
+                    del batch_prompt, batch_response, attention_mask
+                    del batch_advantages, batch_returns, batch_old_log_probs
+                    del actor_grads, critic_grads
+                    del actor_loss, critic_loss, kl_div
+                    gc.collect()
                     continue
                 else:
                     logging.info(f"KL divergence OK: {float(kl_div):.6f} <= {kl_threshold}. Proceeding with update.")
@@ -169,11 +175,14 @@ class MLXPPO:
                 # Evaluate updated models
                 mx.eval(self.actor_model, self.critic_model)
 
-                # Clean up intermediate tensors after each mini-batch
+                # CRITICAL: Clean up ALL intermediate tensors after each mini-batch
                 del batch_prompt, batch_response, attention_mask
                 del batch_advantages, batch_returns, batch_old_log_probs
                 del actor_grads, critic_grads
+                del actor_loss, critic_loss, kl_div
                 gc.collect()
+                # Force MLX to release memory
+                mx.eval(mx.array([0.0]))  # Dummy eval to trigger cleanup
 
                 # Track stats
                 stats["policy_loss"] += float(actor_loss)

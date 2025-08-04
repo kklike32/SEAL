@@ -30,24 +30,24 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Train a PPO agent to generate self-edits.")
     
     # Model and tokenizer arguments
-    parser.add_argument("--model_id", type=str, default="mlx-community/Meta-Llama-3-8B-Instruct", help="The base model ID for the Actor and Critic.")  # Using Llama-3-8B without quantization
+    parser.add_argument("--model_id", type=str, default="mlx-community/Meta-Llama-3-8B-Instruct", help="The base model ID for the Actor and Critic.")
     
     # Output and saving arguments
     parser.add_argument("--output_dir", type=str, default="knowledge-incorporation/logs/rl_training", help="Directory to save models and logs.")
     parser.add_argument("--save_every", type=int, default=2, help="Save a checkpoint every N PPO steps.")
 
     # PPO configuration arguments
-    parser.add_argument("--learning_rate", type=float, default=3e-5, help="Learning rate for the PPO agent.")  # Increased from 1.41e-5
-    parser.add_argument("--batch_size", type=int, default=16, help="Batch size for PPO training (rollout buffer size).")  # Increased from 4
-    parser.add_argument("--mini_batch_size", type=int, default=8, help="Mini-batch size for PPO training.")  # Increased from 2
-    parser.add_argument("--ppo_epochs", type=int, default=4, help="Number of PPO epochs per rollout.")  # Increased from 2
+    parser.add_argument("--learning_rate", type=float, default=3e-5, help="Learning rate for the PPO agent.")
+    parser.add_argument("--batch_size", type=int, default=16, help="Batch size for PPO training (rollout buffer size).")  
+    parser.add_argument("--mini_batch_size", type=int, default=8, help="Mini-batch size for PPO training.") 
+    parser.add_argument("--ppo_epochs", type=int, default=4, help="Number of PPO epochs per rollout.")
     parser.add_argument("--clip_param", type=float, default=0.2, help="PPO clipping parameter.")
     parser.add_argument("--vf_coeff", type=float, default=0.5, help="Value function coefficient in the PPO loss.")
     
     # Other arguments
     parser.add_argument("--seed", type=int, default=0, help="Random seed.")
     parser.add_argument("--reward_port", type=int, default=5555, help="Port for the reward server.")
-    parser.add_argument("--total_ppo_steps", type=int, default=20, help="Total number of PPO steps (rollouts).")  # Increased from 3
+    parser.add_argument("--total_ppo_steps", type=int, default=20, help="Total number of PPO steps (rollouts).")
 
     return parser.parse_args()
 
@@ -113,9 +113,41 @@ class RLActor(nn.Module):
 
     def generate(self, prompt: str, max_tokens: int = 125):
         """
-        Generate a completion from a prompt using mlx_lm's generate function.
+        Generate a completion using proper Llama-3 chat template formatting.
+        This should eliminate the need for extensive post-processing.
         """
-        return mlx_lm_generate(self.model, self.tokenizer, prompt, max_tokens=max_tokens)
+        # Format the prompt using Llama-3 chat template
+        # Convert our Q&A prompt to proper chat format
+        formatted_prompt = f"<|begin_of_text|><|start_header_id|>user<|end_header_id|>\n\n{prompt}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
+        
+        # Generate with proper stopping at <|eot_id|>
+        response = mlx_lm_generate(
+            self.model, 
+            self.tokenizer, 
+            formatted_prompt, 
+            max_tokens=max_tokens
+        )
+        
+        # Extract only the assistant's response
+        if response.startswith(formatted_prompt):
+            assistant_response = response[len(formatted_prompt):].strip()
+        else:
+            # Fallback if formatting is unexpected
+            assistant_response = response.strip()
+        
+        # The model should naturally stop at <|eot_id|>, but clean it up if needed
+        if '<|eot_id|>' in assistant_response:
+            assistant_response = assistant_response.split('<|eot_id|>')[0].strip()
+        
+        # Remove any other template tokens that might leak through
+        import re
+        assistant_response = re.sub(r'<\|[^|]*\|>', '', assistant_response).strip()
+        
+        # Final length safety check
+        if len(assistant_response) > 200:
+            assistant_response = assistant_response[:200].strip()
+            
+        return assistant_response
     
     def compute_log_probs(self, input_ids, response_ids):
         """
@@ -292,21 +324,13 @@ def main():
             logging.info(f"    Sample {i+1}: Prompt: {prompt[:100]}...")  # Log first 100 chars of prompt
             logging.info(f"    Sample {i+1}: Gold answer: {gold_answer}")  # Log gold answer for verification
             generation_start = time.time()
-            full_response = actor_model.generate(prompt)
-            
-            # Extract just the completion (action) by removing the prompt
-            # mlx_lm_generate returns the full sequence including the prompt
-            if full_response.startswith(prompt):
-                completion = full_response[len(prompt):]
-            else:
-                # Fallback: assume the generated text is the completion
-                completion = full_response
+            completion = actor_model.generate(prompt) 
             
             generation_time = time.time() - generation_start
             logging.info(f"    Sample {i+1}: Generation complete in {generation_time:.2f}s (completion length: {len(completion)} chars)")
-            logging.info(f"    Sample {i+1}: Generated completion: {completion[:200]}...")  # Log first 200 chars
+            logging.info(f"    Sample {i+1}: Generated completion (clean): {completion}")  # Log clean completion
             
-            # The action is the completion, not the full response
+            # The action is the clean completion
             action = completion
             
             # Encode the text to tensors - handle different tokenizer return formats

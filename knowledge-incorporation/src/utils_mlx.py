@@ -48,15 +48,41 @@ def generate_mlx(
 
     LOG.info(f"Generating {len(prompts)} completions with MLX...")
     for prompt in prompts:
-        # Note: mlx_lm.generate doesn't support batching, so we loop.
+        # Format prompt using proper Llama-3 chat template for Q&A
+        formatted_prompt = f"<|begin_of_text|><|start_header_id|>user<|end_header_id|>\n\n{prompt}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
+        
         response = generate(
             model,
             tokenizer,
-            prompt=prompt,
+            prompt=formatted_prompt,
             max_tokens=sampling_config.get("max_tokens", 64),
             sampler=sampler,
         )
-        outputs.append({"text": response})
+        
+        # Extract only the assistant's response
+        if response.startswith(formatted_prompt):
+            clean_response = response[len(formatted_prompt):].strip()
+        else:
+            clean_response = response.strip()
+            
+        # The model should naturally stop at <|eot_id|>
+        if '<|eot_id|>' in clean_response:
+            clean_response = clean_response.split('<|eot_id|>')[0].strip()
+        
+        # Remove any remaining template tokens
+        import re
+        clean_response = re.sub(r'<\|[^|]*\|>', '', clean_response).strip()
+        
+        # Stop at first newline for short Q&A answers
+        lines = clean_response.split('\n')
+        if lines:
+            clean_response = lines[0].strip()
+            
+        # Final safety truncation
+        if len(clean_response) > 200:
+            clean_response = clean_response[:200].strip()
+            
+        outputs.append({"text": clean_response})
     LOG.info("Generation complete.")
     return outputs
 
@@ -272,4 +298,3 @@ def run_lora_training(
 
     model.unfreeze()
     return model
-

@@ -118,26 +118,25 @@ You must make two decisions:
     - "train_using_output_tokens"
 
 Also specify:
-    - learning_rate (float)
-    - num_train_epochs (integer)
+    - learning_rate (float between 0.0001 and 0.01)
+    - num_train_epochs (integer between 1 and 10)
 
 ### Output Format
 
-Respond with a valid JSON object. Do not include any explanation, markdown, or extra text. Use lowercase `true`/`false` for booleans and ensure correct JSON syntax.
-
-Example output:
+Respond with ONLY a valid JSON object. No explanation, no markdown, no extra text. 
+Use double quotes for all strings and property names. Use lowercase true/false for booleans.
 
 {
   "data_generation": {
-    "use_basic_augmentations": ...,
-    "use_size_augmentations": ...,
-    "use_chain_augmentations": ...,
-    "use_repeat_augmentations": ...
+    "use_basic_augmentations": true,
+    "use_size_augmentations": false,
+    "use_chain_augmentations": true,
+    "use_repeat_augmentations": false
   },
   "training": {
-    "strategy": ...,
-    "learning_rate": ...,
-    "num_train_epochs": ...
+    "strategy": "train_using_all_tokens",
+    "learning_rate": 0.001,
+    "num_train_epochs": 3
   }
 }
 """
@@ -233,8 +232,9 @@ Example output:
                 return None
         
         try:
-            # Parse the JSON configuration
-            config = json.loads(response_text)
+            # Clean and parse the JSON configuration
+            cleaned_response = self._clean_json_response(response_text)
+            config = json.loads(cleaned_response)
             
             # Validate configuration structure
             if not self._validate_config(config):
@@ -274,6 +274,28 @@ Example output:
             formatted_examples += input_str + output_str + "\n"
         
         return formatted_examples
+    
+    def _clean_json_response(self, response_text: str) -> str:
+        """Clean up response text to make it valid JSON."""
+        # Remove any markdown code blocks
+        response_text = response_text.strip()
+        if response_text.startswith('```'):
+            lines = response_text.split('\n')
+            # Remove first and last lines if they're markdown
+            if lines[0].startswith('```'):
+                lines = lines[1:]
+            if lines and lines[-1].startswith('```'):
+                lines = lines[:-1]
+            response_text = '\n'.join(lines)
+        
+        # Find JSON object bounds
+        start_idx = response_text.find('{')
+        end_idx = response_text.rfind('}')
+        
+        if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
+            response_text = response_text[start_idx:end_idx+1]
+        
+        return response_text.strip()
     
     def _validate_config(self, config: Dict) -> bool:
         """Validate that config has required structure."""

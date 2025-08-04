@@ -142,34 +142,42 @@ def preprocess_reward(raw_reward: float, completion: str) -> float:
     Returns:
         Processed reward with better learning signal
     """
-    # Scale the reward to be more significant
-    scaled_reward = raw_reward * 2.0  # Scale from [-1,1] to [-2,2]
+    import re
     
-    # Add completion quality bonuses/penalties
-    completion_len = len(completion.strip())
+    # The raw reward is already the key signal - don't over-manipulate it
+    # Raw reward comes from adapter_gain = adapter_acc - baseline_acc
+    # This is the most important signal and should dominate
     
-    # Penalty for very short completions (likely low quality)
-    if completion_len < 20:
-        scaled_reward -= 0.5
-        
-    # Penalty for very long completions (likely repetitive/off-topic)
-    elif completion_len > 500:
-        scaled_reward -= 0.3
-        
-    # Small bonus for reasonable length completions
-    elif 50 <= completion_len <= 200:
-        scaled_reward += 0.2
+    completion = completion.strip()
+    completion_len = len(completion)
     
-    # Penalty for repetitive text (simple heuristic)
-    words = completion.lower().split()
-    if len(words) > 10:
-        unique_words = len(set(words))
-        repetition_ratio = unique_words / len(words)
-        if repetition_ratio < 0.5:  # More than 50% repeated words
-            scaled_reward -= 0.4
+    # Start with the raw reward (this is the main signal)
+    processed_reward = raw_reward
     
-    # Clamp final reward to reasonable range
-    return max(-3.0, min(3.0, scaled_reward))
+    # Apply MINIMAL adjustments to avoid corrupting the TTT signal
+    
+    # Only apply quality penalties for clearly bad outputs
+    if completion_len == 0:
+        # Empty completion is clearly bad
+        processed_reward -= 0.5
+    elif completion_len < 3 and not re.match(r'^\d+$', completion):
+        # Very short non-numeric answers are likely gibberish
+        processed_reward -= 0.3
+    elif completion_len > 1000:
+        # Extremely long completions are likely repetitive
+        processed_reward -= 0.2
+    
+    # Check for obvious repetition in longer completions
+    if completion_len > 100:
+        words = completion.lower().split()
+        if len(words) > 10:
+            unique_words = len(set(words))
+            repetition_ratio = unique_words / len(words)
+            if repetition_ratio < 0.3:  # Severely repetitive (70%+ repeated words)
+                processed_reward -= 0.3
+    
+    # Clamp final reward to reasonable range (but don't over-constrain)
+    return max(-2.0, min(2.0, processed_reward))
 
 def _reconnect_socket():
     """Helper function to reconnect the ZMQ socket."""

@@ -26,6 +26,8 @@ except ImportError:
     MLX_AVAILABLE = False
 
 from .arc_augmenters import ARCTask, ARCExample
+# Import shared model manager
+from .shared_model import get_shared_model
 
 
 class ARCSolutionEvaluator:
@@ -45,8 +47,8 @@ class ARCSolutionEvaluator:
         if not MLX_AVAILABLE:
             raise ImportError("MLX is required for solution evaluation")
             
-        # Load base model - adapters will be loaded dynamically
-        self.base_model, self.tokenizer = mlx_lm_load(model_name)
+        # Use shared model instead of loading our own
+        self.base_model, self.tokenizer = get_shared_model(model_name)
         
         if self.tokenizer.pad_token_id is None:
             self.tokenizer.pad_token_id = self.tokenizer.eos_token_id

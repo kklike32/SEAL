@@ -24,6 +24,9 @@ try:
 except ImportError:
     MLX_AVAILABLE = False
 
+# Import shared model manager
+from .shared_model import get_shared_model
+
 
 class ARCRestEMTrainer:
     """
@@ -41,7 +44,8 @@ class ARCRestEMTrainer:
         if not MLX_AVAILABLE:
             raise ImportError("MLX is required for RestEM training")
             
-        self.base_model, self.tokenizer = mlx_lm_load(model_name)
+        # Use shared model instead of loading our own
+        self.base_model, self.tokenizer = get_shared_model(model_name)
         
         # RestEM uses lower rank than TTT phase
         self.lora_config = lora_config or {

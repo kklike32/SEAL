@@ -28,6 +28,9 @@ try:
 except ImportError:
     MLX_AVAILABLE = False
 
+# Import shared model manager
+from .shared_model import get_shared_model
+
 
 @dataclass
 class ARCExample:
@@ -78,8 +81,9 @@ class ARCSelfEditGenerator:
         self.use_mlx = use_mlx
         
         if use_mlx and MLX_AVAILABLE:
-            from mlx_lm import load as mlx_lm_load
-            self.model, self.tokenizer = mlx_lm_load(model_name)
+            # Use shared model instead of loading our own
+            self.model, self.tokenizer = get_shared_model(model_name)
+            logging.info(f"Initialized ARCSelfEditGenerator with shared {model_name} (MLX: {use_mlx})")
         elif HF_AVAILABLE:
             self.tokenizer = AutoTokenizer.from_pretrained(model_name)
             self.model = AutoModelForCausalLM.from_pretrained(
@@ -88,6 +92,7 @@ class ARCSelfEditGenerator:
                 device_map="auto"
             )
             self.use_mlx = False
+            logging.info(f"Initialized ARCSelfEditGenerator with {model_name} (MLX: False)")
         else:
             raise ImportError("Neither MLX nor HuggingFace transformers are available")
         

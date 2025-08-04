@@ -32,6 +32,8 @@ except ImportError:
     DATASETS_AVAILABLE = False
 
 from .arc_augmenters import ARCAugmentationManager, ARCTask, ARCExample
+# Import shared model manager
+from .shared_model import get_shared_model
 
 
 class ARCTTTTrainer:
@@ -48,7 +50,8 @@ class ARCTTTTrainer:
         if not MLX_AVAILABLE:
             raise ImportError("MLX is required for TTT training")
             
-        self.base_model, self.tokenizer = mlx_lm_load(model_name)
+        # Use shared model instead of loading our own
+        self.base_model, self.tokenizer = get_shared_model(model_name)
         
         # Default LoRA configuration matching original SEAL
         self.lora_config = lora_config or {

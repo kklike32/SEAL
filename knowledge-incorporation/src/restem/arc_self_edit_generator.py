@@ -31,6 +31,9 @@ except ImportError:
 # Import shared model manager
 from .shared_model import get_shared_model
 
+# Import shared model manager
+from .shared_model import get_shared_model
+
 
 @dataclass
 class ARCExample:
@@ -250,8 +253,17 @@ Use double quotes for all strings and property names. Use lowercase true/false f
             
         except json.JSONDecodeError as e:
             logging.warning(f"Failed to parse JSON config: {e}")
-            logging.debug(f"Raw response: {response_text}")
-            return None
+            logging.warning(f"Raw response: {repr(response_text)}")
+            
+            # Fallback: Generate a random valid configuration
+            logging.info("Using fallback random configuration")
+            fallback_config = self._generate_fallback_config()
+            return {
+                "config": fallback_config,
+                "prompt": prompt if self.use_mlx else user_message,
+                "response": f"FALLBACK: {json.dumps(fallback_config)}",
+                "task_name": task.name
+            }
     
     def _format_task_examples(self, task: ARCTask) -> str:
         """Format task examples exactly like original SEAL."""
@@ -296,6 +308,22 @@ Use double quotes for all strings and property names. Use lowercase true/false f
             response_text = response_text[start_idx:end_idx+1]
         
         return response_text.strip()
+    
+    def _generate_fallback_config(self) -> Dict[str, Any]:
+        """Generate a random fallback configuration when JSON parsing fails."""
+        return {
+            "data_generation": {
+                "use_basic_augmentations": random.choice([True, False]),
+                "use_size_augmentations": random.choice([True, False]),
+                "use_chain_augmentations": random.choice([True, False]),
+                "use_repeat_augmentations": random.choice([True, False])
+            },
+            "training": {
+                "strategy": random.choice(["train_using_all_tokens", "train_using_output_tokens"]),
+                "learning_rate": random.uniform(0.0001, 0.01),
+                "num_train_epochs": random.randint(1, 10)
+            }
+        }
     
     def _validate_config(self, config: Dict) -> bool:
         """Validate that config has required structure."""

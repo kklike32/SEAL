@@ -47,6 +47,11 @@ def generate_mlx(
     )
 
     LOG.info(f"Generating {len(prompts)} completions with MLX...")
+    
+    # Force garbage collection before generation
+    import gc
+    gc.collect()
+    
     for prompt in prompts:
         # Format prompt using proper Llama-3 chat template for Q&A
         formatted_prompt = f"<|begin_of_text|><|start_header_id|>user<|end_header_id|>\n\n{prompt}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
@@ -83,6 +88,10 @@ def generate_mlx(
             clean_response = clean_response[:200].strip()
             
         outputs.append({"text": clean_response})
+    
+    # Force garbage collection after generation
+    gc.collect()
+    
     LOG.info("Generation complete.")
     return outputs
 

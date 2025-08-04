@@ -12,8 +12,8 @@ MODEL_NAME="mlx-community/Meta-Llama-3-8B-Instruct"
 
 # Minimal test configuration (should complete in ~10-15 minutes)
 MAX_TASKS=1              # Just 1 task for quick test
-N_CONFIGS=3              # Just 3 configurations 
-RESTEM_EPOCHS=2          # Minimal epochs
+N_CONFIGS=1              # Just 1 configuration for extreme minimal test 
+RESTEM_EPOCHS=1          # Minimal epochs
 LOG_LEVEL="INFO"
 
 # Directory Configuration
@@ -57,12 +57,14 @@ if ! python3 -c "import mlx" 2>/dev/null; then
     pip install -r requirements_mlx.txt
 fi
 
-# Configure MLX memory settings for Apple Silicon
-export MLX_GPU_MEMORY_LIMIT=0.7
+# Configure MLX memory settings for Apple Silicon - ULTRA CONSERVATIVE
+export MLX_GPU_MEMORY_LIMIT=0.3
 export PYTORCH_ENABLE_MPS_FALLBACK=1
 export MLX_ENABLE_UNIFIED_MEMORY=1
+export MLX_METAL_BUFFER_CACHE_LIMIT=50
+export MLX_MEMORY_POOL_LIMIT=2048
 
-echo "MLX memory configuration applied (70% GPU memory limit)"
+echo "MLX memory configuration applied (30% GPU memory limit for conservative test)"
 
 # Create timestamp for this run
 TIMESTAMP=$(date '+%Y%m%d_%H%M%S')

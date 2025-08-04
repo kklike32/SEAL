@@ -6,23 +6,42 @@ This script runs the corrected SEAL RestEM implementation on ARC tasks.
 Includes comprehensive logging and error handling.
 """
 
-import os
+# Handle imports properly regardless of where script is run from
 import sys
+import os
 import json
 import logging
 import argparse
 from datetime import datetime
 import numpy as np
 
-# Import modules from current directory (we're in the restem directory)
+# Get the script's directory and add proper paths
+script_dir = os.path.dirname(os.path.abspath(__file__))
+restem_dir = script_dir  # We're in the restem directory
+src_dir = os.path.dirname(restem_dir)  # Go up to src
+ki_dir = os.path.dirname(src_dir)  # Go up to knowledge-incorporation
+
+# Add paths for imports
+sys.path.insert(0, ki_dir)
+sys.path.insert(0, restem_dir)
+
+# Import modules
 try:
+    # Try relative imports first (if run from restem directory)
     from arc_restem_pipeline import ARCRestEMPipeline
     from arc_augmenters import ARCTask, ARCExample
-except ImportError as e:
-    print(f"Import error: {e}")
-    print(f"Make sure you're running from the restem directory")
-    print(f"Current working directory: {os.getcwd()}")
-    sys.exit(1)
+except ImportError:
+    try:
+        # Try absolute imports (if run from SEAL root or elsewhere)
+        from src.restem.arc_restem_pipeline import ARCRestEMPipeline
+        from src.restem.arc_augmenters import ARCTask, ARCExample
+    except ImportError as e:
+        print(f"Import error: {e}")
+        print(f"Script directory: {script_dir}")
+        print(f"Knowledge-incorporation path: {ki_dir}")
+        print(f"Current working directory: {os.getcwd()}")
+        print(f"Python path: {sys.path}")
+        sys.exit(1)
 
 
 def setup_logging(log_dir: str, log_level: str = "INFO") -> None:
@@ -141,9 +160,13 @@ def main():
     # Get SEAL root directory (3 levels up from restem)
     seal_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
     
-    parser.add_argument("--data-dir", type=str, default=os.path.join(seal_root, "few-shot", "data"), 
+    # Default paths relative to SEAL root
+    default_data_dir = os.path.join(seal_root, "few-shot", "data")
+    default_output_dir = os.path.join(seal_root, "logs", "arc_restem_experiments")
+    
+    parser.add_argument("--data-dir", type=str, default=default_data_dir, 
                        help="Directory containing ARC data files")
-    parser.add_argument("--output-dir", type=str, default=os.path.join(seal_root, "logs", "arc_restem_experiments"),
+    parser.add_argument("--output-dir", type=str, default=default_output_dir,
                        help="Output directory for results and logs")
     parser.add_argument("--model-name", type=str, default="mlx-community/Meta-Llama-3-8B-Instruct",
                        help="Model name to use")
@@ -158,6 +181,12 @@ def main():
                        help="Logging level")
     
     args = parser.parse_args()
+    
+    # Debug: Show detected paths
+    print(f"Script location: {os.path.abspath(__file__)}")
+    print(f"Detected SEAL root: {seal_root}")
+    print(f"Data directory: {args.data_dir}")
+    print(f"Output directory: {args.output_dir}")
     
     # Setup output directory and logging
     os.makedirs(args.output_dir, exist_ok=True)

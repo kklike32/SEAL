@@ -19,8 +19,8 @@ RESTEM_EPOCHS=8          # Number of epochs for RestEM training
 LOG_LEVEL="INFO"         # DEBUG, INFO, WARNING, ERROR
 
 # Directory Configuration (relative to SEAL root)
-DATA_DIR="../few-shot/data"                    # ARC data location
-OUTPUT_DIR="../logs/arc_restem_experiments"    # Results output
+DATA_DIR="few-shot/data"                       # ARC data location
+OUTPUT_DIR="logs/arc_restem_experiments"       # Results output
 
 # ================================
 # QUICK PRESET CONFIGURATIONS
@@ -76,27 +76,25 @@ if [ ! -f "$RESTEM_DIR/run_arc_restem.py" ]; then
     exit 1
 fi
 
-# Change to restem directory
-cd "$RESTEM_DIR" || exit 1
+# Stay in SEAL root directory (don't change to restem)
+cd "$SEAL_ROOT" || exit 1
 
 # Check Python dependencies
 echo "Checking Python environment..."
 if ! python3 -c "import mlx" 2>/dev/null; then
     echo "WARNING: MLX not found. Installing requirements..."
-    cd "$SEAL_ROOT" || exit 1
     pip install -r requirements_mlx.txt
-    cd "$RESTEM_DIR" || exit 1
 fi
 
 # Create timestamp for this run
 TIMESTAMP=$(date '+%Y%m%d_%H%M%S')
 echo "Starting RestEM run at $TIMESTAMP"
 
-# Run the pipeline
+# Run the pipeline from SEAL root
 echo "Executing ARC RestEM Pipeline..."
-python3 run_arc_restem.py \
-    --data-dir "$SEAL_ROOT/$DATA_DIR" \
-    --output-dir "$SEAL_ROOT/$OUTPUT_DIR" \
+python3 knowledge-incorporation/src/restem/run_arc_restem.py \
+    --data-dir "$DATA_DIR" \
+    --output-dir "$OUTPUT_DIR" \
     --model-name "$MODEL_NAME" \
     --max-tasks "$MAX_TASKS" \
     --n-configs "$N_CONFIGS" \
@@ -107,13 +105,13 @@ EXIT_CODE=$?
 
 echo "=================================="
 if [ $EXIT_CODE -eq 0 ]; then
-    echo "RestEM run completed successfully!"
+    echo "✅ RestEM run completed successfully!"
     echo "Results saved to: $SEAL_ROOT/$OUTPUT_DIR"
     echo "Check the logs for detailed information."
 elif [ $EXIT_CODE -eq 130 ]; then
-    echo "Run interrupted by user (Ctrl+C)"
+    echo "⚠️  Run interrupted by user (Ctrl+C)"
 else
-    echo "RestEM run failed with exit code $EXIT_CODE"
+    echo "❌ RestEM run failed with exit code $EXIT_CODE"
     echo "Check the logs for error details."
 fi
 echo "=================================="

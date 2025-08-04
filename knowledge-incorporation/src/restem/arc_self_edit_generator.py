@@ -42,6 +42,25 @@ class ARCTask:
     name: str
     train_examples: List[ARCExample]
     test_examples: List[ARCExample]
+    
+    def serialize(self) -> Dict[str, Any]:
+        """Serialize task to dictionary format."""
+        return {
+            'train': [
+                {
+                    'input': example.input_grid.tolist(),
+                    'output': example.output_grid.tolist() if example.output_grid is not None else None
+                }
+                for example in self.train_examples
+            ],
+            'test': [
+                {
+                    'input': example.input_grid.tolist(),
+                    'output': example.output_grid.tolist() if example.output_grid is not None else None
+                }
+                for example in self.test_examples
+            ]
+        }
 
 
 class ARCSelfEditGenerator:
@@ -291,6 +310,8 @@ Example output:
         """Convert config to hashable key for duplicate checking."""
         data_gen = tuple(sorted(config["data_generation"].items()))
         training = tuple(sorted(config["training"].items()))
+        return (data_gen, training)
+    
     def generate_batch_self_edits(
         self, 
         tasks: List[ARCTask], 
@@ -318,37 +339,6 @@ Example output:
             except Exception as e:
                 logging.error(f"Failed to generate configs for task {task.name}: {e}")
                 results[task.name] = []
-        
-        return results
-        """
-        results = {}
-        
-        for task in tasks:
-            logging.info(f"Generating self-edits for task {task.name}")
-            
-            # Generate configurations
-            configs = self.generate_self_edit_configs(task, n_configs_per_task)
-            
-            # Generate solutions for each config
-            task_results = {
-                "task": {
-                    "name": task.name,
-                    "n_train_examples": len(task.train_examples),
-                    "n_test_examples": len(task.test_examples)
-                },
-                "configs": [],
-                "solutions": []
-            }
-            
-            for config in configs:
-                solution = self.generate_solution_from_config(task, config)
-                if solution:
-                    task_results["configs"].append(config)
-                    task_results["solutions"].append(solution)
-                    logging.debug(f"Generated solution {len(task_results['solutions'])}: {solution[:50]}...")
-            
-            results[task.name] = task_results
-            logging.info(f"Generated {len(task_results['solutions'])} solutions for task {task.name}")
         
         return results
 
